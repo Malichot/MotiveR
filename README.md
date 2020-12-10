@@ -17,7 +17,7 @@ Encodage et noms de fichiers.
 ## Processus général.
 
 
-1. Étiquetage morphosyntaxique.
+### 1. Étiquetage morphosyntaxique.
 
 __Script__ : Etiquetage_UDPipe_Fonction.R
 
@@ -30,7 +30,7 @@ __Paramètres__ :
 __Sortie__ : UDPipe_corpus_complet.csv
 
 
-2. Transformation en motifs (UDPipe) : 
+### 2. Transformation en motifs (UDPipe) : 
 
 __Script__ : Regex_UDPipe.R
 
@@ -43,7 +43,7 @@ __Paramètres__ :
 __Sortie__ : Corpus_motifs_UDPipe.csv
 
 
-3. Transformation en motifs (Cordial) : 
+### 3. Transformation en motifs (Cordial) : 
 
 __Script__ : Regex_Cordial.R
 
@@ -53,7 +53,7 @@ __Paramètres__ :
 
 __Sortie__ : Corpus_motifs_Cordial.csv
 
-4. Wordcloud : 
+### 4. Wordcloud : 
 
 Fonction permettant de générer des nuages de mots sur les fréquences relatives et absolues des n premiers motifs du corpus.
 
@@ -70,7 +70,7 @@ __Paramètres__ :
 __Sortie__ : Visualisations fréquences relatives ou absolues.
 
 
-5. TF-IDF : 
+### 5. TF-IDF : 
 
 Fonction permettant de pratiquer une analyse TF-IDF sur n motifs du corpus.
 
@@ -86,7 +86,7 @@ __Paramètres__ :
 
 __Sortie__ : Visualisations groupées ou séparées.
 
-6. AFC : 
+### 6. AFC : 
 
 Fonction permettant de générer une Analyse factorielle des correspondances sur les n premiers motifs du corpus.
 
@@ -108,7 +108,7 @@ __Paramètres__ :
 
 __Sortie__ : Visualisations simple, en gradient de couleurs, ou avec l’affichage d’une seule oeuvre.
 
-7. Calcul de spécificités :
+### 7. Calcul de spécificités :
 
 Fonction permettant de pratiquer un calcul de spécificité sur les motifs du corpus. La spécificité “Inf” correspond à une spécificité positive maximale.
 
@@ -122,7 +122,7 @@ __Paramètres__ :
 
 __Sortie__ : Corpus_motifs_specificites.csv avec : Oeuvre || motifs || n (fréq abs) || total (nb de mots dans l'oeuvre) || nrel (fréq relative) || Spécificités par oeuvres.
 
-8. Barycentres et pourcentage d’apparition : 
+### 8. Barycentres et pourcentage d’apparition : 
 
 Fonction permettant de pratiquer un calcul du barycentre des motifs (répartition dans le corpus) ainsi que le pourcentage de présence du motif dans l’oeuvre par rapport au corpus. 
 
@@ -136,7 +136,7 @@ __Paramètres__ :
 
 __Sortie__ : Barycentre_motifs.csv avec : Oeuvre || motifs || index || n (fréq abs) || n_total (nb de mots dans l'oeuvre) || barycentre || pourcentage (présence du motif par rapport au reste du corpus)
 
-9. Densité de cinq motifs dans une oeuvre :
+### 9. Densité de cinq motifs dans une oeuvre :
 
 Fonction permettant d’analyser la densité d’apparition de cinq motifs différents dans une oeuvre. Attention à bien noter que l’échelle de chaque motif est propre au motif : il faut donc prendre des motifs ayant une fréquence d’apparition proche, sans cela les échelles sont faussées.
 
@@ -158,7 +158,7 @@ __Paramètres__ :
 
 __Sortie__ : Visualisation.
 
-10. Statistiques générales :
+### 10. Statistiques générales :
 
 Script permettant de générer un csv avec tous les calculs précédents dans un tableau.
 
@@ -175,7 +175,7 @@ __Sortie__ : Motifs_statistisques.csv avec : Oeuvre || motifs || n (fréq absolu
 __N.B.__ : Possibilité affichage dans le terminal ou dans une variable R result_df_stats.
 
 
-11. Retour aux textes : 
+### 11. Retour aux textes : 
 
 Fonction permettant de revenir aux textes à partir des motifs que l’on souhaite examiner. La fonction peut prendre beaucoup de temps (plusieurs minutes, ou une dizaine de minutes) à être exécutée, le nombre de motifs étant très élevé suivant la taille de votre corpus. C’est pourquoi il est possible d’ajouter un filtre de fréquence, pour ne prendre en compte que les motifs supérieur à n occurrences (en fréquence absolue).
 
@@ -199,7 +199,7 @@ __Choix__ :
 __Sortie__ : Retour_aux_textes_corpus_specificites.csv avec : id || contexte_gauche || motif (texte) || contexte_droit || Oeuvre || motifs || n || total || nrel || spécificités pour chaque oeuvre.
 
 
-11. Retour aux textes sur un motif particulier : 
+### 12. Retour aux textes sur un motif particulier : 
 
 Même fonctionnalité que la précédente, mais en ne revenant au texte que pour un motif spécifique que l’on entre.
 
