@@ -1,35 +1,156 @@
-## Legallois - Fonction motifs regex dans R ##
+## Legallois - Fonction motifs regex dans R sur UDPipe ##
 
 ## ## ## ## ## ## ##  ## ## ## ## ## ##  ## ## ##  ## ## ## 
 
-# Fonction pour un corpus étiqueté avec des fichiers .cnr ou .csv
-# Sortie : Corpus_motifs.csv avec : mots || motifs || Oeuvre.
+# Fonction pour un corpus étiqueté avec des fichiers .csv (sortie du script UDPipe_Fonction.R)
+# Entrée : corpus = UDPipe_corpus_complet.csv : mots || lemmes || POS || feats || Oeuvre (sortie du script UDPipe_Fonction.R)
+# Sortie : Corpus_motifs_UDPipe.csv avec : mots || motifs || Oeuvre.
 
 ## ## ## ## ## ## ##  ## ## ## ## ## ##  ## ## ##  ## ## ## 
-
 path = "~/Dropbox/2019-2020/Stage/corpus_test/"
+corpus = "UDPipe_corpus_complet.csv"
 
-regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/"){
+regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/Test/", corpus = "UDPipe_corpus_complet.csv"){
   
   # Librairies : 
   
   require("stringr")
-  require("plyr")
+  # require("plyr")
   require("dplyr")
   require("readr")
-  
-  # Répertoire de travail :
-  
+  require("data.table")
   setwd(path)
   
   ## Importation du corpus : 
   
-  corpus = plyr::ldply(list.files(pattern = "*.cnr|*.csv"), function(filename) { # ou .csv
-    dum = read.csv(filename, sep = "\t", stringsAsFactors = FALSE)
-    #If you want to add the filename as well on the column
-    dum$Oeuvre = filename
-    return(dum)
-  })
+  corpus = fread(corpus)
+  
+  # Auxiliaires : 
+  
+  corpus <- corpus %>%
+    mutate(POS = replace(POS, lemmes == "être", "être")) %>% # Auxiliaires
+    mutate(POS = replace(POS, lemmes == "avoir", "avoir")) # Auxiliaires
+  
+  # Remplacement des feats avoir et être pour qu'ils ne soient pas transformés :
+  # (on garde les auxiliaires)
+  
+  corpus <- corpus %>%
+    mutate(feats = replace(feats, lemmes == "avoir", "avoir")) %>%
+    mutate(feats = replace(feats, lemmes == "être", "être"))
+  
+  # Infinitifs :
+  
+  corpus <- corpus %>%
+    mutate(lemmes = replace(lemmes, feats == "Typo=Yes|VerbForm=Inf", "INF")) %>%
+    mutate(lemmes = replace(lemmes, feats == "VerbForm=Inf", "INF")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Typo=No|VerbForm=Inf", "INF"))
+  
+  # Participes : 
+  
+  corpus <- corpus %>%
+    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% # PPsé masc sing
+    mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% # PPsé fem sin
+    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% ## PPsé mas plu
+    mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Plur|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPsé fem plu
+    mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPsé fem sing
+    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPsé masc plu
+    mutate(lemmes = replace(lemmes, feats == "Tense=Pres|VerbForm=Part", "PPRES")) # Pprésnt.
+  
+  
+
+  
+  ############ Remplacement des verbes : ##
+  
+  # Subjonctif présent :
+  
+  corpus <- corpus %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin", "VSUBP"))
+  
+  # Subjonctif imparfait :
+  
+  corpus <- corpus %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=1|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=2|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=3|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=1|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=2|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=3|Tense=Imp|VerbForm=Fin", "VSUBI"))
+  
+  # Impératif présent :
+  
+  corpus <- corpus %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Imp|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin", "IMP")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Imp|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin", "IMP")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Imp|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin", "IMP"))
+  
+  # Conditionnel :
+  
+  corpus <- corpus %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin", "VCOND"))
+  
+  # Indicatif présent :
+  
+  corpus <- corpus %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin", "PRES")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin", "PRES")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin", "PRES")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin", "PRES")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin", "PRES")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin", "PRES"))
+  
+  # Imparfait :
+  
+  corpus <- corpus %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=1|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=2|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=3|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=1|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=2|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=3|Tense=Imp|VerbForm=Fin", "VIMP"))
+  
+  # Passé simple : 
+  
+  corpus <- corpus %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=1|Tense=Past|VerbForm=Fin", "VPS")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=2|Tense=Past|VerbForm=Fin", "VPS")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin", "VPS")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=1|Tense=Past|VerbForm=Fin", "VPS")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=2|Tense=Past|VerbForm=Fin", "VPS")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=3|Tense=Past|VerbForm=Fin", "VPS"))
+  
+  # Futur :
+  
+  corpus <- corpus %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=1|Tense=Fut|VerbForm=Fin", "VF")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=2|Tense=Fut|VerbForm=Fin", "VF")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=3|Tense=Fut|VerbForm=Fin", "VF")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=1|Tense=Fut|VerbForm=Fin", "VF")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=2|Tense=Fut|VerbForm=Fin", "VF")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=3|Tense=Fut|VerbForm=Fin", "VF"))
+  
+  # Démonstratifs :
+  
+  corpus <- corpus %>%
+    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Poss=Yes|PronType=Prs", "DEPOSS")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Poss=Yes|PronType=Prs", "DETPOSS")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Poss=Yes|PronType=Prs", "DETPOSS")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Poss=Yes|PronType=Prs", "DETPOSS")) %>%
+    mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Plur|Poss=Yes|PronType=Prs", "DETPOSS"))
+  
+  
+  # Retrait colonne morphologie :
+  
+  corpus <- corpus[,-4]
   
   ## Retrait des lignes vides :
   
@@ -212,48 +333,39 @@ regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/")
     mutate(POS = replace(POS, lemmes == "non", "non")) %>%
     mutate(POS = replace(POS, lemmes == "peut-être", "peut-être"))
   
-  
   # if lemmes == x
   # replace pos by lemmes ce qui permet 
   # de sauver ensuite le motifs de la transformation.
   
+  # Précisions / insertions POS :
+  # Remplacement conditionnels : si corpus$lemmes == c(), remplacement des POS et lemmes en ADVTOT, etc.
+  
+  corpus[corpus$lemmes %in% c("absolument", "complètement", "entièrement", "incomplètement", "intégralement", "parfaitement", "partiellement", "
+                                               pleinement", "quasiment", "radicalement", "rigoureusement", "strictement", "totalement"), c("lemmes", "POS")] <- "ADVTOT"
   
   
-  ## Retrait des lignes vides :
-  
-  corpus <- corpus[complete.cases(corpus),]
-  
-  ## Suite :
-  corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, lemmes == "vener", "venir"))
-  
-  # Remplacement conditionnels :
-  
-  corpus$lemmes <- ifelse(corpus$lemmes %in% c("absolument", "complètement", "entièrement", "incomplètement", "intégralement", "parfaitement", "partiellement", "
-                                               pleinement", "quasiment", "radicalement", "rigoureusement", "strictement", "totalement"), "ADVTOT", corpus$lemmes)
-  
-  corpus$lemmes <- ifelse(corpus$lemmes %in% c("actuellement", "adultérieurement", "anciennement", "antécédement", "antérieurement", "antiquement", "
-                                               dernièrement", "diurnement", "fraîchement", "futurement", "imminementimminent", "incessamment", "initialement", "nouvellement", "
-                                               nuitamment", "originairement", "originellement", "postérieurement", "posthumément", "préalablement", "précédemment", "
-                                               précocementprécoce", "préliminairement", "prématurémentprématuré", "présentement", "primitivement", "prochainement", "
-                                               récemment", "tardivementtardif", "ultérieurement", "ultimement"), "ADVPHA", corpus$lemmes)
+  corpus[corpus$lemmes %in% c("actuellement", "adultérieurement", "anciennement", "antécédement", "antérieurement", "antiquement", "
+                              dernièrement", "diurnement", "fraîchement", "futurement", "imminementimminent", "incessamment", "initialement", "nouvellement", "
+                              nuitamment", "originairement", "originellement", "postérieurement", "posthumément", "préalablement", "précédemment", "
+                              précocement", "préliminairement", "prématurément", "présentement", "primitivement", "prochainement", "
+                              récemment", "tardivement", "ultérieurement", "ultimement"), c("lemmes", "POS")] <- "ADVPHA"
   
   
-  corpus$lemmes <- ifelse(corpus$lemmes %in% c("accidentellement", "annuellement", "bihebdomadairement", "bimensuellement", "bimestriellement
-                                               ", "biquotidiennement", "bisannuellementcasuellement", "chroniquement", "constamment", "continuellement", "épisodiquement", "
-                                               exceptionnellement", "fréquemment", "hebdomadairement", "irrégulièrement", "journellement", "mensuellement", "
-                                               occasionnellement", "périodiquement", "perpétuellement", "pluriannuellement", "quotidiennement", "rarement", "
-                                               rarissimement", "régulièrement", "saisonnièrement", "séculairement", "semestriellement", "sempiternellement", "
-                                               sporadiquement", "trimestriellement", "trisannuellement"), "ADVFRE", corpus$lemmes)
+  corpus[corpus$lemmes %in% c("accidentellement", "annuellement", "bihebdomadairement", "bimensuellement", "bimestriellement", 
+                              "biquotidiennement", "bisannuellementcasuellement", "chroniquement", "constamment", "continuellement", "épisodiquement", "
+                              exceptionnellement", "fréquemment", "hebdomadairement", "irrégulièrement", "journellement", "mensuellement", "
+                              occasionnellement", "périodiquement", "perpétuellement", "pluriannuellement", "quotidiennement", "rarement", "
+                              rarissimement", "régulièrement", "saisonnièrement", "séculairement", "semestriellement", "sempiternellement", "
+                              sporadiquement", "trimestriellement", "trisannuellement"), c("lemmes", "POS")] <- "ADVFRE"
   
-  corpus$lemmes <- ifelse(corpus$lemmes %in% c("abominablement", "abondamment", "admirablement", "adorablement", "
-                                               affreusement", "amplement", "anormalement", "appréciablement", "ardemment", "
-                                               astronomiquement", "atrocement", "autrement", "bigrement", "bougrement", "
-                                               capitalement", "catastrophiquement", "célestement", "chichement", "chouettement
-                                               ", "colossalement", "considérablement", "onvenablement", "copieusement", "cruellement
-                                               ", "cuisamment", "dangereusement", "délicieusement", "démentiellement", "démesurément
-                                               ", "déplorablement", "dérisoirement", "désastreusement", "désespéramment", "désespérément
-                                               ", "désolamment", "détestablement", "diablement", "diaboliquement", "diamétralement", "
+  corpus[corpus$lemmes %in% c("abominablement", "abondamment", "admirablement", "adorablement", "
+                              affreusement", "amplement", "anormalement", "appréciablement", "ardemment", "
+                              astronomiquement", "atrocement", "autrement", "bigrement", "bougrement", "
+                              capitalement", "catastrophiquement", "célestement", "chichement", "chouettement
+                              ", "colossalement", "considérablement", "onvenablement", "copieusement", "cruellement
+                              ", "cuisamment", "dangereusement", "délicieusement", "démentiellement", "démesurément
+                              ", "déplorablement", "dérisoirement", "désastreusement", "désespéramment", "désespérément
+                              ", "désolamment", "détestablement", "diablement", "diaboliquement", "diamétralement", "
                                                diantrement", "disproportionnément", "divinement", "doublement", "draconiennement
                                                ", "drastiquement", "drôlement", "durement", "éclatamment", "effrayamment", "
                                                effroyablement", "éhontément", "éminemment", "énormément", "épatamment", "éperdument", "
@@ -292,22 +404,22 @@ regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/")
                                                sérieusement", "significativement", "singulièrement", "souverainement", "spécialement", "spectaculairement", "
                                                splendidement", "sublimement", "substantiellement", "suffisamment", "superbement", "supérieurement", "
                                                superlativement", "suprêmement", "surabondamment", "surhumainement", "surréellement", "tellement", "
-                                               terriblement", "triplement", "vachement", "vertigineusement", "viscéralement", "vivement"), "ADVINT", corpus$lemmes)
+                                               terriblement", "triplement", "vachement", "vertigineusement", "viscéralement", "vivement"), c("lemmes", "POS")] <- "ADVINT"
   
-  corpus$lemmes <- ifelse(corpus$lemmes %in% c("communément", "coutumièrement", "généralement", "habituellement", "invariablement", "
-                                               normalement", "ordinairement", "rituellement", "traditionnellement", "usuellement"), "ADVHAB", corpus$lemmes)
+  corpus[corpus$lemmes %in% c("communément", "coutumièrement", "généralement", "habituellement", "invariablement", "
+                                               normalement", "ordinairement", "rituellement", "traditionnellement", "usuellement"), c("lemmes", "POS")] <- "ADVHAB"
   
-  corpus$lemmes <- ifelse(corpus$lemmes %in% c("apparemment", "assurément", "certainement", "effectivement", "éventuellement", "
+  corpus[corpus$lemmes %in% c("apparemment", "assurément", "certainement", "effectivement", "éventuellement", "
                                                évidemment", "fatalement", "forcément", "immanquablement", "incontestablement", "indéniablement", "
                                                indiscutablement", "indubitablement", "inéluctablement", "inévitablement ", "infailliblement", "
                                                manifestement", "naturellement", "nécessairement", "obligatoirement", "plausiblement", "possiblement", "
                                                présumablement", "probablement", "supposément", "sûrement", "visiblement", "vraisemblablement", "vraiment", "
-                                               véritablement", "bien sûr", "certes", "sans doute", "sans aucun doute", "sans nul doute", "certes"), "ADVMOD", corpus$lemmes)
+                                               véritablement", "bien sûr", "certes", "sans doute", "sans aucun doute", "sans nul doute", "certes"), c("lemmes", "POS")] <- "ADVMOD"
   
   ## Retrait des lignes vides :
   corpus <- corpus[complete.cases(corpus),]
   
-  corpus$lemmes <- ifelse(corpus$lemmes %in% c("abjectement", "abruptement", "abstraitement", "abstrusément", "absurdement", "académiquement", "
+  corpus[corpus$lemmes %in% c("abjectement", "abruptement", "abstraitement", "abstrusément", "absurdement", "académiquement", "
                                                acariâtrement", "accortement", "acerbement", "acidement", "âcrement", "acrimonieusement", "activement", "adipeusement", "
                                                admirativement", "adroitement", "affablement", "affaireusement", "affectionnément", "affectueusement", "agilement", "
                                                agressivement", "aguicheusement", "aigrement", "aimablement", "alertement", "allègrement", "allusivement", "altièrement", "
@@ -426,7 +538,7 @@ regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/")
                                                habilement", "héroïquement", "imbécilement", "imprudemment", "inintelligemment", "intelligemment", "lâchement", "
                                                magnanimement", "prudemment", "sadiquement", "sagement", "témérairement", "astucieusement", "bassement", "bêtement", "
                                                criminellement", "idiotement", "judicieusement", "perversement", "sottement", "stupidement", "bizarrement", "
-                                               curieusement", "étonnamment", "étrangement", "fâcheusement", "inexplicablement", "paradoxalement", "regrettablement"), "ADVMAN", corpus$lemmes)
+                                               curieusement", "étonnamment", "étrangement", "fâcheusement", "inexplicablement", "paradoxalement", "regrettablement"), c("lemmes", "POS")] <- "ADVMAN"
   
   ## Retrait des lignes vides :
   corpus <- corpus[complete.cases(corpus),]
@@ -437,7 +549,7 @@ regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/")
     mutate(lemmes = replace(lemmes, POS == "ADV", "ADV"))
   ## Noms communs :
   
-  corpus$lemmes <- ifelse(corpus$lemmes %in% c("bien-être", "accablement", "acuité", "admiration", "affection", "joie", "alacrité", "allégresse", "
+  corpus[corpus$lemmes %in% c("bien-être", "accablement", "acuité", "admiration", "affection", "joie", "alacrité", "allégresse", "
                                                amitié", "amour", "tristesse", "angoisse", "animosité", "anxiété", "apaisement", "appréhension", "attendrissement", "
                                                attirance", "attraction", "douleur", "peur", "aversion", "plaisir", "bonheur", "sensation", "calme", "désenchantement", "
                                                plaisir", "réconfort", "ennui", "orgueil", "bonheur", "écoeurement", "soulagement", "malaise", "trouble", "sentiment", "
@@ -467,88 +579,46 @@ regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/")
                                                abnégation", "ambition", "amoralité", "sentiment", "combativité", "audace", "autoritarisme", "autorité", "dévouement", "hospitalité", "
                                                impatience", "imprudence", "imprévoyance", "inconscience", "indulgence", "insensibilité", "intrépidité", "intégrité", "irrespect", "
                                                mansuétude", "obstination", "optimisme", "outrecuidance", "impartialité", "partialité", "puérilité", "pessimisme", "qualité", "
-                                               incompétence", "stoïcisme", "dynamisme", "négligence", "avarice", "intrépidité"), "NCABS", corpus$lemmes)
+                                               incompétence", "stoïcisme", "dynamisme", "négligence", "avarice", "intrépidité"), c("lemmes", "POS")] <- "NCABS"
   
-  corpus$lemmes <- ifelse(corpus$lemmes %in% c("visage", "figure", "cheveu", "front", "sourcil", "yeux", "cil", "nez", "oeil", "bouche", "lèvre", 
+  corpus[corpus$lemmes %in% c("visage", "figure", "cheveu", "front", "sourcil", "yeux", "cil", "nez", "oeil", "bouche", "lèvre", 
                                                "menton", "joue", "oreille", "gorge", "poil", "bras", "main", "doigt", "jambe", "cuisse", "tête", "cou", "épaule", "coude", 
                                                "avant-bras", "poignet", "hanche", "genou", "cheville", "front", "orteil", "thorax", "abdomen", "barbe", "moustache", "duvet", 
-                                               "langue", "dent", "tempe", "fesse", "pied"), "NCCOR", corpus$lemmes)
+                                               "langue", "dent", "tempe", "fesse", "pied"), c("lemmes", "POS")] <- "NCCOR"
+  
   
   ## Simplification des POS avec regex : 
   ## NB : non prise en compte des regex dans les fonctions qui suivent...
   ## Donc obliger de simplifier avant.
-  corpus <- corpus %>%
-    mutate(POS = str_replace_all(.$POS, "NC.+", "NC")) %>%
-    mutate(POS = str_replace_all(.$POS, "VPARPM.+", "VPARPM")) %>%
-    mutate(POS = str_replace_all(.$POS, "VPARPF.+", "VPARPF")) %>%
-    mutate(POS = str_replace_all(.$POS, "VINDPS.+", "VINDPS")) %>%
-    mutate(POS = str_replace_all(.$POS, "VINDP3S", "VINDPS")) %>%
-    mutate(POS = str_replace_all(.$POS, "VSUBP.+", "VSUBP")) %>%
-    mutate(POS = str_replace_all(.$POS, "VSUBI.+", "VSUBI")) %>%
-    mutate(POS = str_replace_all(.$POS, "VCOND.+", "VCOND")) %>%
-    mutate(POS = str_replace_all(.$POS, "VCONP.+", "VCONP")) %>%
-    mutate(POS = str_replace_all(.$POS, "VINDI.+", "VINDI")) %>%
-    mutate(POS = str_replace_all(.$POS, "NH.+", "NH")) %>%
-    mutate(POS = str_replace_all(.$POS, "NH.+", "NH")) %>%
-    mutate(POS = str_replace_all(.$POS, "NH.+", "NH")) %>%
-    mutate(POS = str_replace_all(.$POS, "NH.+", "NH")) %>%
-    mutate(POS = str_replace_all(.$POS, "NP.+", "NP"))
+  # corpus <- corpus %>%
+  #   mutate(POS = str_replace_all(.$POS, "NC.+", "NC")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "VPARPM.+", "VPARPM")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "VPARPF.+", "VPARPF")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "VINDPS.+", "VINDPS")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "VINDP3S", "VINDPS")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "VSUBP.+", "VSUBP")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "VSUBI.+", "VSUBI")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "VCOND.+", "VCOND")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "VCONP.+", "VCONP")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "VINDI.+", "VINDI")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "NH.+", "NH")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "NH.+", "NH")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "NH.+", "NH")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "NH.+", "NH")) %>%
+  #   mutate(POS = str_replace_all(.$POS, "NP.+", "NP"))
   
-  # Introduire une transformation des POS en NCCOR, NCABS, ADVMAN, ADVHAB, ADVINT, ADVPHA, ADVFRE
-  # Pour les conserver dans l'étape suivante :
-  
-  corpus <- corpus %>%
-    mutate(POS = replace(POS, lemmes == "NCCOR", "NCCOR")) %>%
-    mutate(POS = replace(POS, lemmes == "NCABS", "NCABS")) %>%
-    mutate(POS = replace(POS, lemmes == "ADVMAN", "ADVMAN")) %>%
-    mutate(POS = replace(POS, lemmes == "ADVMOD", "ADVMOD")) %>%
-    mutate(POS = replace(POS, lemmes == "ADVINT", "ADVINT")) %>%
-    mutate(POS = replace(POS, lemmes == "ADVHAB", "ADVHAB")) %>%
-    mutate(POS = replace(POS, lemmes == "ADVFRE", "ADVFRE")) %>%
-    mutate(POS = replace(POS, lemmes == "ADVPHA", "ADVPHA")) %>%
-    mutate(POS = replace(POS, lemmes == "ADVTOT", "ADVTOT"))
+  # TODO : les regex qui précèdent ne servent à rien dans l'étiquetage UDPIPE, non? 
   
   ## Cas où l'on part des POS pour changer les lemmes :
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, POS == "ADJSIG", "ADJ")) %>%
-    mutate(lemmes = replace(lemmes, POS == "ADJPIG", "ADJ")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "ADJMIN", "ADJ")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "ADJFIN", "ADJ")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "ADJMS", "ADJ")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "ADJPS", "ADJ")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "ADJFS", "ADJ")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "ADJFP", "ADJ")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "ADJMP", "ADJ")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "ADJHFS", "ADJ")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "ADJHMS", "ADJ")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "AHMS", "ADJ")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "ADJHSIG", "ADJ")) %>%
-    mutate(lemmes = replace(lemmes, POS == "ADJNUM", "ADJ")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "NCMIN", "DATE")) %>%
-    mutate(lemmes = replace(lemmes, POS == "ADJORD", "ADJORD")) %>%
+    mutate(lemmes = replace(lemmes, POS == "ADJ", "ADJ")) %>%
+    mutate(lemmes = replace(lemmes, POS == "NUM", "ADJ")) %>%  
     mutate(lemmes = replace(lemmes, POS == "DETPOSS", "DETPOSS")) %>%
     mutate(lemmes = replace(lemmes, lemmes == "elle", "il")) %>%
-    mutate(lemmes = replace(lemmes, POS == "VINF", "INF")) %>%
-    mutate(lemmes = replace(lemmes, POS == "VIMP", "IMP")) %>%
-    mutate(lemmes = replace(lemmes, POS == "VPARPRES", "PRES")) %>%
-    mutate(lemmes = replace(lemmes, POS == "VPARPM", "PASS")) %>%
-    mutate(lemmes = replace(lemmes, POS == "VPARPF", "PASS")) %>%
-    mutate(lemmes = replace(lemmes, POS == "VINDPS", "VPS")) %>%
-    mutate(lemmes = replace(lemmes, POS == "VINDF", "VF")) %>%
-    mutate(lemmes = replace(lemmes, POS == "VSUBP", "VSUBP")) %>%
-    mutate(lemmes = replace(lemmes, POS == "VSUBI", "VSUBI")) %>%
-    mutate(lemmes = replace(lemmes, POS == "VCOND", "COND")) %>%
-    mutate(lemmes = replace(lemmes, POS == "VCONP", "COND")) %>%
-    mutate(lemmes = replace(lemmes, POS == "VINDI", "VIMP")) %>% #### PROBLEME ?
-    mutate(lemmes = replace(lemmes, POS == "NC", "NC")) %>%
-    mutate(lemmes = replace(lemmes, POS == "NH", "NC")) %>%
-    mutate(lemmes = replace(lemmes, POS == "NP", "NP")) %>%
-    mutate(lemmes = replace(lemmes, lemmes == "du", "de le")) %>%
-    mutate(lemmes = replace(lemmes, lemmes == "des+", "de le")) %>%
-    mutate(lemmes = replace(lemmes, lemmes == "dees", "de le")) %>%
-    mutate(lemmes = replace(lemmes, lemmes == "dee", "de")) %>%
-    mutate(lemmes = replace(lemmes, POS == "INT", "INT")) %>%
-    mutate(lemmes = replace(lemmes, lemmes == "«", "AEFFACER")) %>%
+    mutate(lemmes = replace(lemmes, POS == "NOUN", "NC")) %>%
+    mutate(lemmes = replace(lemmes, POS == "PROPN", "NP")) %>%
+    mutate(lemmes = replace(lemmes, POS == "INTJ", "INTJ")) %>%
+    mutate(lemmes = replace(lemmes, lemmes == "«", "AEFFACER")) %>% # TODO : vérifier si c'est pertinent de garder cela ??
     mutate(lemmes = replace(lemmes, lemmes == "»", "AEFFACER"))
   
   # Manque :  
@@ -580,15 +650,50 @@ regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/")
   which(corpus$lemmes == "")
   which(corpus$POS == "")
   
-  # Suppression des blancs :
-  
+  t <- which(corpus$mots == "aux")
+  e <- which(corpus$mots == "du")
+  f <- which(corpus$mots == "des")
+  g <- which(corpus$mots == "au")
   d <- which(corpus$lemmes == "")
-  
-  # Conditionnellement sans cela supprime tout :
+  # expl <- which(corpus$POS == "PART") # Suppression explétifs.
   
   if(length(d) > 0) {
     corpus = corpus[-d,1:4] 
   }
+  
+  retrait_na <- which(corpus$mots == "NA")
+  
+  if(length(retrait_na) > 0){
+    corpus <- corpus[-retrait_na,1:4]
+  }
+  
+  if(length(t) > 0){
+    corpus <- corpus %>%
+      mutate(lemmes = replace(lemmes, mots == "aux", "à_le"))
+  }
+  
+  if(length(e) > 0){
+    corpus <- corpus %>%
+      mutate(lemmes = replace(lemmes, mots == "du", "de_le"))
+  }
+  
+  if(length(f) > 0){
+    corpus <- corpus %>%
+      mutate(lemmes = replace(lemmes, mots == "des", "de_le"))
+  }
+  
+  if(length(g) > 0){
+    corpus <- corpus %>%
+      mutate(lemmes = replace(lemmes, mots == "au", "à_le"))
+  }
+  
+  
+  #corpus = corpus[-expl,1:4]
+  
+  #corpus = corpus[-t,1:4]
+  #corpus = corpus[-e,1:4]
+  #corpus = corpus[-f,1:4]
+  #corpus = corpus[-g,1:4]
   
   ## Exportation de la première et 3ème colonne csv :
   
@@ -600,15 +705,22 @@ regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/")
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
   
-  # Export des motifs simples :
+  # Export du corpus pour le retour aux textes :
+  
+  # export
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
   
+  # Export des motifs simples :
   
-  toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_Cordial.csv', tapez 1 et enter")))
+  
+  
+  toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_UDPipe.csv', tapez 1 et enter")))
   if(toprint==1){
-    write_csv(corpus, "Corpus_motifs_Cordial.csv")
+    write_csv(corpus, "Corpus_motifs_UDPipe.csv")
   }
 }
 
-regex_corpus_entier(path = "~/Dropbox/2019-2020/Stage/corpus_test/")
+regex_corpus_entier(path = "~/Dropbox/2019-2020/Stage/corpus_test/", corpus = "UDPipe_corpus_complet.csv")
+
+# Pb : auxiliaires non pris en compte.

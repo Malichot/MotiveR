@@ -17,7 +17,7 @@ dl <- udpipe_download_model(language = "french")
 # Sortie : mots || lemmes || POS || feats || Oeuvre
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
-annotation_udpipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/", 
+annotation_udpipe <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/txt/", 
                               model = "~/Dropbox/2019-2020/Stage/french-gsd-ud-2.4-190531.udpipe"){
   
   # Librairies: 
@@ -70,7 +70,7 @@ annotation_udpipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/",
 }
   
 
-annotation_udpipe(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
+annotation_udpipe(path = "~/Dropbox/2019-2020/Stage/corpus_test/txt/",
                   model = "~/Dropbox/2019-2020/Stage/french-gsd-ud-2.4-190531.udpipe")
 
 
