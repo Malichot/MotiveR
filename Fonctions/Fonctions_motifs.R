@@ -56,7 +56,7 @@ annotation_udpipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/",
   head(corpus_annote_cols)
   
   # Exportation csv : 
-  write.csv(corpus_annote_cols, "UDPipe_corpus_complet.csv", fileEncoding = "UTF-8")
+  write.csv(corpus_annote_cols, "UDPipe_corpus_complet.csv", fileEncoding = "UTF-8", row.names = F)
   
 }
 
@@ -769,7 +769,7 @@ regex_corpus_entier_UDPipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/",
   
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_UDPipe.csv', tapez 1 et enter")))
   if(toprint==1){
-    write.csv(corpus, "Corpus_motifs_UDPipe.csv", fileEncoding = "UTF-8")
+    write.csv(corpus, "Corpus_motifs_UDPipe.csv", fileEncoding = "UTF-8", row.names = F)
   }
 }
 
@@ -1376,7 +1376,7 @@ regex_corpus_entier_Cordial <- function(path = "~/Dropbox/2019-2020/Stage/corpus
   
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_Cordial.csv', tapez 1 et enter")))
   if(toprint==1){
-    write.csv(corpus, "Corpus_motifs_Cordial.csv", fileEncoding = "UTF-8")
+    write.csv(corpus, "Corpus_motifs_Cordial.csv", fileEncoding = "UTF-8", row.names = F)
   }
 }
 
@@ -1959,7 +1959,7 @@ calcul_de_specificites <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", c
   
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_specificites.csv', tapez 1 et enter")))
   if(toprint==1){
-    write.csv(calcul_spec_freq, "Corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
+    write.csv(calcul_spec_freq, "Corpus_motifs_specificites.csv", fileEncoding = "UTF-8", row.names = F)
   }
   
 }
@@ -2066,7 +2066,7 @@ barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "
   
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Barycentre_motifs.csv', tapez 1 et enter \n dans une variable R 'corpus_barycentre', tapez 2")))
   if(toprint==1){
-    write.csv(corpus_barycentre_pourcentage, "Barycentre_motifs.csv", fileEncoding = "UTF-8")
+    write.csv(corpus_barycentre_pourcentage, "Barycentre_motifs.csv", fileEncoding = "UTF-8", row.names = F)
   }
   if(toprint==2){
     corpus_barycentre <<- corpus_barycentre_pourcentage
@@ -2481,7 +2481,7 @@ stats_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", csv = "Corp
   
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Motifs_statistisques.csv', tapez 1 et enter \n Sauvegarder les résultats dans une variable R corpus_final, tapez 2 et enter")))
   if(toprint==1){
-    write.csv(corpus_final, "Motifs_statistisques.csv", fileEncoding = "UTF-8")
+    write.csv(corpus_final, "Motifs_statistisques.csv", fileEncoding = "UTF-8", row.names = F)
   }
   if(toprint==2){
     result_df_stats <<- corpus_final
@@ -2578,7 +2578,7 @@ retour_texte_specificites <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/S
       result <- result[order(result$nrel),]
       toprint<-as.numeric((readline("Sauvegarder les résultats en csv, tapez 1 et enter \n, Sauvegarder dans un objet R result_df, tapez 2 \n")))
       if(toprint==1){
-        write.csv(result, "Retour_aux_textes_corpus_specificites.csv", fileEncoding = "UTF-8")
+        write.csv(result, "Retour_aux_textes_corpus_specificites.csv", fileEncoding = "UTF-8", row.names = F)
       }
       if(toprint==2){
         result_df <<- result
@@ -2674,7 +2674,7 @@ retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/20
       result <- result[order(result$nrel),]
       toprint<-as.numeric((readline("Sauvegarder les résultats en csv, tapez 1 et enter \n, affichez dans le terminal tapez 2 et enter\n Sauvegarder dans un objet R result_df, tapez 3 \n")))
       if(toprint==1){
-        write.csv(result, paste(keyword,"_In_", context, ".csv"), fileEncoding = "UTF-8")
+        write.csv(result, paste(keyword,"_In_", context, ".csv"), fileEncoding = "UTF-8", row.names = F)
       }
       if(toprint==2){
         return(result)

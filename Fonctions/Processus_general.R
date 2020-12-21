@@ -11,7 +11,7 @@ setwd("~/Dropbox/2019-2020/Stage/Test/")
 
 # Import des fonctions : chemin du script Fonctions_motifs.R
 
-source("~/Dropbox/2019-2020/Stage/Code_Antoine/Fonctions/Fonctions_motifs.R")
+source("~/Dropbox/2020-2021/Git-Motifs/Fonctions/Fonctions_motifs.R")
 
 # Téléchargement du modèle d'annotation :
 
