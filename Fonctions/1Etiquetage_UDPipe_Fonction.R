@@ -17,7 +17,7 @@ dl <- udpipe_download_model(language = "french")
 # Sortie : mots || lemmes || POS || feats || Oeuvre
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
-annotation_udpipe <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/txt/", 
+annotation_udpipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/", 
                               model = "~/Dropbox/2019-2020/Stage/french-gsd-ud-2.4-190531.udpipe"){
   
   # Librairies: 
@@ -65,10 +65,10 @@ annotation_udpipe <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/txt/
   head(corpus_annote_cols)
   
   # Exportation csv : 
-  write_csv(corpus_annote_cols, "UDPipe_corpus_complet.csv")
+  write.csv(corpus_annote_cols, "UDPipe_corpus_complet.csv", fileEncoding = "UTF-8")
   
 }
-  
+
 
 annotation_udpipe(path = "~/Dropbox/2019-2020/Stage/corpus_test/txt/",
                   model = "~/Dropbox/2019-2020/Stage/french-gsd-ud-2.4-190531.udpipe")

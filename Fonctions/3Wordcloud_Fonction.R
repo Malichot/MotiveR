@@ -15,7 +15,7 @@
 # == (sortie du script de regex)
 
 motifs_nuage <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", 
-                      csv = "Corpus_motifs_UDPipe.csv", nmots = 55){
+                         csv = "Corpus_motifs_UDPipe.csv", nmots = 55){
   
   # Librairies :
   
@@ -30,7 +30,7 @@ motifs_nuage <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
   # Lecture des données :
   
   setwd(path)
-  corpus_spec <- fread(csv)
+  corpus_spec <- fread(csv, encoding = "UTF-8")
   
   ## Retrait des cases vides :
   
@@ -76,9 +76,9 @@ motifs_nuage <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
   
   # Ordonnancement par fréquences relatives :
   corpus_words_ngrams <- corpus_words_ngrams[order(corpus_words_ngrams$rel_freq, decreasing = T),] 
-
+  
   ## Visualisation sur les fréquences absolues :
-
+  
   plot_abs <- ggplot(
     corpus_spec_punct[1:nmots,], # TOdo : changer 50 par une variable dans la fonction
     aes(
@@ -106,16 +106,16 @@ motifs_nuage <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
     theme_minimal()
   
   
-freq_rel <- as.numeric(readline("Fréquences relatives, tapez 1 et enter \n Fréquences absolues, tapez 2 et enter"))
+  freq_rel <- as.numeric(readline("Fréquences relatives, tapez 1 et enter \n Fréquences absolues, tapez 2 et enter"))
   
   if(freq_rel == 1){
-  return(plot_freq)
-  
+    return(plot_freq)
+    
   }
-
-
+  
+  
   if(freq_rel == 2){
-  return(plot_abs)
+    return(plot_abs)
   }
   
   else{
@@ -123,6 +123,7 @@ freq_rel <- as.numeric(readline("Fréquences relatives, tapez 1 et enter \n Fré
   }
   
 }
+
   
 motifs_nuage(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", 
              csv = "Corpus_motifs_UDPipe.csv", nmots = 55)

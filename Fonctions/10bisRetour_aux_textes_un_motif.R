@@ -3,9 +3,10 @@
 ## Script de retour aux textes 1 motif  ## 
 
 
+
 retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_UDPipe.csv",
-                                      csv_corpus_specificites = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_specificites.csv", 
-                                      motif_cible = "PRES et on ADV PRES"){
+                                               csv_corpus_specificites = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_specificites.csv", 
+                                               motif_cible = "le NC de le NC"){
   ## Importation des librairies : 
   require("tidytext")
   require("tidyverse")
@@ -16,7 +17,7 @@ retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/20
   library("dplyr")
   
   corpus_spec <- fread(csv_corpus_specificites)
-  corpus <- fread(csv_corpus_motifs)
+  corpus <- fread(csv_corpus_motifs, encoding = "UTF-8")
   
   ## Fivegrams de motifs :
   
@@ -82,7 +83,7 @@ retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/20
       result <- result[order(result$nrel),]
       toprint<-as.numeric((readline("Sauvegarder les résultats en csv, tapez 1 et enter \n, affichez dans le terminal tapez 2 et enter\n Sauvegarder dans un objet R result_df, tapez 3 \n")))
       if(toprint==1){
-        write.csv(result, paste(keyword,"_In_", context, ".csv"))
+        write.csv(result, paste(keyword,"_In_", context, ".csv"), fileEncoding = "UTF-8")
       }
       if(toprint==2){
         return(result)
@@ -99,6 +100,7 @@ retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/20
   retour_aux_textes(corpus_five = corpus_five)
   
 }
+
   
 retour_texte_specificites_un_motif(csv_corpus_motifs = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_UDPipe.csv",
                                    csv_corpus_specificites = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_specificites.csv", 

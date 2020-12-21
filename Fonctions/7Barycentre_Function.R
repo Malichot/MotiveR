@@ -20,7 +20,7 @@ barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "
   require("data.table")
   
   setwd(path)
-  corpus_spec <- fread(csv)
+  corpus_spec <- fread(csv, encoding = "UTF-8")
   
   corpus_spec <- as_tibble(corpus_spec) %>%
     group_by(Oeuvre)
@@ -113,7 +113,7 @@ barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "
   
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Barycentre_motifs.csv', tapez 1 et enter \n dans une variable R 'corpus_barycentre', tapez 2")))
   if(toprint==1){
-    write_csv(corpus_barycentre_pourcentage, "Barycentre_motifs.csv")
+    write.csv(corpus_barycentre_pourcentage, "Barycentre_motifs.csv", fileEncoding = "UTF-8")
   }
   if(toprint==2){
     corpus_barycentre <<- corpus_barycentre_pourcentage

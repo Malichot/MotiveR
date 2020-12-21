@@ -30,7 +30,7 @@ motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv
   # Lecture des données :
   
   setwd(path)
-  corpus_spec <- fread(csv)
+  corpus_spec <- fread(csv, encoding = "UTF-8")
   
   ## Retrait des cases vides :
   

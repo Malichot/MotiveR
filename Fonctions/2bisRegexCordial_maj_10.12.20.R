@@ -9,7 +9,7 @@
 
 path = "~/Dropbox/2019-2020/Stage/corpus_test/"
 
-regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/"){
+regex_corpus_entier_Cordial <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/"){
   
   # Librairies : 
   
@@ -609,8 +609,9 @@ regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/")
   
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_Cordial.csv', tapez 1 et enter")))
   if(toprint==1){
-    write_csv(corpus, "Corpus_motifs_Cordial.csv")
+    write.csv(corpus, "Corpus_motifs_Cordial.csv", fileEncoding = "UTF-8")
   }
 }
+
 
 regex_corpus_entier(path = "~/Dropbox/2019-2020/Stage/corpus_test/")

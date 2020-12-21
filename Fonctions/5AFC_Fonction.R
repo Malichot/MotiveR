@@ -16,10 +16,10 @@ nombre_oeuvres = 2
 nmotifs = 30
 nombre_dimensions = 5
 
-motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Corpus//", csv = "", nombre_oeuvres = 2, 
+motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Test/", csv = "UDPipe_corpus_complet.csv", nombre_oeuvres = 2, 
                        nmotifs = 30, nombre_dimensions = 5, une_oeuvre = "Rigodon.cnr"){
   
-# Librairies : 
+  # Librairies : 
   
   require("tidyverse")
   require("tidytext")
@@ -32,7 +32,7 @@ motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Corpus//", csv = "", no
   # Lecture des données :
   
   setwd(path)
-  corpus_spec <- fread(csv)
+  corpus_spec <- fread(csv, encoding = "UTF-8")
   
   ## Retrait des cases vides :
   
@@ -52,7 +52,7 @@ motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Corpus//", csv = "", no
            next_word2 = lead(motifs, 2),
            next_word3 = lead(motifs, 3),
            next_word4 = lead(motifs, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
+    filter(!is.na(next_word), !is.na(next_word2)) %>%
     mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
@@ -78,7 +78,7 @@ motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Corpus//", csv = "", no
   
   # Ordonnancement par fréquences relatives :
   corpus_words_ngrams <- corpus_words_ngrams[order(corpus_words_ngrams$rel_freq, decreasing = T),] 
-
+  
   ## Reshaping the data : colonnes = corpus, lignes = mots et freq
   # Réf : https://stackoverflow.com/questions/19346066/r-re-arrange-dataframe-some-rows-to-columns
   
@@ -110,8 +110,6 @@ motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Corpus//", csv = "", no
   corpus_clean <- as.matrix(corpus_clean)
   head(corpus_clean)
   
-  
-  
   ## Visualisation : 
   
   
@@ -120,28 +118,23 @@ motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Corpus//", csv = "", no
              axes = c(1,2), row.w = NULL, excl=NULL)
   
   
+  
   # fviz_ca_biplot(maCA, title = "Analyse Factorielle des Correspondances")
   
   plot_ca <- fviz_ca_biplot(maCA, map ="rowprincipal", repel = T, select.row = list(contrib = nmotifs),
-                 title = "Analyse Factorielle des Correspondances")
+                            title = "Analyse Factorielle des Correspondances")
   
   # Avec gradient de couleur en fonction des coordonnées :
   
   plot_grad <- fviz_ca(maCA, map ="rowprincipal", repel = T, select.row = list(contrib = nmotifs), 
-          col.row = "coord", title = "Analyse Factorielle des Correspondances")
-  
-  
-  
-  
-  plot_signif <- fviz_screeplot(maCA, addlabels = TRUE, ylim = c(0, 100))
-  
+                       col.row = "coord", title = "Analyse Factorielle des Correspondances")
   
   # Une oeuvre particulière : 
-
+  
   une_ca <- fviz_ca_biplot(maCA, map ="rowprincipal", repel = T, select.row = list(contrib = nmotifs), 
                            select.col = list(name = une_oeuvre), title = "Analyse Factorielle des Correspondances")
   
-  visualisation <- as.numeric(readline("Visualisation, tapez 1 et enter \n Avec gradient de couleurs, tapez 2 \n Une oeuvre particulière, vérifiez que vous l'avez entrée dans le paramètre une_oeuvre et tapez 3 \n La significativité des axes, tapez 4"))
+  visualisation <- as.numeric(readline("Visualisation, tapez 1 et enter \n Avec gradient de couleurs, tapez 2 \n Une oeuvre particulière, vérifiez que vous l'avez entrée dans le paramètre une_oeuvre et tapez 3"))
   
   if(visualisation == 1){
     return(plot_ca)
@@ -156,17 +149,11 @@ motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Corpus//", csv = "", no
     return(une_ca)
   }
   
-  if(visualisation == 4){
-    return(plot_signif)
-  }
-  
-  
   else{
-    print("Votre choix ne correspond pas aux critères proposés...!")
+    print("Votre choix ne correspond pas aux critères ternaires proposés...!")
   }
   
 }
-
 
 motifs_afc(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
            csv = "Corpus_motifs_UDPipe.csv", nombre_dimensions = 2, 

@@ -13,7 +13,8 @@
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
-tf_idf_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/" , csv = "Corpus_motifs_UDPipe.csv", nombre_motifs = 20){
+tf_idf_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
+                          csv = "Corpus_motifs_UDPipe.csv", nombre_motifs = 20){
   
   ## Importation des librairies : 
   
@@ -22,11 +23,11 @@ tf_idf_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/" , csv
   require("ggplot2")
   require("tidyr")
   require("data.table")
-
+  
   # Lecture des données :
   
   setwd(path)
-  corpus_spec <- fread(csv)
+  corpus_spec <- fread(csv, encoding = "UTF-8")
   
   ## Retrait des cases vides :
   
@@ -79,7 +80,7 @@ tf_idf_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/" , csv
   corpus_words_ngrams %>%
     select(-total) %>%
     arrange(desc(tf_idf))
-
+  
   # Visualisation :
   
   tf_idf_grid <- corpus_words_ngrams %>%
@@ -110,7 +111,7 @@ tf_idf_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/" , csv
     ylab("TF-IDF") +
     coord_flip() +
     theme_minimal()
-
+  
   plot_tfidf <- as.numeric(readline("Visualisation séparée, tapez 1 et enter \n Visualisation groupée, tapez 2 et enter"))
   
   if(plot_tfidf == 1){
@@ -126,7 +127,7 @@ tf_idf_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/" , csv
   else{
     print("Votre choix ne correspond pas aux critères binaires proposés...!")
   }
-      
+  
 }
 
 tf_idf_motifs(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/" , csv = "Corpus_motifs_UDPipe.csv", nombre_motifs = 20)

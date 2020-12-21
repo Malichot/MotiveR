@@ -20,7 +20,7 @@ retour_texte_specificites <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/S
   require("reshape2")
   library("dplyr")
   
-  corpus_spec <- fread(csv_corpus_specificites)
+  corpus_spec <- fread(csv_corpus_specificites, encoding = "UTF-8")
   corpus <- fread(csv_corpus_motifs)
   
   ## Fivegrams de motifs :
@@ -93,7 +93,7 @@ retour_texte_specificites <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/S
       result <- result[order(result$nrel),]
       toprint<-as.numeric((readline("Sauvegarder les résultats en csv, tapez 1 et enter \n, Sauvegarder dans un objet R result_df, tapez 2 \n")))
       if(toprint==1){
-        write.csv(result, "Retour_aux_textes_corpus_specificites.csv")
+        write.csv(result, "Retour_aux_textes_corpus_specificites.csv", fileEncoding = "UTF-8")
       }
       if(toprint==2){
         result_df <<- result
@@ -107,7 +107,6 @@ retour_texte_specificites <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/S
   retour_aux_textes(corpus_five)
   
 }
-
 
 retour_texte_specificites(csv_corpus_motifs = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_UDPipe.csv",
                           csv_corpus_specificites = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_specificites.csv",

@@ -16,7 +16,7 @@ calcul_de_specificites <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", c
   
   ## Répertoire de travail :
   setwd(path)
-  corpus_spec <- fread(csv)
+  corpus_spec <- fread(csv, encoding = "UTF-8")
   
   corpus_spec <- as_tibble(corpus_spec) %>%
     group_by(Oeuvre)
@@ -35,7 +35,7 @@ calcul_de_specificites <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", c
            next_word4 = lead(motifs, 4)) %>%
     filter(!is.na(next_word), !is.na(next_word2)) %>%
     mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
-
+  
   # Sélection des colonnes motifs ngram et Oeuvre :
   corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
   
@@ -52,7 +52,7 @@ calcul_de_specificites <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", c
     summarize(total = sum(n))
   
   corpus_spec_punct <- left_join(corpus_spec_punct, total_words)
-
+  
   ## Calcul de la fréquence relative :
   
   corpus_spec_punct$rel_freq <- corpus_spec_punct$n / corpus_spec_punct$total
@@ -76,7 +76,7 @@ calcul_de_specificites <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", c
   #corpus_clean <- as.matrix(corpus_clean)
   
   corpus_clean <- corpus_lexical_table
-    
+  
   ### CALCUL SPÉCIFICITÉS : ###
   
   # lexicaltable = a matrix of nrow parts and ncol type where :
@@ -190,7 +190,7 @@ calcul_de_specificites <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", c
   calcul_spec_test <- specificites.probabilities(corpus_clean)
   
   head(calcul_spec_test)
-
+  
   #####
   
   calcul_spec <- as.data.frame.matrix(calcul_spec)
@@ -208,9 +208,9 @@ calcul_de_specificites <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", c
   
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_specificites.csv', tapez 1 et enter")))
   if(toprint==1){
-    write_csv(calcul_spec_freq, "Corpus_motifs_specificites.csv")
+    write.csv(calcul_spec_freq, "Corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
   }
-
+  
 }
 
 calcul_de_specificites(path = "~/Dropbox/2019-2020/Stage/Corpus/", csv = "Corpus_motifs_UDPipe.csv")

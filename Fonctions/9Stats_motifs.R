@@ -26,7 +26,7 @@ stats_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", csv = "Corp
   
   ## Répertoire de travail :
   setwd(path)
-  corpus_spec <- fread(csv)
+  corpus_spec <- fread(csv, encoding = "UTF-8")
   
   corpus_spec <- as_tibble(corpus_spec) %>%
     group_by(Oeuvre)
@@ -151,7 +151,7 @@ stats_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", csv = "Corp
   
   ## Reshaping the data : colonnes = corpus, lignes = motifs et freq
   corpus_lexical_table <- xtabs(n~motifs+Oeuvre, corpus_words_ngrams_spec)
-
+  
   ## Ré-ordonnancement : 
   corpus_lexical_table <- corpus_lexical_table[order(-corpus_lexical_table[,1], corpus_lexical_table[,1]),]
   
@@ -302,12 +302,12 @@ stats_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", csv = "Corp
   
   corpus_final <- subset(corpus_final, select=-c(index))
   
-
   
-
+  
+  
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Motifs_statistisques.csv', tapez 1 et enter \n Sauvegarder les résultats dans une variable R corpus_final, tapez 2 et enter")))
   if(toprint==1){
-    write_csv(corpus_final, "Motifs_statistisques.csv")
+    write.csv(corpus_final, "Motifs_statistisques.csv", fileEncoding = "UTF-8")
   }
   if(toprint==2){
     result_df_stats <<- corpus_final
