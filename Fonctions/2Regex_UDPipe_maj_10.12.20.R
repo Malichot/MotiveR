@@ -23,7 +23,7 @@ regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/Test/", corpus
   
   ## Importation du corpus : 
   
-  corpus = fread(corpus)
+  corpus = fread(corpus, encoding = "UTF-8")
   
   # Auxiliaires : 
   

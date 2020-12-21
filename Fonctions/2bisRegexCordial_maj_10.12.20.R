@@ -25,7 +25,7 @@ regex_corpus_entier <- function(path = "~/Dropbox/2019-2020/Stage/corpus_test/")
   ## Importation du corpus : 
   
   corpus = plyr::ldply(list.files(pattern = "*.cnr|*.csv"), function(filename) { # ou .csv
-    dum = read.csv(filename, sep = "\t", stringsAsFactors = FALSE)
+    dum = read.csv(filename, sep = "\t", stringsAsFactors = FALSE, encoding = "UTF-8")
     #If you want to add the filename as well on the column
     dum$Oeuvre = filename
     return(dum)

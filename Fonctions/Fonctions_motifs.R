@@ -75,7 +75,7 @@ regex_corpus_entier_UDPipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/",
   
   ## Importation du corpus : 
   
-  corpus = fread(corpus)
+  corpus = fread(corpus, encoding = "UTF-8")
   
   # Auxiliaires : 
   
@@ -792,7 +792,7 @@ regex_corpus_entier_Cordial <- function(path = "~/Dropbox/2019-2020/Stage/corpus
   ## Importation du corpus : 
   
   corpus = plyr::ldply(list.files(pattern = "*.cnr|*.csv"), function(filename) { # ou .csv
-    dum = read.csv(filename, sep = "\t", stringsAsFactors = FALSE)
+    dum = read.csv(filename, sep = "\t", stringsAsFactors = FALSE, encoding = "UTF-8")
     #If you want to add the filename as well on the column
     dum$Oeuvre = filename
     return(dum)
