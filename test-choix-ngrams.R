@@ -1,3 +1,5 @@
+## Test slider :
+
 ## Fonction Wordcloud : ##
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
@@ -14,11 +16,11 @@
 
 # == (sortie du script de regex)
 
-motifs_nuage <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", 
-                         csv = "Corpus_motifs_UDPipe.csv", nmots = 55){
+motifs_nuage <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", 
+                         csv = "Corpus_motifs_UDPipe.csv", nmots = 55, nb_ngrams = 5){
   
   # Librairies :
-  
+  require("slider")  
   require("dplyr")
   require("tidytext")
   require("tidyverse")
@@ -43,15 +45,23 @@ motifs_nuage <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
   
   ## Retrait des cases vides :
   corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
+
   
-  ## Fivegrams :
-  corpus_spec_punct <- corpus_spec  %>%
-    mutate(next_word = lead(motifs),
-           next_word2 = lead(motifs, 2),
-           next_word3 = lead(motifs, 3),
-           next_word4 = lead(motifs, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
-    mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
+  # Slider test for fivegrams :
+  
+  # Creating 5-grams means setting .after to 4 and removing last 4 rows
+  corpus_spec_punct <- corpus_spec %>%
+    mutate(ngrammotif = slide_chr(mots, paste, collapse = " ", .after = nb_ngrams)) %>%
+    head(-nb_ngrams)
+  
+  # ## Fivegrams :
+  # corpus_spec_punct <- corpus_spec  %>%
+  #   mutate(next_word = lead(motifs),
+  #          next_word2 = lead(motifs, 2),
+  #          next_word3 = lead(motifs, 3),
+  #          next_word4 = lead(motifs, 4)) %>%
+  #   filter(!is.na(next_word), !is.na(next_word2), , !is.na(next_word3), , !is.na(next_word4)) %>%
+  #   mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
   corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
@@ -124,9 +134,8 @@ motifs_nuage <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
   
 }
 
-  
-motifs_nuage(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", 
-             csv = "Corpus_motifs_UDPipe.csv", nmots = 55)
+
+motifs_nuage(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", 
+             csv = "Corpus_motifs_UDPipe.csv", nmots = 20, nb_ngrams = 5)
 
 
-    

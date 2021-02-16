@@ -1657,7 +1657,7 @@ motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Test/", csv = "UDPipe_c
            next_word2 = lead(motifs, 2),
            next_word3 = lead(motifs, 3),
            next_word4 = lead(motifs, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2)) %>%
+    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
     mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
@@ -1791,7 +1791,7 @@ calcul_de_specificites <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", c
            next_word2 = lead(motifs, 2),
            next_word3 = lead(motifs, 3),
            next_word4 = lead(motifs, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2)) %>%
+    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
     mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
@@ -1999,7 +1999,7 @@ barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "
            next_word2 = lead(motifs, 2),
            next_word3 = lead(motifs, 3),
            next_word4 = lead(motifs, 4)) %>%
-    #filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
+    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
     mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
@@ -2120,7 +2120,7 @@ motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv
            next_word2 = lead(motifs, 2),
            next_word3 = lead(motifs, 3),
            next_word4 = lead(motifs, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2)) %>%
+    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
     mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
@@ -2522,7 +2522,7 @@ retour_texte_specificites <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/S
            next_word2 = lead(motifs, 2),
            next_word3 = lead(motifs, 3),
            next_word4 = lead(motifs, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2)) %>%
+    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word4), !is.na(next_word4)) %>%
     mutate(ngrammotifs = paste(motifs, next_word, next_word2, next_word3, next_word4))
   
   ## Fivegrams texte : 
@@ -2533,7 +2533,7 @@ retour_texte_specificites <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/S
            next_word2 = lead(mots, 2),
            next_word3 = lead(mots, 3),
            next_word4 = lead(mots, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2)) %>%
+    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
     mutate(ngrammots = paste(mots, next_word, next_word2, next_word3, next_word4))
   
   corpus_five <- corpus_five[,c("mots", "ngrammots", "ngrammotifs", "Oeuvre")]
@@ -2624,7 +2624,7 @@ retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/20
            next_word2 = lead(motifs, 2),
            next_word3 = lead(motifs, 3),
            next_word4 = lead(motifs, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2)) %>%
+    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
     mutate(ngrammotifs = paste(motifs, next_word, next_word2, next_word3, next_word4))
   
   ## Fivegrams texte : 
@@ -2635,7 +2635,7 @@ retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/20
            next_word2 = lead(mots, 2),
            next_word3 = lead(mots, 3),
            next_word4 = lead(mots, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2)) %>%
+    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
     mutate(ngrammots = paste(mots, next_word, next_word2, next_word3, next_word4))
   
   corpus_five <- corpus_five[,c("mots", "ngrammots", "ngrammotifs", "Oeuvre")]
