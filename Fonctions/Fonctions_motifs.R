@@ -1493,9 +1493,9 @@ motifs_nuage <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
   
 }
 
-# Fonction TF-IDF :
+# Fonction TF-IDF (màj : 15 février 2021) :
 
-tf_idf_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
+tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Git-Motifs/",
                           csv = "Corpus_motifs_UDPipe.csv", nombre_motifs = 20){
   
   ## Importation des librairies : 
@@ -1529,7 +1529,7 @@ tf_idf_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
            next_word2 = lead(motifs, 2),
            next_word3 = lead(motifs, 3),
            next_word4 = lead(motifs, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2)) %>%
+    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
     mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
@@ -1560,6 +1560,10 @@ tf_idf_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
     bind_tf_idf(motifs, Oeuvre, n)
   
   corpus_words_ngrams %>%
+    select(-total) %>%
+    arrange(desc(tf_idf))
+  
+  tf_idf_export <- corpus_words_ngrams %>%
     select(-total) %>%
     arrange(desc(tf_idf))
   
@@ -1594,20 +1598,23 @@ tf_idf_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/",
     coord_flip() +
     theme_minimal()
   
-  plot_tfidf <- as.numeric(readline("Visualisation séparée, tapez 1 et enter \n Visualisation groupée, tapez 2 et enter"))
+  plot_tfidf <- as.numeric(readline("Visualisation séparée, tapez 1 et enter \n Visualisation groupée, tapez 2 et enter \n Sauvergarde dans un csv, tapez 3"))
   
   if(plot_tfidf == 1){
     return(tf_idf_grid)
     
   }
   
-  
   if(plot_tfidf == 2){
     return(tf_idf_all)
   }
   
+  if(plot_tfidf == 3){
+    write_csv(tf_idf_export, "Tf-idf.csv")
+  }
+  
   else{
-    print("Votre choix ne correspond pas aux critères binaires proposés...!")
+    print("Votre choix ne correspond pas aux critères ternaires proposés...!")
   }
   
 }
