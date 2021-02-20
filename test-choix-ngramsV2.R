@@ -20,6 +20,7 @@ motifs_nuage <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
                          csv = "Corpus_motifs_UDPipe.csv", nmots = 55, nb_ngrams = 5){
   
   # Librairies :
+
   require("slider")  
   require("dplyr")
   require("tidytext")
@@ -28,6 +29,7 @@ motifs_nuage <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   require("RColorBrewer")
   require("reshape2")
   require("ggsci")
+  require("data.table")
   
   # Lecture des données :
   
@@ -51,7 +53,7 @@ motifs_nuage <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   
   # Creating 5-grams means setting .after to 4 and removing last 4 rows
   corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(mots, paste, collapse = " ", .after = nb_ngrams)) %>%
+    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_ngrams-1)) %>%
     head(-nb_ngrams)
   
   # ## Fivegrams :
@@ -136,6 +138,6 @@ motifs_nuage <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
 
 
 motifs_nuage(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", 
-             csv = "Corpus_motifs_UDPipe.csv", nmots = 20, nb_ngrams = 5)
+             csv = "Corpus_motifs_UDPipe.csv", nmots = 20, nb_ngrams = 2)
 
 

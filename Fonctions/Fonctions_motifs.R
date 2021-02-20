@@ -2016,6 +2016,13 @@ barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "
   
   corpus_punct$index <- cumsum(!duplicated(corpus_punct$Oeuvre))
   
+  # Correction d'un léger bug sur la nature de l'objet.
+  # int => num
+  
+  corpus_punct$index <- as.numeric(corpus_punct$index)
+  
+  # str(corpus_punct)
+  
   corpus_punct_n <- corpus_punct %>% 
     dplyr::count(motifs, index, sort = T)
   
@@ -2073,7 +2080,7 @@ barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "
   
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Barycentre_motifs.csv', tapez 1 et enter \n dans une variable R 'corpus_barycentre', tapez 2")))
   if(toprint==1){
-    write.csv(corpus_barycentre_pourcentage, "Barycentre_motifs.csv", fileEncoding = "UTF-8", row.names = F)
+    write.csv(corpus_barycentre_pourcentage, "Barycentre_motifs.csv", fileEncoding = "UTF-8")
   }
   if(toprint==2){
     corpus_barycentre <<- corpus_barycentre_pourcentage
@@ -2094,6 +2101,7 @@ motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv
   require("tidyverse")
   require("ggplot2")
   require("ggridges")
+  require("data.table")
   
   # Lecture des données :
   
@@ -2128,11 +2136,11 @@ motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv
   
   # Extraction des motifs pertinents :
   
-  corpus_spec_punct$m1 <- corpus_spec_punct$ngrammotif == "NC à le NC de"
-  corpus_spec_punct$m2 <- corpus_spec_punct$ngrammotif == "NC de le NC de"
-  corpus_spec_punct$m3 <- corpus_spec_punct$ngrammotif == "le NC et le NC"
-  corpus_spec_punct$m4 <- corpus_spec_punct$ngrammotif == "le ADJ NC de le"
-  corpus_spec_punct$m5 <- corpus_spec_punct$ngrammotif == "à le NC ce être"
+  corpus_spec_punct$m1 <- corpus_spec_punct$ngrammotif == motif1
+  corpus_spec_punct$m2 <- corpus_spec_punct$ngrammotif == motif2
+  corpus_spec_punct$m3 <- corpus_spec_punct$ngrammotif == motif3
+  corpus_spec_punct$m4 <- corpus_spec_punct$ngrammotif == motif4
+  corpus_spec_punct$m5 <- corpus_spec_punct$ngrammotif == motif5
   
   # Renommer les motifs :
   
@@ -2187,7 +2195,7 @@ motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv
   
   ggplot(corpus_melt, aes(x = `value`, y = `motifs`, fill = `motifs`)) +
     stat_density_ridges(bandwidth = bd, na.rm = T) +
-    scale_fill_viridis_d() +
+    scale_fill_brewer() +
     labs(title = titre_graphique) +
     theme_bw()
   

@@ -2,17 +2,6 @@
 ### Analyse de la densité des motifs ###
 
 ## Analyse de densité des motifs une oeuvre : ##
-path = "~/Dropbox/2019-2020/Stage/Test/"
-csv = "Corpus_motifs_UDPipe.csv"
-filtre = "13_germinal.txt"
-
-motif1 = "NC à le NC de"
-motif2 = "NC de le NC de"
-motif3 = "le NC et le NC"
-motif4 = "le ADJ NC de le"
-motif5 = "à le NC ce être"
-bd = 4000
-titre_graphique = "Densité sur cinq motifs - Germinal"
 
 motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "Corpus_motifs_UDPipe.csv", 
                            filtre = "13_germinal.txt", motif1 = "NC à le NC de", motif2 = "NC de le NC de",
@@ -26,6 +15,7 @@ motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv
   require("tidyverse")
   require("ggplot2")
   require("ggridges")
+  require("data.table")
   
   # Lecture des données :
   
@@ -52,7 +42,7 @@ motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv
            next_word2 = lead(motifs, 2),
            next_word3 = lead(motifs, 3),
            next_word4 = lead(motifs, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2)) %>%
+    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
     mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
@@ -60,11 +50,11 @@ motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv
   
   # Extraction des motifs pertinents :
   
-  corpus_spec_punct$m1 <- corpus_spec_punct$ngrammotif == "NC à le NC de"
-  corpus_spec_punct$m2 <- corpus_spec_punct$ngrammotif == "NC de le NC de"
-  corpus_spec_punct$m3 <- corpus_spec_punct$ngrammotif == "le NC et le NC"
-  corpus_spec_punct$m4 <- corpus_spec_punct$ngrammotif == "le ADJ NC de le"
-  corpus_spec_punct$m5 <- corpus_spec_punct$ngrammotif == "à le NC ce être"
+  corpus_spec_punct$m1 <- corpus_spec_punct$ngrammotif == motif1
+  corpus_spec_punct$m2 <- corpus_spec_punct$ngrammotif == motif2
+  corpus_spec_punct$m3 <- corpus_spec_punct$ngrammotif == motif3
+  corpus_spec_punct$m4 <- corpus_spec_punct$ngrammotif == motif4
+  corpus_spec_punct$m5 <- corpus_spec_punct$ngrammotif == motif5
   
   # Renommer les motifs :
   
@@ -119,15 +109,25 @@ motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv
   
   ggplot(corpus_melt, aes(x = `value`, y = `motifs`, fill = `motifs`)) +
     stat_density_ridges(bandwidth = bd, na.rm = T) +
-    scale_fill_viridis_d() +
+    scale_fill_brewer() +
     labs(title = titre_graphique) +
     theme_bw()
   
 }
 
 
-motifs_densite(path = "~/Dropbox/2019-2020/Stage/Test/", csv = "Corpus_motifs_UDPipe.csv", 
-               filtre = "13_germinal.txt", motif1 = "NC à le NC de", motif2 = "NC de le NC de",
-               motif3 = "le NC et le NC", motif4 = "le ADJ NC de le", motif5 = "à le NC ce être",
-               bd = 4000, titre_graphique = "Densité sur cinq motifs - Germinal")
+motifs_densite(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", csv = "Corpus_motifs_UDPipe.csv", 
+               filtre = "Les_Beaux_Draps.txt", motif1 = "NC à le NC de", motif2 = "NC de le NC de",
+               motif3 = "le NC et le NC", motif4 = "le ADJ NC de le", motif5 = "le NC ce NC de",
+               bd = 4000, titre_graphique = "Densité sur cinq motifs - BD")
 
+path = "~/Dropbox/2020-2021/Corpus-test-motifs/" 
+csv = "Corpus_motifs_UDPipe.csv" 
+filtre = "Les_Beaux_Draps.txt" 
+motif1 = "le NC , de le"
+motif2 = "NC de le NC de"
+motif3 = "le NC et le NC" 
+motif4 = "le ADJ NC de le" 
+motif5 = "NC à le NC de" 
+bd = 4000
+titre_graphique = "Densité sur cinq motifs - BD"

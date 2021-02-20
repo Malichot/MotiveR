@@ -13,6 +13,9 @@
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
+path = "~/Dropbox/2020-2021/Corpus-test-motifs/"
+csv = "Corpus_motifs_UDPipe.csv"
+
 barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "Corpus_motifs_UDPipe.csv"){
   
   require("dplyr")
@@ -39,7 +42,7 @@ barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "
            next_word2 = lead(motifs, 2),
            next_word3 = lead(motifs, 3),
            next_word4 = lead(motifs, 4)) %>%
-    #filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
+    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
     mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
@@ -55,6 +58,13 @@ barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "
   # 1 période = 1 oeuvre :
   
   corpus_punct$index <- cumsum(!duplicated(corpus_punct$Oeuvre))
+
+  # Correction d'un léger bug sur la nature de l'objet.
+  # int => num
+  
+  corpus_punct$index <- as.numeric(corpus_punct$index)
+
+  # str(corpus_punct)
   
   corpus_punct_n <- corpus_punct %>% 
     dplyr::count(motifs, index, sort = T)
