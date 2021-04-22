@@ -36,6 +36,11 @@ regex_corpus_entier_Cordial(path = "~/Dropbox/2019-2020/Stage/Corpus_Retour_au_t
 motifs_nuage(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", 
              csv = "Corpus_motifs_UDPipe.csv", nmots = 25, nb_grams = 4)
 
+# Histogrammes : 
+
+motifs_histograms(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", 
+                  csv = "Corpus_motifs_UDPipe.csv", nmots = 30, nb_grams = 5)
+
 # TF-IDF :
 tf_idf_motifs(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
               csv = "Corpus_motifs_UDPipe.csv", nb_grams = 5, nombre_motifs = 20)
