@@ -13,6 +13,13 @@ Encodage et noms de fichiers.
 
 * Les fichiers doivent être du texte brut, sous format .txt.
 
+Si vous travaillez sur Windows, l'encodage de vos fichiers sera sûrement windows-1252. Pour détecter et transformer rapidement votre encodage, une petite fonction bash à exécuter dans un terminal peut vous être utile :
+
+- Ouvrir un terminal.
+- Aller dans le répertoire où se trouvent les .txt et lancez la commande : chardetect nom\_du\_fichier.txt
+- Pour convertir les fichiers en utf-8, lancez la commande : for f in *.txt; do iconv -f windows-1252 -t utf-8 $f > $f-ut8.txt; done
+- Les fichiers d'origine sont conservés, de nouveaux fichiers sont générés avec l'extension -ut8.txt.
+
 
 ## Processus général.
 
