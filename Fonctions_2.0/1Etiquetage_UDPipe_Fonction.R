@@ -6,6 +6,8 @@
 
 # Télécharger une seule fois le modèle avec la commande suivante :
 
+setwd("~/Dropbox/2020-2021/Motifs/model_udpipe/")
+
 library("udpipe")
 dl <- udpipe_download_model(language = "french")
 
@@ -17,8 +19,8 @@ dl <- udpipe_download_model(language = "french")
 # Sortie : mots || lemmes || POS || feats || Oeuvre
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
-annotation_udpipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/", 
-                              model = "~/Dropbox/2019-2020/Stage/french-gsd-ud-2.4-190531.udpipe"){
+annotation_udpipe <- function(path = "~/Dropbox/2020-2021/Motifs/Corpus_test_motifs/", 
+                              model = "~/Dropbox/2020-2021/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe"){
   
   # Librairies: 
   require("udpipe")
@@ -70,8 +72,8 @@ annotation_udpipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/",
 }
 
 
-annotation_udpipe(path = "~/Dropbox/2019-2020/Stage/corpus_test/txt/",
-                  model = "~/Dropbox/2019-2020/Stage/french-gsd-ud-2.4-190531.udpipe")
+annotation_udpipe(path = "~/Dropbox/2020-2021/Motifs/Corpus_test_motifs/", 
+                  model = "~/Dropbox/2020-2021/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe")
 
 
  

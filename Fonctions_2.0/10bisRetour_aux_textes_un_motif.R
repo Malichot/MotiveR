@@ -6,7 +6,7 @@
 
 retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_UDPipe.csv",
                                                csv_corpus_specificites = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_specificites.csv", 
-                                               motif_cible = "le NC de le NC"){
+                                               motif_cible = "le NC de le NC", nb_grams = 5){
   ## Importation des librairies : 
   require("tidytext")
   require("tidyverse")
@@ -19,26 +19,44 @@ retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/20
   corpus_spec <- fread(csv_corpus_specificites)
   corpus <- fread(csv_corpus_motifs, encoding = "UTF-8")
   
-  ## Fivegrams de motifs :
+  # ## Fivegrams de motifs :
+  # 
+  # corpus_five <- corpus  %>%
+  #   mutate(next_word = lead(motifs),
+  #          next_word2 = lead(motifs, 2),
+  #          next_word3 = lead(motifs, 3),
+  #          next_word4 = lead(motifs, 4)) %>%
+  #   filter(!is.na(next_word), !is.na(next_word2)) %>%
+  #   mutate(ngrammotifs = paste(motifs, next_word, next_word2, next_word3, next_word4))
+  # 
+  # ## Fivegrams texte : 
+  # 
+  # corpus_five <- corpus_five %>%
+  #   group_by(Oeuvre) %>%
+  #   mutate(next_word = lead(mots),
+  #          next_word2 = lead(mots, 2),
+  #          next_word3 = lead(mots, 3),
+  #          next_word4 = lead(mots, 4)) %>%
+  #   filter(!is.na(next_word), !is.na(next_word2)) %>%
+  #   mutate(ngrammots = paste(mots, next_word, next_word2, next_word3, next_word4))
   
-  corpus_five <- corpus  %>%
-    mutate(next_word = lead(motifs),
-           next_word2 = lead(motifs, 2),
-           next_word3 = lead(motifs, 3),
-           next_word4 = lead(motifs, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2)) %>%
-    mutate(ngrammotifs = paste(motifs, next_word, next_word2, next_word3, next_word4))
+  ## Choix du nombre de ngrams 
   
-  ## Fivegrams texte : 
+  corpus_five <- corpus %>%
+    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
   
+  # Transformation en tibble pour éviter l'erreur ?
+  
+  nb <- nb_grams-1
+  corpus_five <- as_tibble(corpus_five) %>%
+    head(-nb)
+    
   corpus_five <- corpus_five %>%
     group_by(Oeuvre) %>%
-    mutate(next_word = lead(mots),
-           next_word2 = lead(mots, 2),
-           next_word3 = lead(mots, 3),
-           next_word4 = lead(mots, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2)) %>%
-    mutate(ngrammots = paste(mots, next_word, next_word2, next_word3, next_word4))
+    mutate(ngrammotif = slide_chr(mots, paste, collapse = " ", .after = nb_grams-1))
+  
+  corpus_five <- as_tibble(corpus_five) %>%
+    head(-nb)
   
   corpus_five <- corpus_five[,c("mots", "ngrammots", "ngrammotifs", "Oeuvre")]
   

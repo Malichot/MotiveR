@@ -52,8 +52,14 @@ barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "
   # Creating 5-grams means setting .after to 4 and removing last 4 rows
   # library : slider
   corpus_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1)) %>%
-    head(-nb_grams)
+    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
+  # head(-nb_grams-1) : ne fonctionne pas : Value of SET_STRING_ELT() must be a 'CHARSXP' not a 'character'
+  
+  # Transformation en tibble pour éviter l'erreur ?
+  
+  nb <- nb_grams-1
+  corpus_spec_punct <- as_tibble(corpus_spec_punct) %>%
+    head(-nb)
   
   # Sélection des colonnes motifs ngram et Oeuvre :
   corpus_punct <- corpus_punct[,c("ngrammotif", "Oeuvre")]

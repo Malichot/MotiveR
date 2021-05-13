@@ -1430,8 +1430,7 @@ motifs_nuage <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   # Creating 5-grams means setting .after to 4 and removing last 4 rows
   # library : slider
   corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1)) %>%
-    head(-nb_grams)
+    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
   
   
   # Sélection des colonnes motifs ngram et Oeuvre :
@@ -1555,8 +1554,7 @@ motifs_histograms <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   # Creating 5-grams means setting .after to 4 and removing last 4 rows
   # library : slider
   corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1)) %>%
-    head(-nb_grams)
+    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
   
   
   # Sélection des colonnes motifs ngram et Oeuvre :
@@ -1683,8 +1681,7 @@ tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   # Creating 5-grams means setting .after to 4 and removing last 4 rows
   # library : slider
   corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1)) %>%
-    head(-nb_grams)
+    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
   corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
@@ -1823,8 +1820,7 @@ motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Test/", csv = "UDPipe_c
   # Creating 5-grams means setting .after to 4 and removing last 4 rows
   # library : slider
   corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1)) %>%
-    head(-nb_grams)
+    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
   corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
@@ -1968,8 +1964,7 @@ calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Corpus-test-motif
   # Creating 5-grams means setting .after to 4 and removing last 4 rows
   # library : slider
   corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1)) %>%
-    head(-nb_grams)
+    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
   corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
@@ -2189,8 +2184,7 @@ barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "
   # Creating 5-grams means setting .after to 4 and removing last 4 rows
   # library : slider
   corpus_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1)) %>%
-    head(-nb_grams)
+    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
   corpus_punct <- corpus_punct[,c("ngrammotif", "Oeuvre")]

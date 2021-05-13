@@ -65,8 +65,7 @@ motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Test/", csv = "UDPipe_c
   # Creating 5-grams means setting .after to 4 and removing last 4 rows
   # library : slider
   corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1)) %>%
-    head(-nb_grams)
+    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
   
   # Sélection des colonnes motifs ngram et Oeuvre :
   corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]

@@ -6,12 +6,12 @@
 # Entrée : corpus = UDPipe_corpus_complet.csv : mots || lemmes || POS || feats || Oeuvre (sortie du script UDPipe_Fonction.R)
 # Sortie : Corpus_motifs_UDPipe.csv avec : mots || motifs || Oeuvre.
 
-## ## ## ## ## ## ##  ## ## ## ## ## ##  ## ## ##  ## ## ## 
-path = "~/Dropbox/2019-2020/Stage/corpus_test/"
+## ## ## ## ## ## ##  ## ## ## ## ## ##  ## ## ## ## ## ## 
+
+path = "~/Dropbox/2020-2021/Motifs/" 
 corpus = "UDPipe_corpus_complet.csv"
 
-
-regex_corpus_entier_UDPipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/", corpus = "UDPipe_corpus_complet.csv"){
+regex_corpus_entier_UDPipe <- function(path = "~/Dropbox/2020-2021/Motifs/", corpus = "UDPipe_corpus_complet.csv"){
   
   # Librairies : 
   
@@ -24,7 +24,11 @@ regex_corpus_entier_UDPipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/",
   
   ## Importation du corpus : 
   
-  corpus = fread(corpus, encoding = "UTF-8")
+  corpus = fread(corpus, encoding = "UTF-8", header = TRUE)
+  
+  ## Vérification que les colonnes sont les bonnes : 
+  
+  corpus <- corpus[,c('mots', 'lemmes', 'POS', 'feats', 'Oeuvre')] 
   
   # Auxiliaires : 
   
@@ -716,13 +720,15 @@ regex_corpus_entier_UDPipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/",
   
   
   
-  toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_UDPipe.csv', tapez 1 et enter")))
+  toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_UDPipe.csv', tapez 1 et enter \n
+                                Dans une variable R corpus_motifs, tapez 2 et enter")))
   if(toprint==1){
     write.csv(corpus, "Corpus_motifs_UDPipe.csv", fileEncoding = "UTF-8")
+  }
+  if(toprint==2){
+    corpus_motifs <<- corpus
   }
 }
 
 
-regex_corpus_entier_UDPipe(path = "~/Dropbox/2019-2020/Stage/corpus_test/", corpus = "UDPipe_corpus_complet.csv")
-
-# Pb : auxiliaires non pris en compte.
+regex_corpus_entier_UDPipe(path = "~/Dropbox/2020-2021/Motifs/", corpus = "UDPipe_corpus_complet.csv")
