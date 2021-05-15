@@ -1,4 +1,6 @@
-## Stage - Legallois - Script UDPipe ##
+## Titre : Scripts motifs - Choix nombre ngrams
+## Auteurs : Dominique Legallois, Antoine de Sacy
+## Date : 15 mai 2021.
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 

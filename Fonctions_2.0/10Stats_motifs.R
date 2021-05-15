@@ -1,89 +1,146 @@
-# Script Legallois #
-# Fonction calcul de spécificités #
-# Conservation de la ponctuation #
+## Titre : Scripts motifs - Fonction génération de statistiques générales
+## Auteurs : Dominique Legallois, Antoine de Sacy
+## Date : 15 mai 2021.
 
-# Entrée : corpus de motifs avec : mots || motifs || Oeuvre
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
-calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", nb_grams = 5,
-                                   csv = "Corpus_motifs_UDPipe.csv"){
+# Script pour statistiques sur le corpus :
+
+# Entrée : sortie du script de choix ngrams ou dataframe : mots | motifs | Oeuvre.
+# Sortie : Motifs_statistisques.csv avec : 
+# Oeuvre | motifs | n (fréq absolue) | nb_total_mots (dans l'oeuvre) | 
+# n_rel (fréquence relative) | spécificités oeuvre par oeuvre | 
+# n_total (fréquence total du motif dans le corpus) | barycentre |
+# pourcentage (présence du motif par rapport au reste du corpus)
+
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+
+stats_motifs <- function(path = "~/Dropbox/2020-2021/Motifs/", 
+                         csv = "corpus_motifs_grams.csv"){
   
   ## Librairies :
-  require("dplyr")
-  require("slider")
   require("tidytext")
   require("tidyverse")
   require("ggplot2")
   require("tidyr")
   require("data.table")
   require("reshape2")
-  
+
   ## Répertoire de travail :
   setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8")
+  corpus_spec <- fread(csv, encoding = "UTF-8", 
+                       header = TRUE, stringsAsFactors = FALSE)
   
-  corpus_spec <- as_tibble(corpus_spec) %>%
-    group_by(Oeuvre)
-  
-  # Vérification okazou :
-  names(corpus_spec) <- c("mots", "motifs", "Oeuvre")
+  # Vérification okazou (pb index) :
+  corpus_spec <- corpus_spec[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
   corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
   
-  ## Fivegrams :
-  # corpus_spec_punct <- corpus_spec  %>%
-  #   mutate(next_word = lead(motifs),
-  #          next_word2 = lead(motifs, 2),
-  #          next_word3 = lead(motifs, 3),
-  #          next_word4 = lead(motifs, 4)) %>%
-  #   filter(!is.na(next_word), !is.na(next_word2)) %>%
-  #   mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
+  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
   
-  # Nouvelle fonction n-grams pour choix du gram :
+  ## ## ## ## ## ## ## ## ## ## ## ##  BARYCENTRES ## ## ## ## ## ## ## ## ## ## ## ## ## #
   
-  # Creating 5-grams means setting .after to 4 and removing last 4 rows
-  # library : slider
-  corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
-  # head(-nb_grams-1) : ne fonctionne pas : Value of SET_STRING_ELT() must be a 'CHARSXP' not a 'character'
+  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
   
-  # Transformation en tibble pour éviter l'erreur ?
+  corpus_punct <- corpus_spec
   
-  nb <- nb_grams-1
-  corpus_spec_punct <- as_tibble(corpus_spec_punct) %>%
-    head(-nb)
+  corpus_punct$index <- cumsum(!duplicated(corpus_punct$Oeuvre))
   
-  # Sélection des colonnes motifs ngram et Oeuvre :
-  corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
+  # Correction d'un léger bug sur la nature de l'objet.
+  # int => num
   
-  names(corpus_spec_punct) <- c("motifs", "Oeuvre")
+  corpus_punct$index <- as.numeric(corpus_punct$index)
+  
+  # str(corpus_punct)
+  
+  corpus_punct_n <- corpus_punct %>% 
+    dplyr::count(motifs, index, sort = T)
+  
+  corpus_punct_total <- corpus_punct
+  
+  corpus_punct_total <- corpus_punct_total %>%
+    dplyr::ungroup() %>%
+    dplyr::count(motifs, sort = T)
+  
+  names(corpus_punct_total) <- c("motifs", "n_total")
+  
+  corpus_baryc <- inner_join(corpus_punct_n, corpus_punct_total)
+  ## Colonnes de fréquences relative et absolues. ## 
+  
+  # Somme du nombre d'occ * indice / Nombre total d'occurrence de la forme.
+  
+  corpus_baryc <- corpus_baryc %>%
+    ungroup() %>%
+    mutate(barycentre = n * index / n_total)
+  
+  # Barycentres qui vont de 0 à 3 :
+  # 3 : le motif représente toutes les occurrences totales : correspond donc à un motif qui n'est présent que dans une oeuvre.
+  # 1.5 : le motif représente la moitié des occurrences totales : il est donc présent deux fois plus que dans le reste du corpus.
+  # 0,1 : le motif est quasi-absent de l'oeuvre, mais très présent dans d'autres.
+  
+  round_df <- function(x, digits) {
+    # round all numeric variables
+    # x: data frame 
+    # digits: number of digits to round
+    numeric_columns <- sapply(x, mode) == 'numeric'
+    x[numeric_columns] <-  round(x[numeric_columns], digits)
+    x
+  }
+  
+  baryc_arrondi <- round_df(corpus_baryc$barycentre, 3)
+  
+  # Changement des valeurs dans la dataframe :
+  
+  corpus_baryc$barycentre <- baryc_arrondi
+  
+  # Ordonnancement : 
+  
+  corpus_baryc <- corpus_baryc[order(-corpus_baryc$n_total),]
+  
+  # Transformation en pourcentage :
+  
+  corpus_barycentre_pourcentage <- corpus_baryc %>%
+    mutate(pourcentage = n / n_total * 100)
+  
+  poucentage_arrondi <- round_df(corpus_barycentre_pourcentage$pourcentage, 2)
+  
+  # Changement des valeurs dans la dataframe :
+  
+  corpus_barycentre_pourcentage$pourcentage <- poucentage_arrondi
+  
+  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+  
+  ## ## ## ## ## ## ## ## ## ## ## # SPÉCIFICITÉS # ## ## ## ## ## ## ## ## ## ## ## ## ##
+  
+  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
-  corpus_spec_punct <- corpus_spec_punct %>%
-    count(motifs, sort = TRUE)
+  
+  corpus_spec <- corpus_spec %>%
+    count(Oeuvre, motifs, sort = TRUE)
   
   ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
   
-  total_words <- corpus_spec_punct %>%
+  total_words <- corpus_spec %>%
     group_by(Oeuvre) %>%
     summarize(total = sum(n))
   
-  corpus_spec_punct <- left_join(corpus_spec_punct, total_words)
+  corpus_spec <- left_join(corpus_spec, total_words)
   
   ## Calcul de la fréquence relative :
   
-  corpus_spec_punct$rel_freq <- corpus_spec_punct$n / corpus_spec_punct$total
+  corpus_spec$rel_freq <- corpus_spec$n / corpus_spec$total
   
-  corpus_words_ngrams_spec <- corpus_spec_punct
+  corpus_words_ngrams_spec <- corpus_spec
   
-  ## Reshaping the data : colonnes = corpus, lignes = mots et freq
+  ## Reshaping the data : colonnes = corpus, lignes = motifs et freq
   corpus_lexical_table <- xtabs(n~motifs+Oeuvre, corpus_words_ngrams_spec)
   
   ## Ré-ordonnancement : 
   corpus_lexical_table <- corpus_lexical_table[order(-corpus_lexical_table[,1], corpus_lexical_table[,1]),]
   
   # Retrait des lignes contenant des ngrams qui ne sont pas dans tous les textes :
-  
   # Cela veut dire : toutes les valeurs de ngrams qui sont uniques (qui contienne 0)
   
   #row_substract <- apply(corpus_lexical_table, 1, function(row) all(row !=0 ))
@@ -202,14 +259,6 @@ calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Corpus-test-motif
   
   calcul_spec <- specificites(corpus_clean)
   
-  ##
-  
-  calcul_spec_test <- specificites.probabilities(corpus_clean)
-  
-  head(calcul_spec_test)
-  
-  #####
-  
   calcul_spec <- as.data.frame.matrix(calcul_spec)
   
   # Transformation des lignes dans la variable motifs :
@@ -218,22 +267,40 @@ calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Corpus-test-motif
   
   ## Ajout de la table de fréquences :
   
-  colnames(corpus_words_ngrams_spec) <- c("Oeuvre", "motifs", "n", "total", "nrel")
+  colnames(corpus_words_ngrams_spec) <- c("Oeuvre", "motifs", "n", "nb_total_mots", "n_rel")
   
-  # Fusion des dataframes :
+  
+  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+  
+  ## ## ## ## ## ## ## ## ## ## FUSION DES DATAFRAMES ## ## ## ## ## ## ## ## ## ## ## ## #
+  
+  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+  
+  
+  # Fusion calcul de spécificités avec fréquences absolues, nombre total de mots dans le corpus, frequences relatives, specificité.
+  
   calcul_spec_freq <- inner_join(corpus_words_ngrams_spec, calcul_spec)
   
-  toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_specificites.csv', tapez 1 et enter\nSauvegarder les résulats dans une variable 'res', tapez 2")))
+  # Ajout des barycentres :
+  
+  corpus_final <- inner_join(calcul_spec_freq, corpus_barycentre_pourcentage)
+  
+  corpus_final <- subset(corpus_final, select=-c(index))
+  
+  
+  
+  
+  toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Motifs_statistisques.csv', tapez 1 et enter \n Sauvegarder les résultats dans une variable R corpus_final, tapez 2 et enter")))
   if(toprint==1){
-    write.csv(calcul_spec_freq, "Corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
+    write.csv(corpus_final, "Motifs_statistisques.csv", fileEncoding = "UTF-8")
   }
   if(toprint==2){
-    res <<- calcul_spec_freq
+    result_df_stats <<- corpus_final
   }
   
 }
 
-calcul_de_specificites(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", nb_grams = 4,
-                       csv = "Corpus_motifs_UDPipe.csv")
+stats_motifs(path = "~/Dropbox/2020-2021/Motifs/",
+             csv = "corpus_motifs_grams.csv")
 
-# Sortie : Corpus_motifs_specificites.csv avec : Oeuvre || motifs || n (fréq abs) || total (nb de mots dans l'oeuvre) || nrel (fréq relative) || Spécificités par oeuvres.
+

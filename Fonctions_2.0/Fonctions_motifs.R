@@ -1,3 +1,7 @@
+## Titre : Scripts motifs - Choix nombre ngrams
+## Auteurs : Dominique Legallois, Antoine de Sacy
+## Date : 15 mai 2021.
+
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
 ## ## ## ## ## ## ## ## ## ## ## ##  LISTE DES FONCTIONS ## ## ## ## ## ## ## ## ## ## ## ## ##
@@ -5,11 +9,10 @@
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
 
-# Fonction Étiquetage : 
+# Fonction Étiquetage (màj 15 mai 2021) : 
 
-
-annotation_udpipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/", 
-                              model = "~/Dropbox/2019-2020/Stage/french-gsd-ud-2.4-190531.udpipe"){
+annotation_udpipe <- function(path = "~/Dropbox/2020-2021/Motifs/Corpus_test_motifs/", 
+                              model = "~/Dropbox/2020-2021/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe"){
   
   # Librairies: 
   require("udpipe")
@@ -56,13 +59,13 @@ annotation_udpipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/",
   head(corpus_annote_cols)
   
   # Exportation csv : 
-  write.csv(corpus_annote_cols, "UDPipe_corpus_complet.csv", fileEncoding = "UTF-8", row.names = F)
+  write.csv(corpus_annote_cols, "UDPipe_corpus_complet.csv", fileEncoding = "UTF-8")
   
 }
 
-# Fonction Transformation en motifs UDPpipe :
+# Fonction Transformation en motifs UDPpipe (màj 15 mai 2021) :
 
-regex_corpus_entier_UDPipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/", corpus = "UDPipe_corpus_complet.csv"){
+regex_corpus_entier_UDPipe <- function(path = "~/Dropbox/2020-2021/Motifs/", corpus = "UDPipe_corpus_complet.csv"){
   
   # Librairies : 
   
@@ -75,7 +78,11 @@ regex_corpus_entier_UDPipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/",
   
   ## Importation du corpus : 
   
-  corpus = fread(corpus, encoding = "UTF-8")
+  corpus = fread(corpus, encoding = "UTF-8", header = TRUE)
+  
+  ## Vérification que les colonnes sont les bonnes : 
+  
+  corpus <- corpus[,c('mots', 'lemmes', 'POS', 'feats', 'Oeuvre')] 
   
   # Auxiliaires : 
   
@@ -767,12 +774,15 @@ regex_corpus_entier_UDPipe <- function(path = "~/Dropbox/2019-2020/Stage/Test/",
   
   
   
-  toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_UDPipe.csv', tapez 1 et enter")))
+  toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_UDPipe.csv', tapez 1 et enter \n
+                                Dans une variable R corpus_motifs, tapez 2 et enter")))
   if(toprint==1){
-    write.csv(corpus, "Corpus_motifs_UDPipe.csv", fileEncoding = "UTF-8", row.names = F)
+    write.csv(corpus, "Corpus_motifs_UDPipe.csv", fileEncoding = "UTF-8")
+  }
+  if(toprint==2){
+    corpus_motifs <<- corpus
   }
 }
-
 
 # Transformation en motifs (Cordial) : 
 
@@ -1376,15 +1386,286 @@ regex_corpus_entier_Cordial <- function(path = "~/Dropbox/2019-2020/Stage/corpus
   
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_Cordial.csv', tapez 1 et enter")))
   if(toprint==1){
-    write.csv(corpus, "Corpus_motifs_Cordial.csv", fileEncoding = "UTF-8", row.names = F)
+    write.csv(corpus, "Corpus_motifs_Cordial.csv", fileEncoding = "UTF-8")
   }
 }
 
+# Fonction pour le choix du nombre de ngrams (màj 15 mai 2021) : 
 
-# Fonction Nuage de mots (màj : 24 février 2021) : 
+choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
+                            csv = "Corpus_motifs_UDPipe.csv") {
+  require("dplyr")
+  require("tidytext")
+  require("tidyverse")
+  require("data.table")
+  
+  # Lecture des données :
+  
+  setwd(path)
+  
+  corpus_spec <-
+    fread(
+      csv,
+      encoding = "UTF-8",
+      header = TRUE,
+      stringsAsFactors = FALSE
+    )
+  
+  # Vérification okazou :
+  
+  corpus_spec <- corpus_spec[, c('mots', 'motifs', 'Oeuvre')]
+  
+  ## Retrait des cases vides okazou :
+  
+  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
+  
+  # Choix du nombre de ngrams :
+  
+  choix_nb_grams <-
+    as.numeric(readline("Sélectionner le nombre de ngrams (2 à 7) et tapez enter"))
+  
+  if (choix_nb_grams == 2) {
+    # bigrams motifs :
+    
+    corpus_spec_punct <- corpus_spec  %>%
+      mutate(next_motif = lead(motifs)) %>%
+      filter(!is.na(next_motif)) %>%
+      mutate(ngrammotif = paste(motifs, next_motif))
+    
+    # bigrams mots :
+    
+    corpus_spec_punct <- corpus_spec_punct  %>%
+      mutate(next_word = lead(mots)) %>%
+      filter(!is.na(next_word)) %>%
+      mutate(ngrammot = paste(mots, next_word))
+    
+    # Sélection et renommage des colonnes :
+    
+    corpus_spec_punct <-
+      corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
+    
+    names(corpus_spec_punct) <- c("mots", "ngrammot", "motifs", "Oeuvre")
+    
+    
+  }
+  
+  if (choix_nb_grams == 3) {
+    # 3-grams motifs :
+    
+    corpus_spec_punct <- corpus_spec  %>%
+      mutate(next_motif = lead(motifs),
+             next_motif2 = lead(motifs, 2)) %>%
+      filter(!is.na(next_motif), !is.na(next_motif2)) %>%
+      mutate(ngrammotif = paste(motifs, next_motif, next_motif2))
+    
+    # 3-grams mots : 
+    
+    corpus_spec_punct <- corpus_spec_punct  %>%
+      mutate(next_word = lead(mots),
+             next_word2 = lead(mots, 2)) %>%
+      filter(!is.na(next_word), !is.na(next_word2)) %>%
+      mutate(ngrammot = paste(mots, next_word, next_word2))
+    
+    # Sélection et renommage des colonnes :
+    
+    corpus_spec_punct <-
+      corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
+    
+    names(corpus_spec_punct) <- c("mots", "ngrammot", "motifs", "Oeuvre")
+    
+  }
+  
+  if (choix_nb_grams == 4) {
+    # 4-grams motifs :
+    
+    corpus_spec_punct <- corpus_spec  %>%
+      mutate(
+        next_motif = lead(motifs),
+        next_motif2 = lead(motifs, 2),
+        next_motif3 = lead(motifs, 3)
+      ) %>%
+      filter(!is.na(next_motif),!is.na(next_motif2),!is.na(next_motif3)) %>%
+      mutate(ngrammotif = paste(motifs, next_motif, next_motif2, next_motif3))
+    
+    # 4-grams mots :
+    
+    corpus_spec_punct <- corpus_spec_punct  %>%
+      mutate(
+        next_word = lead(mots),
+        next_word2 = lead(mots, 2),
+        next_word3 = lead(mots, 3)
+      ) %>%
+      filter(!is.na(next_word),!is.na(next_word2),!is.na(next_word3)) %>%
+      mutate(ngrammot = paste(mots, next_word, next_word2, next_word3))
+    
+    # Sélection et renommage des colonnes :
+    
+    corpus_spec_punct <-
+      corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
+    
+    names(corpus_spec_punct) <- c("mots", "ngrammot", "motifs", "Oeuvre")
+    
+  }
+  
+  if (choix_nb_grams == 5) {
+    # Fivegrams motifs :
+    
+    corpus_spec_punct <- corpus_spec  %>%
+      mutate(
+        next_motif = lead(motifs),
+        next_motif2 = lead(motifs, 2),
+        next_motif3 = lead(motifs, 3),
+        next_motif4 = lead(motifs, 4)
+      ) %>%
+      filter(!is.na(next_motif),!is.na(next_motif2),!is.na(next_motif3),!is.na(next_motif4)) %>%
+      mutate(ngrammotif = paste(motifs, next_motif, next_motif2, next_motif3, next_motif4))
+    
+    # Fivegrams mots : 
+    
+    corpus_spec_punct <- corpus_spec_punct  %>%
+      mutate(
+        next_word = lead(mots),
+        next_word2 = lead(mots, 2),
+        next_word3 = lead(mots, 3),
+        next_word4 = lead(mots, 4)
+      ) %>%
+      filter(!is.na(next_word),!is.na(next_word2),!is.na(next_word3),!is.na(next_word4)) %>%
+      mutate(ngrammot = paste(mots, next_word, next_word2, next_word3, next_word4))
+    
+    # Sélection et renommage des colonnes :
+    
+    corpus_spec_punct <-
+      corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
+    
+    names(corpus_spec_punct) <- c("mots", "ngrammot", "motifs", "Oeuvre")
+    
+    
+  }
+  
+  if (choix_nb_grams == 6) {
+    # Sixgrams motifs :
+    
+    corpus_spec_punct <- corpus_spec  %>%
+      mutate(
+        next_motif = lead(motifs),
+        next_motif2 = lead(motifs, 2),
+        next_motif3 = lead(motifs, 3),
+        next_motif4 = lead(motifs, 4),
+        next_motif5 = lead(motifs, 5)
+      ) %>%
+      filter(
+        !is.na(next_motif),!is.na(next_motif2),!is.na(next_motif3),!is.na(next_motif4),!is.na(next_motif5)
+      ) %>%
+      mutate(ngrammotif = paste(
+        motifs,
+        next_motif,
+        next_motif2,
+        next_motif3,
+        next_motif4,
+        next_motif5
+      ))
+    
+    # Sixgrams mots :
+    
+    corpus_spec_punct <- corpus_spec_punct  %>%
+      mutate(
+        next_word = lead(mots),
+        next_word2 = lead(mots, 2),
+        next_word3 = lead(mots, 3),
+        next_word4 = lead(mots, 4),
+        next_word5 = lead(mots, 5)
+      ) %>%
+      filter(
+        !is.na(next_word),!is.na(next_word2),!is.na(next_word3),!is.na(next_word4),!is.na(next_word5)
+      ) %>%
+      mutate(ngrammot = paste(
+        mots,
+        next_word,
+        next_word2,
+        next_word3,
+        next_word4,
+        next_word5
+      ))
+    
+    # Sélection et renommage des colonnes :
+    
+    corpus_spec_punct <-
+      corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
+    
+    names(corpus_spec_punct) <- c("mots", "ngrammot", "motifs", "Oeuvre")
+    
+  }
+  
+  if (choix_nb_grams == 7) {
+    # 7-grams motifs :
+    
+    corpus_spec_punct <- corpus_spec  %>%
+      mutate(
+        next_motif = lead(motifs),
+        next_motif2 = lead(motifs, 2),
+        next_motif3 = lead(motifs, 3),
+        next_motif4 = lead(motifs, 4),
+        next_motif5 = lead(motifs, 5),
+        next_motif6 = lead(motifs, 6)
+      ) %>%
+      filter(
+        !is.na(next_motif),!is.na(next_motif2),!is.na(next_motif3),!is.na(next_motif4),!is.na(next_motif5),!is.na(next_motif6)
+      ) %>%
+      mutate(
+        ngrammotif = paste(
+          motifs,
+          next_motif,
+          next_motif2,
+          next_motif3,
+          next_motif4,
+          next_motif5,
+          next_motif6
+        )
+      )
+    
+    # 7-grams mots :
+    
+    corpus_spec_punct <- corpus_spec_punct  %>%
+      mutate(
+        next_word = lead(mots),
+        next_word2 = lead(mots, 2),
+        next_word3 = lead(mots, 3),
+        next_word4 = lead(mots, 4),
+        next_word5 = lead(mots, 5),
+        next_word6 = lead(mots, 6)
+      ) %>%
+      filter(
+        !is.na(next_word),!is.na(next_word2),!is.na(next_word3),!is.na(next_word4),!is.na(next_word5),!is.na(next_word6)
+      ) %>%
+      mutate(
+        ngrammot = paste(
+          mots,
+          next_word,
+          next_word2,
+          next_word3,
+          next_word4,
+          next_word5,
+          next_word6
+        )
+      )
+    
+    # Sélection et renommage des colonnes :
+    
+    corpus_spec_punct <-
+      corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
+    
+    names(corpus_spec_punct) <- c("mots", "ngrammot", "motifs", "Oeuvre")
+    
+  }
+  
+  write.csv(corpus_spec_punct, "corpus_motifs_grams.csv", fileEncoding = "UTF-8")
+  
+}
+
+# Fonction Nuage de mots (màj : 15 mai 2021) : 
 
 motifs_nuage <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", 
-                         csv = "Corpus_motifs_UDPipe.csv", nmots = 25, nb_grams = 3){
+                         csv = "Corpus_motifs_UDPipe.csv", nmots = 25){
   
   # Librairies :
   
@@ -1395,60 +1676,30 @@ motifs_nuage <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   require("RColorBrewer")
   require("reshape2")
   require("ggsci")
-  require("slider")
   require("data.table")
   
   # Lecture des données :
   
   setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8")
+  corpus_spec <- fread(csv, encoding = "UTF-8", header = TRUE, stringsAsFactors = FALSE)
+  
+  # Vérification okazou (pb index) :
+  corpus <- corpus_spec[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
-  
-  ## Mise sous la forme tidy :
-  
-  # Vérification okazou :
-  names(corpus_spec) <- c("mots", "motifs", "Oeuvre")
-  
-  ## Retrait des cases vides :
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
-  
-  ## Fivegrams :
-  # corpus_spec_punct <- corpus_spec  %>%
-  #   mutate(next_word = lead(motifs),
-  #          next_word2 = lead(motifs, 2),
-  #          next_word3 = lead(motifs, 3),
-  #          next_word4 = lead(motifs, 4)) %>%
-  #   filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
-  #   mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
-  # 
-  
-  # Nouvelle fonction n-grams pour choix du gram :
-  
-  # Creating 5-grams means setting .after to 4 and removing last 4 rows
-  # library : slider
-  corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
-  
-  
-  # Sélection des colonnes motifs ngram et Oeuvre :
-  corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
-  
-  names(corpus_spec_punct) <- c("motifs", "Oeuvre")
+  corpus <- corpus[complete.cases(corpus),]
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
-  corpus_spec_punct <- corpus_spec_punct %>%
+  corpus <- corpus %>%
     count(Oeuvre, motifs, sort = TRUE)
   
   ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
   
-  total_words <- corpus_spec_punct %>%
+  total_words <- corpus %>%
     group_by(Oeuvre) %>%
     summarize(total = sum(n))
   
-  corpus_words_ngrams <- left_join(corpus_spec_punct, total_words, by = "Oeuvre") 
+  corpus_words_ngrams <- left_join(corpus, total_words, by = "Oeuvre") 
   
   ## Calcul de la fréquence relative :
   
@@ -1460,7 +1711,7 @@ motifs_nuage <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   ## Visualisation sur les fréquences absolues :
   
   plot_abs <- ggplot(
-    corpus_spec_punct[1:nmots,], # TOdo : changer 50 par une variable dans la fonction
+    corpus[1:nmots,], # TOdo : changer 50 par une variable dans la fonction
     aes(
       label = motifs, size = n,
       x = Oeuvre, color = Oeuvre, fill = Oeuvre 
@@ -1504,75 +1755,44 @@ motifs_nuage <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   
 }
 
-# Fonction Histogramme (màj : 22 avril 2021) : 
+# Fonction Histogramme (màj : 15 mai 2021) : 
 
-motifs_histograms <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", 
-                              csv = "Corpus_motifs_UDPipe.csv", nmots = 25, nb_grams = 4){
+motifs_histograms <- function(path = "~/Dropbox/2020-2021/Motifs/", 
+                              csv = "corpus_motifs_grams.csv", nmots = 25){
   
   # Librairies :
   
   require("dplyr")
   require("tidytext")
   require("tidyverse")
-  require("ggwordcloud")
   require("RColorBrewer")
   require("reshape2")
   require("ggsci")
-  require("slider")
   require("data.table")
   require("ggpubr")
   
   # Lecture des données :
   
   setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8")
-  
-  ## Retrait des cases vides :
-  
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
-  
-  ## Mise sous la forme tidy :
+  corpus_grams <- fread(csv, encoding = "UTF-8", header = TRUE, stringsAsFactors = FALSE)
   
   # Vérification okazou :
-  names(corpus_spec) <- c("mots", "motifs", "Oeuvre")
+  corpus_grams <- corpus_grams[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
-  
-  ## Fivegrams :
-  # corpus_spec_punct <- corpus_spec  %>%
-  #   mutate(next_word = lead(motifs),
-  #          next_word2 = lead(motifs, 2),
-  #          next_word3 = lead(motifs, 3),
-  #          next_word4 = lead(motifs, 4)) %>%
-  #   filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
-  #   mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
-  # 
-  
-  # Nouvelle fonction n-grams pour choix du gram :
-  
-  # Creating 5-grams means setting .after to 4 and removing last 4 rows
-  # library : slider
-  corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
-  
-  
-  # Sélection des colonnes motifs ngram et Oeuvre :
-  corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
-  
-  names(corpus_spec_punct) <- c("motifs", "Oeuvre")
+  corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
-  corpus_spec_punct <- corpus_spec_punct %>%
-    count(Oeuvre, motifs, sort = TRUE)
+  corpus_grams <- corpus_grams %>%
+    count(motifs, Oeuvre, sort = TRUE)
   
   ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
   
-  total_words <- corpus_spec_punct %>%
+  total_words <- corpus_grams %>%
     group_by(Oeuvre) %>%
     summarize(total = sum(n))
   
-  corpus_words_ngrams <- left_join(corpus_spec_punct, total_words, by = "Oeuvre") 
+  corpus_words_ngrams <- left_join(corpus_grams, total_words, by = "Oeuvre") 
   
   ## Calcul de la fréquence relative :
   
@@ -1635,10 +1855,10 @@ motifs_histograms <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   
 }
 
-# Fonction TF-IDF (màj : 24 février 2021) :
+# Fonction TF-IDF (màj : 15 mai 2021) :
 
-tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
-                          csv = "Corpus_motifs_UDPipe.csv", nb_grams = 5, nombre_motifs = 20){
+tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Motifs/",
+                          csv = "corpus_motifs_grams.csv", nombre_motifs = 20){
   
   ## Importation des librairies : 
   
@@ -1653,47 +1873,20 @@ tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   # Lecture des données :
   
   setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8")
-  
-  ## Retrait des cases vides :
-  
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
-  
-  ## Mise sous la forme tidy :
+  corpus_grams <- fread(csv, encoding = "UTF-8", 
+                        header = TRUE, stringsAsFactors = FALSE)
   
   # Vérification okazou :
-  names(corpus_spec) <- c("mots", "motifs", "Oeuvre")
+  corpus_grams <- corpus_grams[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
   
-  ## Fivegrams :
-  # corpus_spec_punct <- corpus_spec  %>%
-  #   mutate(next_word = lead(motifs),
-  #          next_word2 = lead(motifs, 2),
-  #          next_word3 = lead(motifs, 3),
-  #          next_word4 = lead(motifs, 4)) %>%
-  #   filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
-  #   mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
-  
-  # Nouvelle fonction n-grams pour choix du gram :
-  
-  # Creating 5-grams means setting .after to 4 and removing last 4 rows
-  # library : slider
-  corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
-  
-  # Sélection des colonnes motifs ngram et Oeuvre :
-  corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
-  
-  names(corpus_spec_punct) <- c("motifs", "Oeuvre")
+  corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
-  corpus_spec_punct <- corpus_spec_punct %>%
+  corpus_words_ngrams <- corpus_grams %>%
     count(Oeuvre, motifs, sort = TRUE) %>%
     filter(n > 1)
-  
-  corpus_words_ngrams <- corpus_spec_punct
   
   ##  ##  ##  ##  ##  ##  ##  ##  ##  ##  ##  ##  
   
@@ -1729,7 +1922,7 @@ tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
     ungroup %>%
     ggplot(aes(motifs, tf_idf, fill = Oeuvre)) +
     geom_col(show.legend = T) +
-    labs(x = NULL, y = "tf-idf") +
+    labs(x = NULL, y = "TF-IDF") +
     facet_wrap(~Oeuvre, ncol = 2, scales = "free") +
     coord_flip() +
     theme_minimal()
@@ -1770,11 +1963,10 @@ tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   
 }
 
-# Fonction Analyse factorielle des correspondances (màj : 24 février 2021) : 
+# Fonction Analyse en composante principale (màj : 15 mai 2021) : 
 
-motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Test/", csv = "UDPipe_corpus_complet.csv", 
-                       nombre_oeuvres = 4, nb_grams = 5, nmotifs = 30, nombre_dimensions = 5, 
-                       une_oeuvre = "Rigodon.cnr"){
+motifs_acp <- function(path = "~/Dropbox/2020-2021/Motifs/", csv = "corpus_motifs_grams.csv", 
+                       freq_filter = 1){
   
   # Librairies : 
   
@@ -1792,64 +1984,26 @@ motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Test/", csv = "UDPipe_c
   # Lecture des données :
   
   setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8")
-  
-  ## Retrait des cases vides :
-  
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
-  
-  ## Mise sous la forme tidy :
+  corpus_grams <- fread(csv, encoding = "UTF-8", header = TRUE, stringsAsFactors = FALSE)
   
   # Vérification okazou :
-  names(corpus_spec) <- c("mots", "motifs", "Oeuvre")
+  corpus_grams <- corpus_grams[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
   
-  ## Fivegrams :
-  # corpus_spec_punct <- corpus_spec  %>%
-  #   mutate(next_word = lead(motifs),
-  #          next_word2 = lead(motifs, 2),
-  #          next_word3 = lead(motifs, 3),
-  #          next_word4 = lead(motifs, 4)) %>%
-  #   filter(!is.na(next_word), !is.na(next_word2)) %>%
-  #   mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
+  corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
   
-  # Nouvelle fonction n-grams pour choix du gram :
+  ## Dénombrement + filtrage des données pour alléger les normalisations :
+  corpus_grams <- corpus_grams %>%
+    dplyr::count(Oeuvre, motifs, sort = TRUE) %>%
+    filter(n > freq_filter)
   
-  # Creating 5-grams means setting .after to 4 and removing last 4 rows
-  # library : slider
-  corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
+  ## Préparation des données pour normalisation : 
+  ## lignes = motifs
+  ## colonnes = corpus
+  ## Réf : https://stackoverflow.com/questions/19346066/r-re-arrange-dataframe-some-rows-to-columns
   
-  # Sélection des colonnes motifs ngram et Oeuvre :
-  corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
-  
-  names(corpus_spec_punct) <- c("motifs", "Oeuvre")
-  
-  ## Dénombrement + filtrage éventuel des données : ex : n > 10
-  corpus_spec_punct <- corpus_spec_punct %>%
-    dplyr::count(Oeuvre, motifs, sort = TRUE)
-  
-  ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
-  
-  total_words <- corpus_spec_punct %>%
-    group_by(Oeuvre) %>%
-    dplyr::summarize(total = sum(n))
-  
-  corpus_words_ngrams <- left_join(corpus_spec_punct, total_words, by = "Oeuvre") 
-  
-  ## Calcul de la fréquence relative :
-  
-  corpus_words_ngrams$rel_freq <- corpus_words_ngrams$n / corpus_words_ngrams$total
-  
-  # Ordonnancement par fréquences relatives :
-  corpus_words_ngrams <- corpus_words_ngrams[order(corpus_words_ngrams$rel_freq, decreasing = T),] 
-  
-  ## Reshaping the data : colonnes = corpus, lignes = mots et freq
-  # Réf : https://stackoverflow.com/questions/19346066/r-re-arrange-dataframe-some-rows-to-columns
-  
-  corpus_lexical_table <- xtabs(rel_freq~motifs+Oeuvre, corpus_words_ngrams)
+  corpus_lexical_table <- xtabs(n~motifs+Oeuvre, corpus_grams)
   
   ## Ré-ordonnancement : 
   
@@ -1858,78 +2012,62 @@ motifs_afc <- function(path = "~/Dropbox/2019-2020/Stage/Test/", csv = "UDPipe_c
   head(corpus_lexical_table)
   tail(corpus_lexical_table)
   
+  ## Normalisations (zscores)
+  ## Cf.
   
-  ##  ##  ##  ##  ##  ##  ##  ##  ##  ##  ##  ##  
-  
-  # Retrait des lignes contenant des ngrams qui ne sont pas dans tous les textes :
-  # Cela veut dire : toutes les valeurs de ngrams qui sont uniques (qui contienne 0)
-  # Renversement de la dataframe avec variable = corpus
-  # rows = motifs
-  # Retrait des motifs où une valeur = 0.
-  
-  ## Nouvelle matrice nettoyée : 
-  
-  row_substract <- apply(corpus_lexical_table, 1, function(row) all(row !=0 ))
-  
-  ## Subset :
-  
-  corpus_clean <- corpus_lexical_table[row_substract,]
-  corpus_clean <- as.matrix(corpus_clean)
-  head(corpus_clean)
-  
-  ## Visualisation : 
-  
-  
-  maCA <- CA(corpus_clean, ncp = nombre_dimensions, row.sup = NULL, col.sup = NULL, 
-             quanti.sup=NULL, quali.sup = NULL, graph = T, 
-             axes = c(1,2), row.w = NULL, excl=NULL)
-  
-  
-  
-  # fviz_ca_biplot(maCA, title = "Analyse Factorielle des Correspondances")
-  
-  plot_ca <- fviz_ca_biplot(maCA, map ="rowprincipal", repel = T, select.row = list(contrib = nmotifs),
-                            title = "Analyse Factorielle des Correspondances")
-  
-  # Avec gradient de couleur en fonction des coordonnées :
-  
-  plot_grad <- fviz_ca(maCA, map ="rowprincipal", repel = T, select.row = list(contrib = nmotifs), 
-                       col.row = "coord", title = "Analyse Factorielle des Correspondances")
-  
-  # Une oeuvre particulière : 
-  
-  une_ca <- fviz_ca_biplot(maCA, map ="rowprincipal", repel = T, select.row = list(contrib = nmotifs), 
-                           select.col = list(name = une_oeuvre), title = "Analyse Factorielle des Correspondances")
-  
-  visualisation <- as.numeric(readline("Visualisation, tapez 1 et enter \n Avec gradient de couleurs, tapez 2 \n Une oeuvre particulière, vérifiez que vous l'avez entrée dans le paramètre une_oeuvre et tapez 3"))
-  
-  if(visualisation == 1){
-    return(plot_ca)
-    
+  # Z-scores sur les fréquences de motifs
+  ZTransf = function(x){
+    for(i in 1:nrow(x)){
+      x[i,] = ( x[i,] - mean(x[i,]) )  / sd(x[i,])
+    }
+    return(x)
   }
   
-  if(visualisation == 2){
-    return(plot_grad)
+  corpus_norm <- ZTransf(corpus_lexical_table)
+  
+  head(corpus_norm)
+  
+  # Check na and infinite values : 
+  
+  a <- is.infinite(corpus_norm)
+  b <- which(a == TRUE)
+  
+  if(length(b) > 0){
+    corpus_norm <- corpus_norm[-b,]
   }
   
-  if(visualisation == 3){
-    return(une_ca)
+  c <- is.na(corpus_norm)
+  d <- which(c == TRUE)
+  
+  if(length(d) > 0){
+    corpus_norm <- corpus_norm[-d,]
   }
   
-  else{
-    print("Votre choix ne correspond pas aux critères ternaires proposés...!")
-  }
+  # And now PCA : 
+  
+  corpus_PCA <- prcomp(t(corpus_norm), scale. = FALSE)
+  
+  # Impression des composants
+  
+  fviz_eig(corpus_PCA)
+  
+  # Plot !
+  
+  fviz_pca_ind(corpus_PCA,
+               col.ind = "coord", # Colorer par le cos2
+               gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+               repel = FALSE, 
+  )
   
 }
 
-# Fonction Calcul de spécificités (màj : 24 février 2021) :
+# Fonction Calcul de spécificités (màj : 15 mai 2021) :
 
-calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", nb_grams = 5,
-                                   csv = "Corpus_motifs_UDPipe.csv"){
+calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
+                                   csv = "corpus_motifs_grams.csv"){
   
   ## Librairies :
   require("dplyr")
-  require("slider")
   require("tidytext")
   require("tidyverse")
   require("ggplot2")
@@ -1939,55 +2077,32 @@ calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Corpus-test-motif
   
   ## Répertoire de travail :
   setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8")
+  corpus_spec <- fread(csv, encoding = "UTF-8", 
+                       header = TRUE, stringsAsFactors = FALSE)
   
-  corpus_spec <- as_tibble(corpus_spec) %>%
-    group_by(Oeuvre)
-  
-  # Vérification okazou :
-  names(corpus_spec) <- c("mots", "motifs", "Oeuvre")
+  # Vérification okazou (pb index) :
+  corpus_spec <- corpus_spec[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
   corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
   
-  ## Fivegrams :
-  # corpus_spec_punct <- corpus_spec  %>%
-  #   mutate(next_word = lead(motifs),
-  #          next_word2 = lead(motifs, 2),
-  #          next_word3 = lead(motifs, 3),
-  #          next_word4 = lead(motifs, 4)) %>%
-  #   filter(!is.na(next_word), !is.na(next_word2)) %>%
-  #   mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
-  
-  # Nouvelle fonction n-grams pour choix du gram :
-  
-  # Creating 5-grams means setting .after to 4 and removing last 4 rows
-  # library : slider
-  corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
-  
-  # Sélection des colonnes motifs ngram et Oeuvre :
-  corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
-  
-  names(corpus_spec_punct) <- c("motifs", "Oeuvre")
-  
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
-  corpus_spec_punct <- corpus_spec_punct %>%
-    count(motifs, sort = TRUE)
+  corpus_spec <- corpus_spec %>%
+    count(Oeuvre, motifs, sort = TRUE)
   
   ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
   
-  total_words <- corpus_spec_punct %>%
+  total_words <- corpus_spec %>%
     group_by(Oeuvre) %>%
     summarize(total = sum(n))
   
-  corpus_spec_punct <- left_join(corpus_spec_punct, total_words)
+  corpus_spec <- left_join(corpus_spec, total_words)
   
   ## Calcul de la fréquence relative :
   
-  corpus_spec_punct$rel_freq <- corpus_spec_punct$n / corpus_spec_punct$total
+  corpus_spec$rel_freq <- corpus_spec$n / corpus_spec$total
   
-  corpus_words_ngrams_spec <- corpus_spec_punct
+  corpus_words_ngrams_spec <- corpus_spec
   
   ## Reshaping the data : colonnes = corpus, lignes = mots et freq
   corpus_lexical_table <- xtabs(n~motifs+Oeuvre, corpus_words_ngrams_spec)
@@ -2136,67 +2251,48 @@ calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Corpus-test-motif
   # Fusion des dataframes :
   calcul_spec_freq <- inner_join(corpus_words_ngrams_spec, calcul_spec)
   
-  toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_specificites.csv', tapez 1 et enter\nSauvegarder les résulats dans une variable 'res', tapez 2")))
+  toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_specificites.csv', tapez 1 et enter\nSauvegarder les résulats avec fréquences 'Corpus_spec_freq' (pour retour au texte) tapez 2\nSavegarder les résultats dans une variable 'res', tapez 3")))
   if(toprint==1){
-    write.csv(calcul_spec_freq, "Corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
+    write.csv(calcul_spec, "Corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
   }
   if(toprint==2){
+    write.csv(calcul_spec_freq, "Corpus_spec_freq.csv", fileEncoding = "UTF-8")
+  }
+  if(toprint==3){
     res <<- calcul_spec_freq
   }
   
 }
 
-# Fonction Calcul des barycentres (màj : 24 février 2021) : 
+# Fonction Calcul des barycentres (màj : 15 mai 2021) : 
 
-barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "Corpus_motifs_UDPipe.csv",
-                       nb_grams = 5){
+barycentre <- function(path = "~/Dropbox/2020-2021/Motifs/", csv = "corpus_motifs_grams.csv"){
   
   require("dplyr")
-  require("slider")
   require("readr")
   require("data.table")
   
   setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8")
+  corpus_spec <- fread(csv, encoding = "UTF-8", header = TRUE, stringsAsFactors = FALSE)
   
-  corpus_spec <- as_tibble(corpus_spec) %>%
-    group_by(Oeuvre)
-  
-  corpus <- corpus_spec
-  
-  # Vérification okazou :
-  names(corpus) <- c("mots", "motifs", "Oeuvre")
+  # Vérification okazou (pb index) :
+  corpus_spec <- corpus_spec[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  corpus <- corpus[complete.cases(corpus),]
+  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
   
-  ## Fivegrams :
-  # corpus_punct <- corpus  %>%
-  #   mutate(next_word = lead(motifs),
-  #          next_word2 = lead(motifs, 2),
-  #          next_word3 = lead(motifs, 3),
-  #          next_word4 = lead(motifs, 4)) %>%
-  #   filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
-  #   mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
+  ## Barycentre :
   
-  # Nouvelle fonction n-grams pour choix du gram :
-  
-  # Creating 5-grams means setting .after to 4 and removing last 4 rows
-  # library : slider
-  corpus_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
-  
-  # Sélection des colonnes motifs ngram et Oeuvre :
-  corpus_punct <- corpus_punct[,c("ngrammotif", "Oeuvre")]
-  
-  names(corpus_punct) = c("motifs", "Oeuvre")
-  
-  # il faudrait tout d'abord pouvoir numéroter les périodes par un indice augmentant de +1 à chaque changement de période.
+  # Il faudrait tout d'abord pouvoir numéroter les périodes par un indice augmentant de +1 
+  # à chaque changement de période.
   # La formule utilisée pour calculer le barycentre est alors : B = (Somme pour tout les i de 
-  # ( Nombre d'occurences  à la période i * indice de la période i)) divisée par (Nombre total d'occurences de la forme)
+  # ( Nombre d'occurences  à la période i * indice de la période i)) 
+  # divisée par (Nombre total d'occurences de la forme)
   
   # Ajout d'une colonne index pour numéroter les périodes :
   # 1 période = 1 oeuvre :
+  
+  corpus_punct <- corpus_spec
   
   corpus_punct$index <- cumsum(!duplicated(corpus_punct$Oeuvre))
   
@@ -2213,18 +2309,18 @@ barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "
   corpus_punct_total <- corpus_punct
   
   corpus_punct_total <- corpus_punct_total %>%
-    ungroup(corpus_punct_total) %>%
-    count(motifs, sort = T)
+    dplyr::ungroup() %>%
+    dplyr::count(motifs, sort = T)
   
   names(corpus_punct_total) <- c("motifs", "n_total")
   
-  corpus_baryc <- inner_join(corpus_punct_n, corpus_punct_total) ## TODO Ajouter cette fonctionnalité innerjoin aux retours aux textes. ##
+  corpus_baryc <- inner_join(corpus_punct_n, corpus_punct_total)
   ## Colonnes de fréquences relative et absolues. ## 
   
   # Somme du nombre d'occ * indice / Nombre total d'occurrence de la forme.
   
   corpus_baryc <- corpus_baryc %>%
-    ungroup(corpus_baryc) %>%
+    ungroup() %>%
     mutate(barycentre = n * index / n_total)
   
   # Barycentres qui vont de 0 à 3 :
@@ -2271,12 +2367,18 @@ barycentre <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "
   } 
 }
 
-# Fonction calcul de densité (màj : 24 février 2021) :
-
-motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv = "Corpus_motifs_UDPipe.csv", nb_grams = 5,
-                           filtre = "13_germinal.txt", motif1 = "NC à le NC de", motif2 = "NC de le NC de",
-                           motif3 = "le NC et le NC", motif4 = "le ADJ NC de le", motif5 = "à le NC ce être",
-                           bd = 4000, titre_graphique = "Densité sur cinq motifs - Germinal"){
+# Fonction calcul de densité (màj : 15 mai 2021) :
+  
+motifs_densite <- function(path = "~/Dropbox/2020-2021/Motifs/", 
+                           csv = "corpus_motifs_grams.csv", 
+                           filtre = "Flaubert-Bovary.txt", 
+                           motif1 = "le NC de le NC",
+                           motif2 = "NC de le NC ,",
+                           motif3 = "le NC de DETPOSS NC",
+                           motif4 = "à le NC de le",
+                           motif5 = "NC de le NC .",
+                           bd = 4000,
+                           titre_graphique = "Densité sur cinq motifs - Madame Bovary"){
   
   require("dplyr")
   require("reshape2")
@@ -2286,95 +2388,80 @@ motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv
   require("ggplot2")
   require("ggridges")
   require("data.table")
-  require("slider")
   
   # Lecture des données :
   
   setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8")
+  corpus <- fread(csv, encoding = "UTF-8", header = TRUE, stringsAsFactors = FALSE)
+  
+  # Vérification okazou (pb index) :
+  corpus <- corpus[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
-  
-  ## Mise sous la forme tidy :
-  
-  # Vérification okazou :
-  names(corpus_spec) <- c("mots", "motifs", "Oeuvre")
+  corpus <- corpus[complete.cases(corpus),]
   
   # Filtre d'une oeuvre
   
-  corpus_spec <- corpus_spec %>%
+  corpus <- corpus %>%
     filter(Oeuvre == filtre)
   
-  ## Fivegrams :
-  # corpus_spec_punct <- corpus_spec  %>%
-  #   mutate(next_word = lead(motifs),
-  #          next_word2 = lead(motifs, 2),
-  #          next_word3 = lead(motifs, 3),
-  #          next_word4 = lead(motifs, 4)) %>%
-  #   filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
-  #   mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
+  # Changement de nom de colonnes pour coller au script : 
   
-  # Nouvelle fonction n-grams pour choix du gram :
+  corpus_dens <- corpus
   
-  # Creating 5-grams means setting .after to 4 and removing last 4 rows
-  # library : slider
-  corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1)) %>%
-    head(-nb_grams)
+  names(corpus_dens) <- c('mots', 'ngrammotif', 'Oeuvre')
   
   # Sélection des colonnes motifs ngram et Oeuvre :
-  corpus_spec_punct <- corpus_spec_punct[,c("mots", "ngrammotif")]
+  corpus_dens <- corpus_dens[,c("mots", "ngrammotif")]
   
   # Extraction des motifs pertinents :
   
-  corpus_spec_punct$m1 <- corpus_spec_punct$ngrammotif == motif1
-  corpus_spec_punct$m2 <- corpus_spec_punct$ngrammotif == motif2
-  corpus_spec_punct$m3 <- corpus_spec_punct$ngrammotif == motif3
-  corpus_spec_punct$m4 <- corpus_spec_punct$ngrammotif == motif4
-  corpus_spec_punct$m5 <- corpus_spec_punct$ngrammotif == motif5
+  corpus_dens$m1 <- corpus_dens$ngrammotif == motif1
+  corpus_dens$m2 <- corpus_dens$ngrammotif == motif2
+  corpus_dens$m3 <- corpus_dens$ngrammotif == motif3
+  corpus_dens$m4 <- corpus_dens$ngrammotif == motif4
+  corpus_dens$m5 <- corpus_dens$ngrammotif == motif5
   
   # Renommer les motifs :
   
   # Transformation des TRUE en rownumber :
   # == Transformer les TRUE en la valeur de l'index correspondante...
   
-  true_to_rownb1 = which(corpus_spec_punct$m1 == TRUE)
-  corpus_spec_punct$m1[corpus_spec_punct$m1 == TRUE] <- true_to_rownb1
+  true_to_rownb1 = which(corpus_dens$m1 == TRUE)
+  corpus_dens$m1[corpus_dens$m1 == TRUE] <- true_to_rownb1
   
-  true_to_rownb2 = which(corpus_spec_punct$m2 == TRUE)
-  corpus_spec_punct$m2[corpus_spec_punct$m2 == TRUE] <- true_to_rownb2
+  true_to_rownb2 = which(corpus_dens$m2 == TRUE)
+  corpus_dens$m2[corpus_dens$m2 == TRUE] <- true_to_rownb2
   
-  true_to_rownb3 = which(corpus_spec_punct$m3 == TRUE)
-  corpus_spec_punct$m3[corpus_spec_punct$m3 == TRUE] <- true_to_rownb3
+  true_to_rownb3 = which(corpus_dens$m3 == TRUE)
+  corpus_dens$m3[corpus_dens$m3 == TRUE] <- true_to_rownb3
   
-  true_to_rownb4 = which(corpus_spec_punct$m4 == TRUE)
-  corpus_spec_punct$m4[corpus_spec_punct$m4 == TRUE] <- true_to_rownb4
+  true_to_rownb4 = which(corpus_dens$m4 == TRUE)
+  corpus_dens$m4[corpus_dens$m4 == TRUE] <- true_to_rownb4
   
-  true_to_rownb5 = which(corpus_spec_punct$m5 == TRUE)
-  corpus_spec_punct$m5[corpus_spec_punct$m5 == TRUE] <- true_to_rownb5
+  true_to_rownb5 = which(corpus_dens$m5 == TRUE)
+  corpus_dens$m5[corpus_dens$m5 == TRUE] <- true_to_rownb5
   
   # Transformer les FALSE en NA :
   
-  corpus_spec_punct$m1[corpus_spec_punct$m1 == FALSE] <- 0
-  corpus_spec_punct$m2[corpus_spec_punct$m2 == FALSE] <- 0
-  corpus_spec_punct$m3[corpus_spec_punct$m3 == FALSE] <- 0
-  corpus_spec_punct$m4[corpus_spec_punct$m4 == FALSE] <- 0
-  corpus_spec_punct$m5[corpus_spec_punct$m5 == FALSE] <- 0
+  corpus_dens$m1[corpus_dens$m1 == FALSE] <- 0
+  corpus_dens$m2[corpus_dens$m2 == FALSE] <- 0
+  corpus_dens$m3[corpus_dens$m3 == FALSE] <- 0
+  corpus_dens$m4[corpus_dens$m4 == FALSE] <- 0
+  corpus_dens$m5[corpus_dens$m5 == FALSE] <- 0
   
   # Retrait colonne mots :
   
-  corpus_spec_punct <- corpus_spec_punct[-1]
+  corpus_dens <- corpus_dens[,-1]
   
   # Renommer les colonnes pour que les motifs soient affichés dans le graphique
   
-  names(corpus_spec_punct) <- c("ngrammotifs", as.character(motif1), as.character(motif2), as.character(motif3),
-                                as.character(motif4), as.character(motif5))
+  names(corpus_dens) <- c("ngrammotifs", as.character(motif1), as.character(motif2), as.character(motif3),
+                          as.character(motif4), as.character(motif5))
   
   # Transformation des données :
   
-  corpus_melt <- melt(corpus_spec_punct, id.var = "ngrammotifs")
+  corpus_melt <- melt(corpus_dens, id.var = "ngrammotifs")
   
   names(corpus_melt) <- c("ngrammotifs", "motifs", "value")
   
@@ -2394,10 +2481,10 @@ motifs_densite <- function(path = "~/Dropbox/2019-2020/Stage/Test_Regex_R/", csv
   
 }
 
-# Fonction pour statistiques générales :
+# Fonction pour statistiques générales (màj : 15 mai 2021) :
 
-stats_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", csv = "Corpus_motifs_UDPipe.csv", 
-                         nb_grams = 5){
+stats_motifs <- function(path = "~/Dropbox/2020-2021/Motifs/", 
+                         csv = "corpus_motifs_grams.csv"){
   
   ## Librairies :
   require("tidytext")
@@ -2406,45 +2493,17 @@ stats_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", csv = "Corp
   require("tidyr")
   require("data.table")
   require("reshape2")
-  require("slider")
   
   ## Répertoire de travail :
   setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8")
+  corpus_spec <- fread(csv, encoding = "UTF-8", 
+                       header = TRUE, stringsAsFactors = FALSE)
   
-  corpus_spec <- as_tibble(corpus_spec) %>%
-    group_by(Oeuvre)
-  
-  # Vérification okazou :
-  names(corpus_spec) <- c("mots", "motifs", "Oeuvre")
+  # Vérification okazou (pb index) :
+  corpus_spec <- corpus_spec[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
   corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
-  
-  ## Fivegrams :
-  
-  # corpus_spec_punct <- corpus_spec  %>%
-  #   mutate(next_word = lead(motifs),
-  #          next_word2 = lead(motifs, 2),
-  #          next_word3 = lead(motifs, 3),
-  #          next_word4 = lead(motifs, 4)) %>%
-  #   filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
-  #   mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
-  
-  # Nouvelle fonction n-grams pour choix du gram :
-  
-  # Creating 5-grams means setting .after to 4 and removing last 4 rows
-  # library : slider
-  corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1)) %>%
-    head(-nb_grams)
-  
-  # Sélection des colonnes motifs ngram et Oeuvre :
-  corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
-  
-  names(corpus_spec_punct) <- c("motifs", "Oeuvre")
-  
-  
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
   
@@ -2452,35 +2511,35 @@ stats_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", csv = "Corp
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
   
-  corpus_barycentre <- corpus_spec_punct
+  corpus_punct <- corpus_spec
   
-  # il faudrait tout d'abord pouvoir numéroter les périodes par un indice augmentant de +1 à chaque changement de période.
-  # La formule utilisée pour calculer le barycentre est alors : B = (Somme pour tout les i de 
-  # ( Nombre d'occurences  à la période i * indice de la période i)) divisée par (Nombre total d'occurences de la forme)
+  corpus_punct$index <- cumsum(!duplicated(corpus_punct$Oeuvre))
   
-  # Ajout d'une colonne index pour numéroter les périodes :
-  # 1 période = 1 oeuvre :
+  # Correction d'un léger bug sur la nature de l'objet.
+  # int => num
   
-  corpus_barycentre$index <- cumsum(!duplicated(corpus_barycentre$Oeuvre))
+  corpus_punct$index <- as.numeric(corpus_punct$index)
   
-  corpus_barycentre_n <- corpus_barycentre %>% 
+  # str(corpus_punct)
+  
+  corpus_punct_n <- corpus_punct %>% 
     dplyr::count(motifs, index, sort = T)
   
-  corpus_punct_total <- corpus_barycentre
+  corpus_punct_total <- corpus_punct
   
   corpus_punct_total <- corpus_punct_total %>%
-    ungroup(corpus_punct_total) %>%
-    count(motifs, sort = T)
+    dplyr::ungroup() %>%
+    dplyr::count(motifs, sort = T)
   
   names(corpus_punct_total) <- c("motifs", "n_total")
   
-  corpus_baryc <- inner_join(corpus_barycentre_n, corpus_punct_total) ## TODO Ajouter cette fonctionnalité innerjoin aux retours aux textes. ##
+  corpus_baryc <- inner_join(corpus_punct_n, corpus_punct_total)
   ## Colonnes de fréquences relative et absolues. ## 
   
   # Somme du nombre d'occ * indice / Nombre total d'occurrence de la forme.
   
   corpus_baryc <- corpus_baryc %>%
-    ungroup(corpus_baryc) %>%
+    ungroup() %>%
     mutate(barycentre = n * index / n_total)
   
   # Barycentres qui vont de 0 à 3 :
@@ -2514,6 +2573,8 @@ stats_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", csv = "Corp
   
   poucentage_arrondi <- round_df(corpus_barycentre_pourcentage$pourcentage, 2)
   
+  # Changement des valeurs dans la dataframe :
+  
   corpus_barycentre_pourcentage$pourcentage <- poucentage_arrondi
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
@@ -2524,22 +2585,22 @@ stats_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", csv = "Corp
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
   
-  corpus_spec_punct <- corpus_spec_punct %>%
-    count(motifs, sort = TRUE)
+  corpus_spec <- corpus_spec %>%
+    count(Oeuvre, motifs, sort = TRUE)
   
   ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
   
-  total_words <- corpus_spec_punct %>%
+  total_words <- corpus_spec %>%
     group_by(Oeuvre) %>%
     summarize(total = sum(n))
   
-  corpus_spec_punct <- left_join(corpus_spec_punct, total_words)
+  corpus_spec <- left_join(corpus_spec, total_words)
   
   ## Calcul de la fréquence relative :
   
-  corpus_spec_punct$rel_freq <- corpus_spec_punct$n / corpus_spec_punct$total
+  corpus_spec$rel_freq <- corpus_spec$n / corpus_spec$total
   
-  corpus_words_ngrams_spec <- corpus_spec_punct
+  corpus_words_ngrams_spec <- corpus_spec
   
   ## Reshaping the data : colonnes = corpus, lignes = motifs et freq
   corpus_lexical_table <- xtabs(n~motifs+Oeuvre, corpus_words_ngrams_spec)
@@ -2674,7 +2735,7 @@ stats_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", csv = "Corp
   
   ## Ajout de la table de fréquences :
   
-  colnames(corpus_words_ngrams_spec) <- c("Oeuvre", "motifs", "n", "n_rel", "nb_total_mots")
+  colnames(corpus_words_ngrams_spec) <- c("Oeuvre", "motifs", "n", "nb_total_mots", "n_rel")
   
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
@@ -2707,11 +2768,13 @@ stats_motifs <- function(path = "~/Dropbox/2019-2020/Stage/Corpus/", csv = "Corp
   
 }
 
-# Fonction de retour aux textes : 
 
-retour_texte_specificites <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_UDPipe.csv",
-                                      csv_corpus_specificites = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_specificites.csv", 
-                                      frequence = 10){
+# Fonction de retour aux textes (màj : 15 mai 2021) : 
+
+retour_texte_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
+                                      csv_corpus_motifs = "corpus_motifs_grams.csv",
+                                      csv_corpus_specificites = "Corpus_spec_freq.csv", 
+                                      frequence = 150){
   
   
   ## Importation des librairies : 
@@ -2721,33 +2784,25 @@ retour_texte_specificites <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/S
   require("tidyr")
   require("data.table")
   require("reshape2")
-  library("dplyr")
+  require("dplyr")
   
-  corpus_spec <- fread(csv_corpus_specificites, encoding = "UTF-8")
-  corpus <- fread(csv_corpus_motifs)
+  # Chargement des deux corpus :
   
-  ## Fivegrams de motifs :
+  corpus_spec <- fread(csv_corpus_specificites, encoding = "UTF-8", 
+                       header = TRUE, stringsAsFactors = FALSE)
   
-  corpus_five <- corpus  %>%
-    mutate(next_word = lead(motifs),
-           next_word2 = lead(motifs, 2),
-           next_word3 = lead(motifs, 3),
-           next_word4 = lead(motifs, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word4), !is.na(next_word4)) %>%
-    mutate(ngrammotifs = paste(motifs, next_word, next_word2, next_word3, next_word4))
+  # Suppression colonne index : 
   
-  ## Fivegrams texte : 
+  corpus_spec <- corpus_spec[,-c("V1")]
   
-  corpus_five <- corpus_five %>%
-    group_by(Oeuvre) %>%
-    mutate(next_word = lead(mots),
-           next_word2 = lead(mots, 2),
-           next_word3 = lead(mots, 3),
-           next_word4 = lead(mots, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
-    mutate(ngrammots = paste(mots, next_word, next_word2, next_word3, next_word4))
+  corpus <- fread(csv_corpus_motifs, encoding = "UTF-8", 
+                  header = TRUE, stringsAsFactors = FALSE)
   
-  corpus_five <- corpus_five[,c("mots", "ngrammots", "ngrammotifs", "Oeuvre")]
+  # Vérification okazou (pb index) :
+  corpus <- corpus[,c("mots", "ngrammot", "motifs", "Oeuvre")]
+  
+  ## Retrait des cases vides :
+  corpus <- corpus[complete.cases(corpus),]
   
   # Réduction du corpus_spec à nombre_motifs : évite de produire des trop grand csv,
   # réduit le temps de génération, inutile d'analyser des motifs à très basse fréquence...
@@ -2765,12 +2820,14 @@ retour_texte_specificites <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/S
   
   # Préalable : choix d'un motif pertinent ! Ex : le NC , le NC
   
-  retour_aux_textes <- function(corpus_five){
+  
+  
+  retour_aux_textes <- function(corpus_spec){
     
     context<- as.numeric(readline("Combien de mots de contexte voulez-vous afficher ? Entrez un nombre : \n"))
     longueur_motif <- as.numeric(readline("Quelle longueur a votre motif : \n"))
     #keyword<- (readline("Entrez le motif : \n"))
-    hits <- which(corpus_five$ngrammotifs %in% corpus_spec$motifs)
+    hits <- which(corpus$motifs %in% corpus_spec$motifs)
     
     if(length(hits)>0){
       result<-NULL
@@ -2780,13 +2837,13 @@ retour_texte_specificites <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/S
         if(start < 1){ #if(start < 1 && h == 1){
           start<-1}
         
-        end<-hits[h]+context+5 # La fin du motif contient aussi le motif en lui-même. 
+        end<-hits[h]+context+as.numeric(longueur_motif) # La fin du motif contient aussi le motif en lui-même. 
         
-        myrow<-cbind(hits[h], paste(corpus_five$mots[start:(hits[h]-1)], collapse=" "), 
-                     paste(corpus_five$ngrammots[hits[h]], collapse=" "), 
-                     paste(corpus_five$mots[(hits[h]+longueur_motif):end], collapse=" "), 
-                     paste(corpus_five$Oeuvre[hits[h]], collapse = " "),
-                     paste(corpus_five$ngrammotifs[hits[h]], collapse = " "))
+        myrow<-cbind(hits[h], paste(corpus$mots[start:(hits[h]-1)], collapse=" "), 
+                     paste(corpus$ngrammot[hits[h]], collapse=" "), 
+                     paste(corpus$mots[(hits[h]+longueur_motif):end], collapse=" "), 
+                     paste(corpus$Oeuvre[hits[h]], collapse = " "),
+                     paste(corpus$motifs[hits[h]], collapse = " "))
         result<-rbind(result,myrow)
         
       }
@@ -2796,7 +2853,7 @@ retour_texte_specificites <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/S
       result <- result[order(result$nrel),]
       toprint<-as.numeric((readline("Sauvegarder les résultats en csv, tapez 1 et enter \n, Sauvegarder dans un objet R result_df, tapez 2 \n")))
       if(toprint==1){
-        write.csv(result, "Retour_aux_textes_corpus_specificites.csv", fileEncoding = "UTF-8", row.names = F)
+        write.csv(result, "Retour_aux_textes_corpus_specificites.csv", fileEncoding = "UTF-8")
       }
       if(toprint==2){
         result_df <<- result
@@ -2807,15 +2864,16 @@ retour_texte_specificites <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/S
     }
   }
   
-  retour_aux_textes(corpus_five)
+  retour_aux_textes(corpus_spec)
   
 }
 
-# Fonction de retour aux textes pour un motif spécifique :
+# Fonction de retour aux textes pour un motif spécifique (màj : 15 mai 2021) :
 
-retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_UDPipe.csv",
-                                               csv_corpus_specificites = "~/Dropbox/2019-2020/Stage/Corpus/Corpus_motifs_specificites.csv", 
-                                               motif_cible = "le NC de le NC"){
+retour_texte_specificites_un_motif <- function(path = "~/Dropbox/2020-2021/Motifs/",
+                                               csv_corpus_motifs = "corpus_motifs_grams.csv",
+                                               csv_corpus_specificites = "Corpus_spec_freq.csv",
+                                               motif_cible = "de le NC de le NC ,"){
   ## Importation des librairies : 
   require("tidytext")
   require("tidyverse")
@@ -2825,31 +2883,26 @@ retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/20
   require("reshape2")
   library("dplyr")
   
-  corpus_spec <- fread(csv_corpus_specificites)
-  corpus <- fread(csv_corpus_motifs, encoding = "UTF-8")
+  # Chargement des deux corpus :
   
-  ## Fivegrams de motifs :
+  corpus_spec <- fread(csv_corpus_specificites, encoding = "UTF-8", 
+                       header = TRUE, stringsAsFactors = FALSE)
   
-  corpus_five <- corpus  %>%
-    mutate(next_word = lead(motifs),
-           next_word2 = lead(motifs, 2),
-           next_word3 = lead(motifs, 3),
-           next_word4 = lead(motifs, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
-    mutate(ngrammotifs = paste(motifs, next_word, next_word2, next_word3, next_word4))
+  # Suppression colonne index : 
   
-  ## Fivegrams texte : 
+  corpus_spec <- corpus_spec[,-c("V1")]
   
-  corpus_five <- corpus_five %>%
-    group_by(Oeuvre) %>%
-    mutate(next_word = lead(mots),
-           next_word2 = lead(mots, 2),
-           next_word3 = lead(mots, 3),
-           next_word4 = lead(mots, 4)) %>%
-    filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
-    mutate(ngrammots = paste(mots, next_word, next_word2, next_word3, next_word4))
+  corpus <- fread(csv_corpus_motifs, encoding = "UTF-8", 
+                  header = TRUE, stringsAsFactors = FALSE)
   
-  corpus_five <- corpus_five[,c("mots", "ngrammots", "ngrammotifs", "Oeuvre")]
+  # Vérification okazou (pb index) :
+  corpus <- corpus[,c("mots", "ngrammot", "motifs", "Oeuvre")]
+  
+  ## Retrait des cases vides :
+  corpus <- corpus[complete.cases(corpus),]
+  
+  
+  corpus <- corpus[,c("mots", "ngrammot", "motifs", "Oeuvre")]
   
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
@@ -2861,12 +2914,12 @@ retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/20
   ## Référence : M. Jockers, Text analysis with R for students of literature, 2014.
   
   # Préalable : choix d'un motif pertinent ! Ex : le NC , le NC
-  retour_aux_textes <- function(corpus_five){
+  retour_aux_textes <- function(corpus){
     
     context<- as.numeric(readline("Combien de mots de contexte voulez-vous afficher ? Entrez un nombre : \n"))
     longueur_motif <- as.numeric(readline("Quelle longueur a votre motif : \n"))
     keyword<- as.character(motif_cible)
-    hits <- which(corpus_five$ngrammotifs == as.character(keyword))
+    hits <- which(corpus$motifs == as.character(keyword))
     
     if(length(hits)>0){
       result<-NULL
@@ -2876,13 +2929,13 @@ retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/20
         if(start < 1){ #if(start < 1 && h == 1){
           start<-1}
         
-        end<-hits[h]+context+5 # La fin du motif contient aussi le motif en lui-même. 
+        end<-hits[h]+context+as.numeric(longueur_motif) # La fin du motif contient aussi le motif en lui-même. 
         
-        myrow<-cbind(hits[h], paste(corpus_five$mots[start:(hits[h]-1)], collapse=" "), 
-                     paste(corpus_five$ngrammots[hits[h]], collapse=" "), 
-                     paste(corpus_five$mots[(hits[h]+longueur_motif):end], collapse=" "), 
-                     paste(corpus_five$Oeuvre[hits[h]], collapse = " "),
-                     paste(corpus_five$ngrammotifs[hits[h]], collapse = " "))
+        myrow<-cbind(hits[h], paste(corpus$mots[start:(hits[h]-1)], collapse=" "), 
+                     paste(corpus$ngrammot[hits[h]], collapse=" "), 
+                     paste(corpus$mots[(hits[h]+longueur_motif):end], collapse=" "), 
+                     paste(corpus$Oeuvre[hits[h]], collapse = " "),
+                     paste(corpus$motifs[hits[h]], collapse = " "))
         result<-rbind(result,myrow)
         
       }
@@ -2892,7 +2945,7 @@ retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/20
       result <- result[order(result$nrel),]
       toprint<-as.numeric((readline("Sauvegarder les résultats en csv, tapez 1 et enter \n, affichez dans le terminal tapez 2 et enter\n Sauvegarder dans un objet R result_df, tapez 3 \n")))
       if(toprint==1){
-        write.csv(result, paste(keyword,"_In_", context, ".csv"), fileEncoding = "UTF-8", row.names = F)
+        write.csv(result, paste(keyword,"_In_", context, ".csv"), fileEncoding = "UTF-8")
       }
       if(toprint==2){
         return(result)
@@ -2906,8 +2959,7 @@ retour_texte_specificites_un_motif <- function(csv_corpus_motifs = "~/Dropbox/20
     }
   }
   
-  retour_aux_textes(corpus_five = corpus_five)
+  retour_aux_textes(corpus = corpus)
   
 }
-
 

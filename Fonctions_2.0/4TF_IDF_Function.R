@@ -1,5 +1,6 @@
-# Script pour Dominique Legallois #
-# Fonction TF-IDF avec ponctuation #
+## Titre : Scripts motifs - TF-IDF
+## Auteurs : Dominique Legallois, Antoine de Sacy
+## Date : 15 mai 2021.
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
@@ -8,14 +9,13 @@
 ## Paramètres : 
 
 # path = "~/Dropbox/2019-2020/Stage/Corpus_Retour_au_texte/"
-# csv = "Corpus_motifs.csv"==> Sortie du script regex.
-# nb_grams: choix du nombre de ngrams.
+# csv = "corpus_motifs_ngrams.csv"==> Sortie du script ngrams
 # nombre_motifs = 20 ==> sélection du nombre de motifs à afficher dans la visualisation.
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
-tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
-                          csv = "Corpus_motifs_UDPipe.csv", nb_grams = 5, nombre_motifs = 20){
+tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Motifs/",
+                          csv = "corpus_motifs_grams.csv", nombre_motifs = 20){
   
   ## Importation des librairies : 
   
@@ -30,56 +30,20 @@ tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   # Lecture des données :
   
   setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8")
-  
-  ## Retrait des cases vides :
-  
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
-  
-  ## Mise sous la forme tidy :
+  corpus_grams <- fread(csv, encoding = "UTF-8", 
+                       header = TRUE, stringsAsFactors = FALSE)
   
   # Vérification okazou :
-  names(corpus_spec) <- c("mots", "motifs", "Oeuvre")
+  corpus_grams <- corpus_grams[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
   
-  ## Fivegrams :
-  # corpus_spec_punct <- corpus_spec  %>%
-  #   mutate(next_word = lead(motifs),
-  #          next_word2 = lead(motifs, 2),
-  #          next_word3 = lead(motifs, 3),
-  #          next_word4 = lead(motifs, 4)) %>%
-  #   filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
-  #   mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
-  
-  # Nouvelle fonction n-grams pour choix du gram :
-  
-  # Creating 5-grams means setting .after to 4 and removing last 4 rows
-  # library : slider
-  
-  corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
-  # head(-nb_grams-1) : ne fonctionne pas : Value of SET_STRING_ELT() must be a 'CHARSXP' not a 'character'
-  
-  # Transformation en tibble pour éviter l'erreur ?
-  
-  nb <- nb_grams-1
-  corpus_spec_punct <- as_tibble(corpus_spec_punct) %>%
-    head(-nb)
-  
-  
-  # Sélection des colonnes motifs ngram et Oeuvre :
-  corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
-  
-  names(corpus_spec_punct) <- c("motifs", "Oeuvre")
+  corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
-  corpus_spec_punct <- corpus_spec_punct %>%
+  corpus_words_ngrams <- corpus_grams %>%
     count(Oeuvre, motifs, sort = TRUE) %>%
     filter(n > 1)
-  
-  corpus_words_ngrams <- corpus_spec_punct
   
   ##  ##  ##  ##  ##  ##  ##  ##  ##  ##  ##  ##  
   
@@ -115,7 +79,7 @@ tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
     ungroup %>%
     ggplot(aes(motifs, tf_idf, fill = Oeuvre)) +
     geom_col(show.legend = T) +
-    labs(x = NULL, y = "tf-idf") +
+    labs(x = NULL, y = "TF-IDF") +
     facet_wrap(~Oeuvre, ncol = 2, scales = "free") +
     coord_flip() +
     theme_minimal()
@@ -156,6 +120,6 @@ tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
 
 }
 
-tf_idf_motifs(path = "~/Dropbox/2020-2021/Corpus-test-motifs/" , csv = "Corpus_motifs_UDPipe.csv",
-              nb_grams = 4, nombre_motifs = 20)
+tf_idf_motifs(path = "~/Dropbox/2020-2021/Motifs/",
+              csv = "corpus_motifs_grams.csv", nombre_motifs = 20)
 

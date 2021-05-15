@@ -1,4 +1,6 @@
-## Fonction Wordcloud : ##
+## Titre : Scripts motifs - Histogrammes
+## Auteurs : Dominique Legallois, Antoine de Sacy
+## Date : 15 mai 2021.
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
@@ -7,16 +9,14 @@
 ## Paramètres : 
 
 # path = chemin, préférablement celui où se trouve le csv.
-# csv = "Corpus_motifs.csv"==> Sortie du script regex.
+# csv = "corpus_motifs_grams.csv"==> Sortie du script choix de ngrams.
 # nmots = 55 ==> sélection du nombre de motifs à afficher dans la visualisation.
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
-# == (sortie du script de regex)
 
-
-motifs_histograms <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", 
-                         csv = "Corpus_motifs_UDPipe.csv", nmots = 25, nb_grams = 4){
+motifs_histograms <- function(path = "~/Dropbox/2020-2021/Motifs/", 
+                         csv = "corpus_motifs_grams.csv", nmots = 25){
   
   # Librairies :
   
@@ -26,68 +26,31 @@ motifs_histograms <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   require("RColorBrewer")
   require("reshape2")
   require("ggsci")
-  require("slider")
   require("data.table")
   require("ggpubr")
   
   # Lecture des données :
   
   setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8")
-  
-  ## Retrait des cases vides :
-  
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
-  
-  ## Mise sous la forme tidy :
+  corpus_grams <- fread(csv, encoding = "UTF-8", header = TRUE, stringsAsFactors = FALSE)
   
   # Vérification okazou :
-  names(corpus_spec) <- c("mots", "motifs", "Oeuvre")
+  corpus_grams <- corpus_grams[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
-  
-  ## Fivegrams :
-  # corpus_spec_punct <- corpus_spec  %>%
-  #   mutate(next_word = lead(motifs),
-  #          next_word2 = lead(motifs, 2),
-  #          next_word3 = lead(motifs, 3),
-  #          next_word4 = lead(motifs, 4)) %>%
-  #   filter(!is.na(next_word), !is.na(next_word2), !is.na(next_word3), !is.na(next_word4)) %>%
-  #   mutate(ngrammotif = paste(motifs, next_word, next_word2, next_word3, next_word4))
-  # 
-  
-  # Nouvelle fonction n-grams pour choix du gram :
-  
-  # Creating 5-grams means setting .after to 4 and removing last 4 rows
-  # library : slider
-  
-  corpus_spec_punct <- corpus_spec %>%
-    mutate(ngrammotif = slide_chr(motifs, paste, collapse = " ", .after = nb_grams-1))
-  # head(-nb_grams-1) : ne fonctionne pas : Value of SET_STRING_ELT() must be a 'CHARSXP' not a 'character'
-  
-  # Transformation en tibble pour éviter l'erreur ?
-  
-  nb <- nb_grams-1
-  corpus_spec_punct <- as_tibble(corpus_spec_punct) %>%
-    head(-nb)
-  
-  # Sélection des colonnes motifs ngram et Oeuvre :
-  corpus_spec_punct <- corpus_spec_punct[,c("ngrammotif", "Oeuvre")]
-  
-  names(corpus_spec_punct) <- c("motifs", "Oeuvre")
-  
+  corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
+
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
-  corpus_spec_punct <- corpus_spec_punct %>%
-    count(Oeuvre, motifs, sort = TRUE)
+  corpus_grams <- corpus_grams %>%
+    count(motifs, Oeuvre, sort = TRUE)
   
   ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
   
-  total_words <- corpus_spec_punct %>%
+  total_words <- corpus_grams %>%
     group_by(Oeuvre) %>%
     summarize(total = sum(n))
   
-  corpus_words_ngrams <- left_join(corpus_spec_punct, total_words, by = "Oeuvre") 
+  corpus_words_ngrams <- left_join(corpus_grams, total_words, by = "Oeuvre") 
   
   ## Calcul de la fréquence relative :
   
@@ -151,6 +114,6 @@ motifs_histograms <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
 }
 
 
-motifs_histograms(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", 
-             csv = "Corpus_motifs_UDPipe.csv", nmots = 30, nb_grams = 5)
+motifs_histograms(path = "~/Dropbox/2020-2021/Motifs/", 
+                  csv = "corpus_motifs_grams.csv", nmots = 25)
 
