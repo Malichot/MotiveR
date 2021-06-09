@@ -7,11 +7,11 @@
 
 # Répertoire de travail :
 
-setwd("~/Dropbox/2020-2021/Motifs/")
+setwd("~/Motifs/")
 
 # Import des fonctions : chemin du script Fonctions_motifs.R
 
-source("~/Dropbox/2020-2021/Motifs/Fonctions_2.0/Fonctions_motifs.R")
+source("~/Motifs/Fonctions_2.0/Fonctions_motifs.R")
 
 # Téléchargement du modèle d'annotation :
 
@@ -19,50 +19,50 @@ source("~/Dropbox/2020-2021/Motifs/Fonctions_2.0/Fonctions_motifs.R")
 # dl <- udpipe_download_model(language = "french")
 
 # Annotation : 
-annotation_udpipe(path = "~/Dropbox/2020-2021/Git-Motifs/Corpus-test/", 
-                  model = "~/Dropbox/2019-2020/Stage/french-gsd-ud-2.4-190531.udpipe")
+annotation_udpipe(path = "~/Motifs/Corpus_test_motifs/", 
+                  model = "~/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe")
 
 
 # Transformation en motifs UDPipe
-regex_corpus_entier_UDPipe(path = "~/Dropbox/2020-2021/Git-Motifs/", 
+regex_corpus_entier_UDPipe(path = "~/Motifs/", 
                     corpus = "UDPipe_corpus_complet.csv")
 
 # Transformation en motifs Cordial :
-
 regex_corpus_entier_Cordial(path = "~/Dropbox/2019-2020/Stage/Corpus_Retour_au_texte/Cordial/")
 
 # Choix du nombre de ngrams : 
-
-choix_nb_ngrams(path = "~/Dropbox/2020-2021/Motifs/", csv = "Corpus_motifs_UDPipe.csv")
+choix_nb_ngrams(path = "~/Motifs/", csv = "Corpus_motifs_UDPipe.csv")
 
 # Wordcloud : 
-motifs_nuage(path = "~/Dropbox/2020-2021/Motifs/", 
-             csv = "Corpus_motifs_UDPipe.csv", nmots = 25)
+motifs_nuage(path = "~/Motifs/", 
+             csv = "Corpus_motifs_UDPipe.csv", 
+             nmots = 150)
 
 # Histogrammes : 
 
-motifs_histograms(path = "~/Dropbox/2020-2021/Motifs/", 
-                  csv = "corpus_motifs_grams.csv", nmots = 25)
+motifs_histograms(path = "~/Motifs/", 
+                  csv = "corpus_motifs_grams.csv", 
+                  nmots = 30)
 
 # TF-IDF :
-tf_idf_motifs(path = "~/Dropbox/2020-2021/Motifs/",
-              csv = "corpus_motifs_grams.csv", nombre_motifs = 20)
+tf_idf_motifs(path = "~/Motifs/",
+              csv = "corpus_motifs_grams.csv", nombre_motifs = 10)
 
 # ACP :
-motifs_acp(path = "~/Dropbox/2020-2021/Motifs/", csv = "corpus_motifs_grams.csv", 
-           freq_filter = 1)
+motifs_acp(path = "~/Motifs/", csv = "corpus_motifs_grams.csv", 
+           freq_filter = 1, n_obs = 50)
 
 
 # Spécificités :
-calcul_de_specificites(path = "~/Dropbox/2020-2021/Motifs/",
+calcul_de_specificites(path = "~/Motifs/",
                        csv = "corpus_motifs_grams.csv")
 
 # Barycentres : 
-barycentre(path = "~/Dropbox/2020-2021/Motifs/", csv = "corpus_motifs_grams.csv")
+barycentre(path = "~/Dropbox/2020-2021/Motifs/", 
+           csv = "corpus_motifs_grams.csv")
 
 # Densité :
-
-motifs_densite(path = "~/Dropbox/2020-2021/Motifs/", 
+motifs_densite(path = "~/Motifs/", 
                csv = "corpus_motifs_grams.csv", 
                filtre = "Flaubert-Bovary.txt", 
                motif1 = "le NC de le NC",
@@ -73,7 +73,7 @@ motifs_densite(path = "~/Dropbox/2020-2021/Motifs/",
                bd = 4000,
                titre_graphique = "Densité sur cinq motifs - Madame Bovary")
 
-# Statistiques générales : 
+# Statistiques générales :
 stats_motifs(path = "~/Dropbox/2020-2021/Motifs/", 
              csv = "corpus_motifs_grams.csv")
 
@@ -87,7 +87,7 @@ retour_texte_specificites(path = "~/Dropbox/2020-2021/Motifs/",
 retour_texte_specificites_un_motif(path = "~/Dropbox/2020-2021/Motifs/",
                                    csv_corpus_motifs = "corpus_motifs_grams.csv",
                                    csv_corpus_specificites = "Corpus_spec_freq.csv",
-                                   motif_cible = "de le NC de le NC ,")
+                                   motif_cible = "de le NC de le")
 
 
 

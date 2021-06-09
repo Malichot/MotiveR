@@ -1963,10 +1963,10 @@ tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
 }
 
-# Fonction Analyse en composante principale (màj : 15 mai 2021) : 
+# Fonction Analyse en composante principale (màj : 28 mai 2021) :
 
 motifs_acp <- function(path = "~/Dropbox/2020-2021/Motifs/", csv = "corpus_motifs_grams.csv", 
-                       freq_filter = 1){
+                       freq_filter = 1, n_obs = 50){
   
   # Librairies : 
   
@@ -2045,19 +2045,59 @@ motifs_acp <- function(path = "~/Dropbox/2020-2021/Motifs/", csv = "corpus_motif
   
   # And now PCA : 
   
-  corpus_PCA <- prcomp(t(corpus_norm), scale. = FALSE)
+  if(n_obs == "all"){
+    corpus_PCA <- prcomp(corpus_norm[1:nrow(corpus_norm),], scale. = FALSE)
+  }
+  else {
+    corpus_PCA <- prcomp(corpus_norm[1:n_obs,], scale. = FALSE)
+  }
+  
   
   # Impression des composants
   
   fviz_eig(corpus_PCA)
   
-  # Plot !
+  # Plot observations !
   
-  fviz_pca_ind(corpus_PCA,
-               col.ind = "coord", # Colorer par le cos2
-               gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-               repel = FALSE, 
+  plot_obs <- fviz_pca_ind(corpus_PCA,
+                           col.ind = "coord", # Colorer par le cos2
+                           gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                           repel = FALSE, 
   )
+  
+  # Plot variables ! 
+  
+  plot_var <- fviz_pca_var(corpus_PCA,
+                           col.var = "coord", 
+                           gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                           repel = TRUE     
+  )
+  
+  # Plot variables + obs ! 
+  
+  plot_bis <- fviz_pca_biplot(corpus_PCA, repel = TRUE,
+                              col.var = "#2E9FDF", 
+                              col.ind = "#696969"  
+  )
+  
+  msg <- as.numeric(readline("Plot variables, tapez 1 et enter \n , Plot motifs tapez 2 et enter \n Plot motifs + variables, tapez 3 et enter"))
+  
+  if(msg == 1){
+    fviz_eig(corpus_PCA)
+    return(plot_var)
+  }
+  if(msg == 2){
+    fviz_eig(corpus_PCA)
+    return(plot_obs)
+  }
+  if(msg == 3){
+    fviz_eig(corpus_PCA)
+    return(plot_bis)
+  }
+  
+  else{
+    print("Votre choix ne correspond pas aux critères ternaires proposés...!")
+  }
   
 }
 
