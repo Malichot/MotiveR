@@ -93,9 +93,9 @@ __Paramètres__ :
 
 __Sortie__ : Visualisations groupées ou séparées.
 
-### 6. AFC : 
+### 6. ACP : 
 
-Fonction permettant de générer une Analyse factorielle des correspondances sur les n premiers motifs du corpus.
+Fonction permettant de générer une Analyse en composante principale .
 
 __Script__ : AFC_Fonction.R
 
@@ -103,15 +103,9 @@ __Paramètres__ :
 
     path  = chemin vers le csv produit par le script de transformation en motifs.
 
-    csv = Corpus_motifs_UDPipe.csv
+    freq_filter = seuil de fréquences des observations prises en compte 
 
-    nombre_oeuvres = nombre d’oeuvres dans le corpus analysé.
-
-    nmotifs : nombre de motifs à prendre en compte dans l’AFC et dans la visualisation. 
-
-    nombre_dimensions : nombre de dimension à conserver dans le calcul de l’AFC.
-
-    Optionnel : une_oeuvre = affichage d’une seule oeuvre dans l’AFC.  
+    n_obs = nombre d'observations à garder dans l'ACP, si "all", toutes prises en compte.
 
 __Sortie__ : Visualisations simple, en gradient de couleurs, ou avec l’affichage d’une seule oeuvre.
 
