@@ -231,7 +231,7 @@ __Choix__ :
 
     Contexte à afficher en nombre de mots à gauche et droite du motif.
 
-    Longueur du motifs, en nombre de mots (5).
+    Longueur du motifs, en nombre de mots (2-7).
 
 
 __Sortie__ : motif_in_context.csv avec : id || contexte_gauche || motif (texte) || contexte_droit || Oeuvre || motifs || n || total || nrel || spécificités pour chaque oeuvre. Possibilité affichage dans le terminal ou dans une variable R result_df.
