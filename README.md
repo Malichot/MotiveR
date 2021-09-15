@@ -21,6 +21,17 @@ Si vous travaillez sur Windows, l'encodage de vos fichiers sera sûrement window
 - Les fichiers d'origine sont conservés, de nouveaux fichiers sont générés avec l'extension -ut8.txt.
 
 
+## Regex de nettoyage Perl avant l'utilisation de MotiveR
+
+- Ouvrez un terminal et aller au chemin où se trouvent vos fichiers .txt.
+
+	- Ex : cd Documents/MotiveR/corpus-test
+
+- Lancez les commandes perl suivantes : 
+
+	- Pour le retrait des sauts de lignes et remplacement par un espace : perl -i -pe 's/\n$/ /g' *
+	- Pour la tokénisation par phrases et l'ajout d'un saut de ligne (pour éviter les bugs dans l'annotation) : perl -i -pe 's/([.!?…]+)/\1\n\n/g' *
+
 ## Processus général.
 
 
