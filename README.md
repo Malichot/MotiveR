@@ -60,17 +60,6 @@ __Paramètres__ :
 
 __Sortie__ : Corpus_motifs_UDPipe.csv
 
-
-### Transformation en motifs (Cordial) : 
-
-__Fonction__ : regex_corpus_entier_Cordial()
-
-__Paramètres__ : 
-
-    path  = chemin vers les .cnr produits par l’étiquetage Cordial.
-
-__Sortie__ : Corpus_motifs_Cordial.csv
-
 ### Choix nombre n-grams :
 
 __Fonction__ : choix_nb_ngrams()
@@ -117,7 +106,7 @@ __Sortie__ : Visualisations groupées ou séparées.
 
 ### ACP : 
 
-Fonction permettant de générer une Analyse en composante principale .
+Fonction permettant de générer une Analyse en composante principale.
 
 __Fonction__ : motifs_acp()
 
@@ -146,20 +135,6 @@ __Paramètres__ :
 	csv = "corpus_motifs_grams.csv"
 	
 __Sortie__ : Corpus_motifs_specificites.csv avec : Oeuvre || motifs || n (fréq abs) || total (nb de mots dans l'oeuvre) || nrel (fréq relative) || Spécificités par oeuvres. Pour le retour aux textes, tapez 2.
-
-### Barycentres et pourcentage d’apparition : 
-
-Fonction permettant de pratiquer un calcul du barycentre des motifs (répartition dans le corpus) ainsi que le pourcentage de présence du motif dans l’oeuvre par rapport au corpus. 
-
-__Script__ : Barycentre_Function.R
-
-__Paramètres__ : 
-
-    path  = chemin vers le csv produit par le script de choix de ngrams.
-
-    csv = "corpus_motifs_grams.csv"
-
-__Sortie__ : Barycentre_motifs.csv avec : Oeuvre || motifs || index || n (fréq abs) || n_total (nb de mots dans l'oeuvre) || barycentre || pourcentage (présence du motif par rapport au reste du corpus)
 
 ### Densité de cinq motifs dans une oeuvre :
 
