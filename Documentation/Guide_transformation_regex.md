@@ -27,11 +27,11 @@
 
 #### Mots invariables : 
 
-- Certains ne font pas vraiment sens : « jour », « nuit », des verbes (prendre, falloir, finir, …), des adjectifs (vrai, véritable…), des mots composés qui ne seront de toute façon pas pris en compte lors de la tokénisation (« bien plus », « bien moins »). À revoir ? À systématiser ?
+- On les garde.
 
 #### Adverbes :
 
-- On garde certains adverbes et on les qualifie : ADVTOT (?), ADVPHA (?), ADVFRE (fréquence), ADVINT (intensité), ADVHAB (habitude), ADVMOD (modaux), ADVMAN (manière). Remplacement conditionnel : si le lemme = « mot », remplacement du POS par le mot pour qu’il apparaisse dans les motifs.
+- On garde certains adverbes et on les qualifie : ADVTOT, ADVPHA, ADVFRE (fréquence), ADVINT (intensité), ADVHAB (habitude), ADVMOD (modaux), ADVMAN (manière). Remplacement conditionnel : si le lemme = « mot », remplacement du POS par le mot pour qu’il apparaisse dans les motifs.
 
 Remplacement des autres ADV en ADV dans les motifs.
 
