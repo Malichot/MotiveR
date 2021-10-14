@@ -74,7 +74,7 @@ annotation_udpipe <- function(path = "~/Desktop/Motifs/Corpus/",
   head(corpus_annote_cols)
   
   # Exportation csv : 
-  write.csv(corpus_annote_cols, "../UDPipe_corpus_complet.csv", fileEncoding = "UTF-8")
+  write.csv(corpus_annote_cols, "UDPipe_corpus_complet.csv", fileEncoding = "UTF-8")
   
 }
 
