@@ -827,4 +827,4 @@ regex_corpus_entier_UDPipe <- function(path = "~/Desktop/Motifs/", corpus = "UDP
   }
 }
 
-regex_corpus_entier_UDPipe(path = "~/Desktop/Motifs/", corpus = "UDPipe_corpus_complet.csv")
+regex_corpus_entier_UDPipe(path = "~/Documents/Huma-num/2021-2022/Motifs/", corpus = "UDPipe_corpus_complet.csv")

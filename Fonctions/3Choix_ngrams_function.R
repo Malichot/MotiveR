@@ -276,5 +276,5 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
 }
 
-choix_nb_ngrams(path = "~/Desktop/Motifs/",
+choix_nb_ngrams(path = "~/Documents/Huma-num/2021-2022/Motifs/",
                 csv = "Corpus_motifs_UDPipe.csv")

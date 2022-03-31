@@ -77,7 +77,7 @@ retour_texte_specificites_un_motif <- function(path = "~/Dropbox/2020-2021/Motif
       result <- as_tibble(result)
       result <- inner_join(result, corpus_spec)
       result <- result[order(result$nrel),]
-      toprint<-as.numeric((readline("Sauvegarder les résultats en csv, tapez 1 et enter \n, affichez dans le terminal tapez 2 et enter\n Sauvegarder dans un objet R result_df, tapez 3 \n")))
+      toprint<-as.numeric((readline("Sauvegarder les résultats en csv, tapez 1 et enter \n, affichez dans le terminal tapez 2 et enter\n Sauvegarder dans un objet R result_df, tapez 3 \n Affichez les résultats dans une table interactive, tapez 4 \n")))
       if(toprint==1){
         write.csv(result, paste(keyword,"_In_", context, ".csv"), fileEncoding = "UTF-8")
       }
@@ -86,6 +86,9 @@ retour_texte_specificites_un_motif <- function(path = "~/Dropbox/2020-2021/Motif
       }
       if(toprint==3){
         result_df <<- as_tibble(result)
+      }
+      if(toprint==4){
+        datatable(data = result, class = "cell-border stripe", options = list(searchHighlight = TRUE))
       }
     } 
     else {
@@ -98,10 +101,10 @@ retour_texte_specificites_un_motif <- function(path = "~/Dropbox/2020-2021/Motif
 }
 
   
-retour_texte_specificites_un_motif(path = "~/Dropbox/2020-2021/Motifs/",
+retour_texte_specificites_un_motif(path = "~/Documents/Huma-num/2021-2022/Motifs/",
                                    csv_corpus_motifs = "corpus_motifs_grams.csv",
                                    csv_corpus_specificites = "Corpus_spec_freq.csv",
-                                   motif_cible = "de le NC de le NC ,")
+                                   motif_cible = "de le NC de le")
 
 
 

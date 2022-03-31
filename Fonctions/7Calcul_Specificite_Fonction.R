@@ -6,11 +6,14 @@
 
 # Entrée : corpus de motifs avec : mots || motifs || Oeuvre
 
-path = "~/Dropbox/2020-2021/Motifs/"
+path = "~/Documents/Huma-num/2021-2022/Motifs/"
 csv = "corpus_motifs_grams.csv"
+retrait_frequence_1 = TRUE
+
 
 calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
-                                   csv = "corpus_motifs_grams.csv"){
+                                   csv = "corpus_motifs_grams.csv",
+                                   retrait_frequence_1 = TRUE){
   
   ## Librairies :
   require("dplyr")
@@ -197,6 +200,15 @@ calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
   # Fusion des dataframes :
   calcul_spec_freq <- inner_join(corpus_words_ngrams_spec, calcul_spec)
   
+  # Retrait éventuel des fréquences < 1 pour réduction de la taille du corpus : 
+  
+  if(retrait_frequence_1 == TRUE){
+    
+    calcul_spec_freq <- calcul_spec_freq %>%
+      filter(n > 1)
+    
+  }
+  
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_specificites.csv', tapez 1 et enter\nSauvegarder les résulats avec fréquences 'Corpus_spec_freq' (pour retour au texte) tapez 2\nSavegarder les résultats dans une variable 'res', tapez 3")))
   if(toprint==1){
     write.csv(calcul_spec, "Corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
@@ -210,8 +222,8 @@ calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
 }
 
-calcul_de_specificites(path = "~/Desktop/Motifs/",
-                       csv = "corpus_motifs_grams.csv")
+calcul_de_specificites(path = "~/Documents/Huma-num/2021-2022/Motifs/",
+                       csv = "corpus_motifs_grams.csv", retrait_frequence_1 = TRUE)
 
 # Sortie : Corpus_motifs_specificites.csv avec : Oeuvre || motifs || Spécificités par oeuvres.
 # Sortie : Corpus_spec_freq.csv avec : Oeuvre || motifs || n (fréq abs) || total (nb de mots dans l'oeuvre) || nrel (fréq relative) || Spécificités par oeuvres.

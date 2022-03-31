@@ -1601,7 +1601,8 @@ motifs_acp <- function(path = "~/Dropbox/2020-2021/Motifs/", csv = "corpus_motif
 # Fonction Calcul de spécificités (màj : 15 mai 2021) :
 
 calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
-                                   csv = "corpus_motifs_grams.csv"){
+                                   csv = "corpus_motifs_grams.csv",
+                                   retrait_frequence_1 = TRUE){
   
   ## Librairies :
   require("dplyr")
@@ -1787,6 +1788,15 @@ calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
   # Fusion des dataframes :
   calcul_spec_freq <- inner_join(corpus_words_ngrams_spec, calcul_spec)
+  
+  # Retrait éventuel des fréquences < 1 pour réduction de la taille du corpus : 
+  
+  if(retrait_frequence_1 == TRUE){
+    
+    calcul_spec_freq <- calcul_spec_freq %>%
+      filter(n > 1)
+    
+  }
   
   toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_specificites.csv', tapez 1 et enter\nSauvegarder les résulats avec fréquences 'Corpus_spec_freq' (pour retour au texte) tapez 2\nSavegarder les résultats dans une variable 'res', tapez 3")))
   if(toprint==1){

@@ -24,8 +24,8 @@ path = "~/Desktop/Motifs/Corpus-nettoye-05-10-21/"
 model = "~/Desktop/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe"
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
-annotation_udpipe <- function(path = "~/Desktop/Motifs/Corpus/", 
-                              model = "~/Desktop/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe"){
+annotation_udpipe <- function(path = "~/Documents/Huma-num/2021-2022/Motifs/Corpus-test/", 
+                              model = "~/Documents/Huma-num/2021-2022/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe"){
   
   # Librairies: 
   require("udpipe")
@@ -79,8 +79,8 @@ annotation_udpipe <- function(path = "~/Desktop/Motifs/Corpus/",
 }
 
 
-annotation_udpipe(path = "~/Desktop/Motifs/Corpus-test/", 
-                  model = "~/Desktop/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe")
+annotation_udpipe(path = "~/Documents/Huma-num/2021-2022/Motifs/Corpus-test/", 
+                  model = "~/Documents/Huma-num/2021-2022/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe")
 
 
 

@@ -52,7 +52,8 @@ motifs_acp(path = "~/Desktop/Motifs/", csv = "corpus_motifs_grams.csv",
 
 # Spécificités :
 calcul_de_specificites(path = "~/Desktop/Motifs/",
-                       csv = "corpus_motifs_grams.csv")
+                       csv = "corpus_motifs_grams.csv",
+                       retrait_frequence_1 = TRUE)
 
 # Densité :
 motifs_densite(path = "~/Desktop/Motifs/", 

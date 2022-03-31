@@ -26,6 +26,7 @@ retour_texte_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
   require("data.table")
   require("reshape2")
   require("dplyr")
+  require("DT")
   
   # Chargement des deux corpus :
   
@@ -61,8 +62,6 @@ retour_texte_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
   # Préalable : choix d'un motif pertinent ! Ex : le NC , le NC
   
-
-  
   retour_aux_textes <- function(corpus_spec){
     
     context<- as.numeric(readline("Combien de mots de contexte voulez-vous afficher ? Entrez un nombre : \n"))
@@ -92,12 +91,15 @@ retour_texte_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
       result <- as_tibble(result)
       result <- inner_join(result, corpus_spec)
       result <- result[order(result$nrel),]
-      toprint<-as.numeric((readline("Sauvegarder les résultats en csv, tapez 1 et enter \n, Sauvegarder dans un objet R result_df, tapez 2 \n")))
+      toprint<-as.numeric((readline("Sauvegarder les résultats en csv, tapez 1 et enter \n, Sauvegarder dans un objet R result_df, tapez 2 \n, Explorer les résultats dans une table interactive, tapez 3 \n")))
       if(toprint==1){
         write.csv(result, "Retour_aux_textes_corpus_specificites.csv", fileEncoding = "UTF-8")
       }
       if(toprint==2){
         result_df <<- result
+      }
+      if(toprint==3){
+        datatable(data = result, class = "cell-border stripe", options = list(searchHighlight = TRUE))
       }
     }
     else {
@@ -109,10 +111,8 @@ retour_texte_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
 }
 
-retour_texte_specificites(path = "~/Desktop/Motifs/",
+retour_texte_specificites(path = "~/Documents/Huma-num/2021-2022/Motifs/",
                           csv_corpus_motifs = "corpus_motifs_grams.csv",
                           csv_corpus_specificites = "Corpus_spec_freq.csv",
                           frequence = 170)
-
-
 
