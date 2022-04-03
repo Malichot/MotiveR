@@ -1,6 +1,16 @@
+# IDE
+/.idea
+
+# R
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+/Motifs.Rproj
+
+# Mac
 .DS_Store
+
+# Other
 /personal
+
