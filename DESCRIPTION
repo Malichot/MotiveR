@@ -17,6 +17,7 @@ LazyData: true
 Depends:
     R (>= 4.1.1)
 Imports:
+    udpipe,
     factoextra (>= 1.0.7),
     ca (>= 0.71.1),
     FactoMineR (>= 2.4),
