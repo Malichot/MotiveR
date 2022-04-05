@@ -1,0 +1,41 @@
+Package: Motifs
+Type: Package
+Title:  Identification de motifs lexico-grammaticaux
+Version: 0.0.0
+Author: Antoine de Sacy
+Authors@R: c(
+    person("Dominique", "Legallois", role = c("aut")),
+    person("Antoine", "de Sacy", role = c("aut")),
+    person("Bruno", "Spilak", role = "cre", email = "bruno.spilak@gmail.com")
+    )
+Description: Développement sous R d’une méthode d’analyse textuelle fondée sur l’identification de motifs
+    lexico-grammaticaux, méthode dite des « motifs » par Dominique Legallois
+    (Université Sorbonne Nouvelle Paris III) et Antoine de Sacy.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 4.1.1)
+Imports:
+    factoextra (>= 1.0.7),
+    ca (>= 0.71.1),
+    FactoMineR (>= 2.4),
+    ggrepel (>= 0.9.1),
+    ggwordcloud (>= 0.5.0),
+    ggpubr (>= 0.4.0),
+    ggsci (>= 2.9),
+    reshape2 (>= 1.4.4),
+    RColorBrewer (>= 1.1-2),
+    forcats (>= 0.5.1),
+    stringr (>= 1.4.0),
+    purrr (>= 0.3.4),
+    readr (>= 2.0.2),
+    tidyr (>= 1.1.4),
+    tibble (>= 3.1.5),
+    ggplot2 (>= 3.3.5),
+    tidyverse (>= 1.3.1),
+    tidytext (>= 0.3.2),
+    dplyr (>= 1.0.7),
+    data.table (>= 1.14.2)
+URL: https://github.com/Malichot/Motifs
+BugReports: https://github.com/Malichot/Motifs/issues
