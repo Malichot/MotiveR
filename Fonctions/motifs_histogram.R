@@ -14,9 +14,8 @@
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
-
 motifs_histograms <- function(path = "~/Dropbox/2020-2021/Motifs/", 
-                         csv = "corpus_motifs_grams.csv", nmots = 25){
+                              csv = "corpus_motifs_grams.csv", nmots = 25){
   
   # Librairies :
   
@@ -39,7 +38,7 @@ motifs_histograms <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
   ## Retrait des cases vides :
   corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
-
+  
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
   corpus_grams <- corpus_grams %>%
     count(motifs, Oeuvre, sort = TRUE)
@@ -71,7 +70,7 @@ motifs_histograms <- function(path = "~/Dropbox/2020-2021/Motifs/",
   ## Fréquences absolues :
   
   plot_abs <- ggplot(data = corpus_words_ngrams[1:nmots,],
-                           aes(x = motifs, y = n, fill = Oeuvre)) +
+                     aes(x = motifs, y = n, fill = Oeuvre)) +
     geom_histogram(stat = "identity", position = "dodge", show.legend = T) + 
     theme_minimal() +
     theme(legend.position="top")
@@ -88,7 +87,7 @@ motifs_histograms <- function(path = "~/Dropbox/2020-2021/Motifs/",
   # Visualisation :
   
   plot_freq <- ggplot(data = df_freq_rel[1:nmots,],
-                           aes(x = motifs, y = rel_freq, fill = Oeuvre)) +
+                      aes(x = motifs, y = rel_freq, fill = Oeuvre)) +
     geom_histogram(stat = "identity", position = "dodge", show.legend = T) + 
     theme_minimal() +
     theme(legend.position="top")
@@ -112,9 +111,3 @@ motifs_histograms <- function(path = "~/Dropbox/2020-2021/Motifs/",
   }
   
 }
-
-
-motifs_histograms(path = "~/Desktop/Motifs/", 
-                  csv = "corpus_motifs_grams.csv", 
-                  nmots = 35)
-
