@@ -1,38 +1,27 @@
-#' Titre : Scripts motifs - TF-IDF
-#' Auteurs : Dominique Legallois, Antoine de Sacy
-#' Date: 6 octobre 2021.
+#' TF-IDF plot
+#'
+#' Fonction génération TF-IDF
+#'
+#' @param corpus_grams data.frame sous format mots || motifs || Oeuvre
+#'
+#' @param corpus_path string chemin du csv contenant les motifs en ngram
+#'
+#' @param n_motifs int sélection du nombre de motifs à afficher
+#'
+#' @param plot_type string "group" pour une visualisation groupée, "sep" pour une visualisation séparée
 
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
-
-# Entrée : un corpus sous format : mots || motifs || Oeuvre
-
-## Paramètres : 
-
-# path = "~/Dropbox/2019-2020/Stage/Corpus_Retour_au_texte/"
-# csv = "corpus_motifs_ngrams.csv"==> Sortie du script ngrams
-# nombre_motifs = 20 ==> sélection du nombre de motifs à afficher dans la visualisation.
-
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
-
-# Fonction TF-IDF (màj : 15 mai 2021) :
-
-motifs_tf_idf <- function(path = "~/Dropbox/2020-2021/Motifs/",
-                          csv = "corpus_motifs_grams.csv", nombre_motifs = 20){
-  
-  ## Importation des librairies : 
-  
-  require("tidytext")
-  require("tidyverse")
-  require("dplyr")
-  # require("slider")
-  require("ggplot2")
-  require("tidyr")
-  require("data.table")
-  
+#' @example
+#' motifs_tf_idf(corpus_path="corpus_motifs_grams.csv", n_motifs = 20, plot_type="group")
+#'
+#' @export
+motifs_tf_idf <- function(corpus_grams=NULL,
+                          corpus_path=NULL, 
+                          n_motifs = 20, 
+                          plot_type = "group",
+                          save_output = FALSE,
+                          overwrite=FALSE){
   # Lecture des données :
-  
-  setwd(path)
-  corpus_grams <- fread(csv, encoding = "UTF-8", 
+  corpus_grams <- fread(corpus_path, encoding = "UTF-8", 
                         header = TRUE, stringsAsFactors = FALSE)
   
   # Vérification okazou :
@@ -71,53 +60,51 @@ motifs_tf_idf <- function(path = "~/Dropbox/2020-2021/Motifs/",
     arrange(desc(tf_idf))
   
   # Visualisation :
-  
-  tf_idf_grid <- corpus_words_ngrams %>%
-    select(-total) %>%
-    arrange(desc(tf_idf)) %>%
-    mutate(motifs = factor(motifs, levels = rev(unique(motifs)))) %>% 
-    group_by(Oeuvre) %>% 
-    top_n(nombre_motifs) %>% # À moduler suivant les besoins : > x ; == x ; etc.
-    ungroup %>%
-    ggplot(aes(motifs, tf_idf, fill = Oeuvre)) +
-    geom_col(show.legend = T) +
-    labs(x = NULL, y = "TF-IDF") +
-    facet_wrap(~Oeuvre, ncol = 2, scales = "free") +
-    coord_flip() +
-    theme_minimal()
-  
-  ## Autre visualisation : ##
-  
-  tf_idf_all <- corpus_words_ngrams %>% 
-    select(-total) %>%
-    arrange(desc(tf_idf)) %>%
-    mutate(motifs = factor(motifs, levels = rev(unique(motifs)))) %>% 
-    top_n(nombre_motifs) %>% # À moduler suivant les besoins : > x ; == x ; etc.
-    ungroup() %>%
-    mutate(word = reorder(motifs, tf_idf)) %>%
-    ggplot(aes(motifs, tf_idf, fill = Oeuvre)) +
-    geom_bar(stat = "identity") +
-    ylab("TF-IDF") +
-    coord_flip() +
-    theme_minimal()
-  
-  plot_tfidf <- as.numeric(readline("Visualisation séparée, tapez 1 et enter \n Visualisation groupée, tapez 2 et enter \n Sauvergarde dans un csv, tapez 3"))
-  
-  if(plot_tfidf == 1){
+  if(plot_type == "sep"){
+    tf_idf_grid <- corpus_words_ngrams %>%
+      select(-total) %>%
+      arrange(desc(tf_idf)) %>%
+      mutate(motifs = factor(motifs, levels = rev(unique(motifs)))) %>% 
+      group_by(Oeuvre) %>% 
+      top_n(n_motifs) %>% # À moduler suivant les besoins : > x ; == x ; etc.
+      ungroup %>%
+      ggplot(aes(motifs, tf_idf, fill = Oeuvre)) +
+      geom_col(show.legend = T) +
+      labs(x = NULL, y = "TF-IDF") +
+      facet_wrap(~Oeuvre, ncol = 2, scales = "free") +
+      coord_flip() +
+      theme_minimal()
     return(tf_idf_grid)
-    
-  }
-  
-  if(plot_tfidf == 2){
+  } else if(plot_type == "group"){
+    tf_idf_all <- corpus_words_ngrams %>% 
+      select(-total) %>%
+      arrange(desc(tf_idf)) %>%
+      mutate(motifs = factor(motifs, levels = rev(unique(motifs)))) %>% 
+      top_n(n_motifs) %>% # À moduler suivant les besoins : > x ; == x ; etc.
+      ungroup() %>%
+      mutate(word = reorder(motifs, tf_idf)) %>%
+      ggplot(aes(motifs, tf_idf, fill = Oeuvre)) +
+      geom_bar(stat = "identity") +
+      ylab("TF-IDF") +
+      coord_flip() +
+      theme_minimal()
     return(tf_idf_all)
+  } else{
+    stop("L'argument plot_type=", plot_type, " n'est pas valide...")
   }
   
-  if(plot_tfidf == 3){
-    write_csv(tf_idf_export, "Tf-idf.csv")
+  if (save_output) {
+    save_path = file.path(OUTPUT_DIR, "tf-idf.csv")
+    message("Sauvegarde des motifs dans ", save_path)
+    if (!file.exists(save_path)) {
+      write.csv(tf_idf_export, save_path)
+    } else {
+      if (overwrite) {
+        warning("Le fichier ", save_path, " existe dèjà, écrase et sauve nouveau. Pour éviter ce comportement, utiliser overwrite = FALSE.")
+        write.csv(tf_idf_export, save_path)
+      } else {
+        stop("Le fichier ", save_path, " existe dèjà. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE.")
+      }
+    }
   }
-  
-  else{
-    print("Votre choix ne correspond pas aux critères ternaires proposés...!")
-  }
-  
 }
