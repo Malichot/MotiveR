@@ -2,7 +2,7 @@
 #'
 #' Fonction génération de wordclouds
 #'
-#' @param corpus data.frame sous format mots || motifs || Oeuvre
+#' @param corpus_grams data.frame sous format mots || motifs || Oeuvre
 #'
 #' @param corpus_path string chemin du csv contenant les motifs en ngram
 #'
@@ -11,11 +11,11 @@
 #' @param freq string "rel" pour fréquence relative ou "abs" pour fréquence absolue
 #'
 #' @example
-#' corpus_annote <- motifs_nuage(corpus_path="corpus_motifs_grams.csv", nmots = 25)
+#' motifs_nuage(corpus_path="corpus_motifs_grams.csv", nmots = 25, freq = "rel")
 #'
 #' @export
 motifs_nuage <-
-  function(corpus = NULL,
+  function(corpus_grams = NULL,
            corpus_path = NULL,
            nmots = 25,
            freq = "rel") {
@@ -31,11 +31,11 @@ motifs_nuage <-
     # require("data.table")
     
     # Lecture des données :
-    if (is.null(corpus) & is.null(corpus_path)) {
+    if (is.null(corpus_grams) & is.null(corpus_path)) {
       corpus_path = file.path(OUTPUT_DIR, "corpus_motifs_grams.csv")
-      message("Chargement du corpus depuis le fichier ", corpus_path)
+      message("Chargement du corpus_grams depuis le fichier ", corpus_path)
       if (file.exists(corpus_path)) {
-        corpus <-
+        corpus_grams <-
           data.table::fread(
             corpus_path,
             encoding = "UTF-8",
@@ -45,10 +45,10 @@ motifs_nuage <-
       } else {
         stop("Le fichier ", corpus_path, " n'existe pas.")
       }
-    } else if (is.null(corpus) & (!is.null(corpus_path))) {
-      message("Chargement du corpus depuis le fichier ", corpus_path)
+    } else if (is.null(corpus_grams) & (!is.null(corpus_path))) {
+      message("Chargement du corpus_grams depuis le fichier ", corpus_path)
       if (file.exists(corpus_path)) {
-        corpus <-
+        corpus_grams <-
           data.table::fread(
             corpus_path,
             encoding = "UTF-8",
@@ -58,31 +58,31 @@ motifs_nuage <-
       } else {
         stop("Le fichier ", corpus_path, " n'existe pas.")
       }
-    } else if (!is.null(corpus) & (is.null(corpus_path))) {
+    } else if (!is.null(corpus_grams) & (is.null(corpus_path))) {
       # nothing to do
     } else {
-      stopifnot(!is.null(corpus) & (!is.null(corpus_path)))
-      stop("Vous ne pouvez pas passer à la fois 'corpus' et 'corpus_path' en argument.")
+      stopifnot(!is.null(corpus_grams) & (!is.null(corpus_path)))
+      stop("Vous ne pouvez pas passer à la fois 'corpus_grams' et 'corpus_path' en argument.")
     }
     
     # Vérification okazou (pb index) :
-    corpus <- corpus[, c("mots", "motifs", "Oeuvre")]
+    corpus_grams <- corpus_grams[, c("mots", "motifs", "Oeuvre")]
     
     ## Retrait des cases vides :
-    corpus <- corpus[complete.cases(corpus), ]
+    corpus_grams <- corpus_grams[complete.cases(corpus_grams), ]
     
     ## Dénombrement + filtrage éventuel des données : ex : n > 10
-    corpus <- corpus %>%
+    corpus_grams <- corpus_grams %>%
       count(Oeuvre, motifs, sort = TRUE)
     
     ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
     
-    total_words <- corpus %>%
+    total_words <- corpus_grams %>%
       group_by(Oeuvre) %>%
       summarize(total = sum(n))
     
     corpus_words_ngrams <-
-      left_join(corpus, total_words, by = "Oeuvre")
+      left_join(corpus_grams, total_words, by = "Oeuvre")
     
     ## Calcul de la fréquence relative :
     
@@ -96,7 +96,7 @@ motifs_nuage <-
     if (freq == "abs") {
       ## Visualisation sur les fréquences absolues :
       world_cloud_plot <- ggplot2::ggplot(
-        corpus[1:nmots, ],
+        corpus_grams[1:nmots, ],
         # TOdo : changer 50 par une variable dans la fonction
         ggplot2::aes(
           label = motifs,
