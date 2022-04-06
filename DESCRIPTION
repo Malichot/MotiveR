@@ -38,5 +38,6 @@ Imports:
     tidytext (>= 0.3.2),
     dplyr (>= 1.0.7),
     data.table (>= 1.14.2)
+RoxygenNote: 7.1.2
 URL: https://github.com/Malichot/Motifs
 BugReports: https://github.com/Malichot/Motifs/issues
