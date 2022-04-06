@@ -2,11 +2,11 @@
 #'
 #' Étiquetage du corpus situé dans path
 #'
-#' @param path Chemin du dossier contenant les différents corpus.
+#' @param path string: Chemin du dossier contenant les différents corpus.
 #'
-#' @param model Chemin du modèle UDPipe, chemin par défault: "./french-gsd-ud-2.5-191206.udpipe".
-#' Si NULL, le modèle est d'abord téléchargé.
-#'
+#' @param save_output boolean: Sauvegarde les résultats
+#' 
+#' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
 #'
 #' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
 #'
@@ -17,8 +17,18 @@
 UDPIPE_DIR <<- file.path(getwd(), "udpipe")
 UDPIPE_MODEL_NAME <<- "french-gsd-ud-2.5-191206.udpipe"
 UDPIPE_MODEL_PATH <<- file.path(UDPIPE_DIR, UDPIPE_MODEL_NAME)
-annotation_udpipe <- function(path, save=TRUE, overwrite=FALSE){
-  
+annotation_udpipe <- function(path, save_output=TRUE, overwrite = FALSE){
+  if (save_output) {
+    OUTPUT_DIR <<- file.path(".", paste0("output-", basename(path)))
+    message("Sauvegarde les résultats dans le dossier ", OUTPUT_DIR)
+    if (!file.exists(OUTPUT_DIR)) {
+      dir.create(OUTPUT_DIR)
+    } else {
+      if (! overwrite) {
+        stop("Le dosser de sauvegarde", OUTPUT_DIR, " existe dèjà. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE.")
+      }
+    }
+  }
   # Librairies: 
   # require("udpipe")
   # require("tidyverse")
@@ -70,14 +80,9 @@ annotation_udpipe <- function(path, save=TRUE, overwrite=FALSE){
   colnames(corpus_annote) <- c("mots", "lemmes", "POS", "feats", "Oeuvre")
   
   # Exportation csv :
-  if (save) {
-    OUTPUT_DIR <<- file.path(".", paste0("output-", basename(path)))
-    message("Sauve les résultats dans le dossier ", OUTPUT_DIR)
-    if (!file.exists(OUTPUT_DIR)) {
-      dir.create(OUTPUT_DIR)
-    }
+  if (save_output) {
     save_path = file.path(OUTPUT_DIR, "UDPipe_corpus_complet.csv")
-    print(paste0("Sauve annotation dans ", save_path))
+    message("Sauvegarde udpipe annotations dans ", save_path)
     if (!file.exists(save_path)) {
       write.csv(corpus_annote, save_path, fileEncoding = "UTF-8")
     } else {
