@@ -19,7 +19,7 @@ source("./Fonctions/Fonctions_motifs.R")
 
 # Annotation : 
 annotation_udpipe(path = "./Corpus-torun//", 
-                  model = "./model_udpipe/french-gsd-ud-2.5-191206.udpipe")
+                  model = "./udpipe/french-gsd-ud-2.5-191206.udpipe")
 # => create UDPipe_corpus_complet.csv
 
 # Transformation en motifs UDPipe
@@ -84,10 +84,3 @@ retour_texte_specificites_un_motif(path = ".",
                                    csv_corpus_motifs = "corpus_motifs_grams.csv",
                                    csv_corpus_specificites = "Corpus_spec_freq.csv",
                                    motif_cible = ", à le NC")
-
-
-
-
-
-
-
