@@ -2,7 +2,7 @@
 #' Auteurs : Dominique Legallois, Antoine de Sacy
 #' Date: 6 octobre 2021.
 
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
 # Fonction de choix du nb de ngrams (màj septembre 2021) :
 
@@ -31,7 +31,7 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
   ## Retrait des cases vides okazou :
   
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
+  corpus_spec <- corpus_spec[complete.cases(corpus_spec), ]
   
   # Choix du nombre de ngrams :
   
@@ -58,9 +58,10 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
     corpus_spec_punct <-
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
     
-    names(corpus_spec_punct) <- c("mots", "ngrammot", "motifs", "Oeuvre")
+    names(corpus_spec_punct) <-
+      c("mots", "ngrammot", "motifs", "Oeuvre")
     
-
+    
   }
   
   if (choix_nb_grams == 3) {
@@ -69,15 +70,15 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
     corpus_spec_punct <- corpus_spec  %>%
       mutate(next_motif = lead(motifs),
              next_motif2 = lead(motifs, 2)) %>%
-      filter(!is.na(next_motif), !is.na(next_motif2)) %>%
+      filter(!is.na(next_motif),!is.na(next_motif2)) %>%
       mutate(ngrammotif = paste(motifs, next_motif, next_motif2))
     
-    # 3-grams mots : 
+    # 3-grams mots :
     
     corpus_spec_punct <- corpus_spec_punct  %>%
       mutate(next_word = lead(mots),
              next_word2 = lead(mots, 2)) %>%
-      filter(!is.na(next_word), !is.na(next_word2)) %>%
+      filter(!is.na(next_word),!is.na(next_word2)) %>%
       mutate(ngrammot = paste(mots, next_word, next_word2))
     
     # Sélection et renommage des colonnes :
@@ -85,7 +86,8 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
     corpus_spec_punct <-
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
     
-    names(corpus_spec_punct) <- c("mots", "ngrammot", "motifs", "Oeuvre")
+    names(corpus_spec_punct) <-
+      c("mots", "ngrammot", "motifs", "Oeuvre")
     
   }
   
@@ -98,7 +100,9 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
         next_motif2 = lead(motifs, 2),
         next_motif3 = lead(motifs, 3)
       ) %>%
-      filter(!is.na(next_motif),!is.na(next_motif2),!is.na(next_motif3)) %>%
+      filter(!is.na(next_motif),
+             !is.na(next_motif2),
+             !is.na(next_motif3)) %>%
       mutate(ngrammotif = paste(motifs, next_motif, next_motif2, next_motif3))
     
     # 4-grams mots :
@@ -109,7 +113,9 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
         next_word2 = lead(mots, 2),
         next_word3 = lead(mots, 3)
       ) %>%
-      filter(!is.na(next_word),!is.na(next_word2),!is.na(next_word3)) %>%
+      filter(!is.na(next_word),
+             !is.na(next_word2),
+             !is.na(next_word3)) %>%
       mutate(ngrammot = paste(mots, next_word, next_word2, next_word3))
     
     # Sélection et renommage des colonnes :
@@ -117,7 +123,8 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
     corpus_spec_punct <-
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
     
-    names(corpus_spec_punct) <- c("mots", "ngrammot", "motifs", "Oeuvre")
+    names(corpus_spec_punct) <-
+      c("mots", "ngrammot", "motifs", "Oeuvre")
     
   }
   
@@ -131,10 +138,15 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
         next_motif3 = lead(motifs, 3),
         next_motif4 = lead(motifs, 4)
       ) %>%
-      filter(!is.na(next_motif),!is.na(next_motif2),!is.na(next_motif3),!is.na(next_motif4)) %>%
+      filter(
+        !is.na(next_motif),
+        !is.na(next_motif2),
+        !is.na(next_motif3),
+        !is.na(next_motif4)
+      ) %>%
       mutate(ngrammotif = paste(motifs, next_motif, next_motif2, next_motif3, next_motif4))
     
-    # Fivegrams mots : 
+    # Fivegrams mots :
     
     corpus_spec_punct <- corpus_spec_punct  %>%
       mutate(
@@ -143,7 +155,10 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
         next_word3 = lead(mots, 3),
         next_word4 = lead(mots, 4)
       ) %>%
-      filter(!is.na(next_word),!is.na(next_word2),!is.na(next_word3),!is.na(next_word4)) %>%
+      filter(!is.na(next_word),
+             !is.na(next_word2),
+             !is.na(next_word3),
+             !is.na(next_word4)) %>%
       mutate(ngrammot = paste(mots, next_word, next_word2, next_word3, next_word4))
     
     # Sélection et renommage des colonnes :
@@ -151,7 +166,8 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
     corpus_spec_punct <-
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
     
-    names(corpus_spec_punct) <- c("mots", "ngrammot", "motifs", "Oeuvre")
+    names(corpus_spec_punct) <-
+      c("mots", "ngrammot", "motifs", "Oeuvre")
     
     
   }
@@ -168,16 +184,22 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
         next_motif5 = lead(motifs, 5)
       ) %>%
       filter(
-        !is.na(next_motif),!is.na(next_motif2),!is.na(next_motif3),!is.na(next_motif4),!is.na(next_motif5)
+        !is.na(next_motif),
+        !is.na(next_motif2),
+        !is.na(next_motif3),
+        !is.na(next_motif4),
+        !is.na(next_motif5)
       ) %>%
-      mutate(ngrammotif = paste(
-        motifs,
-        next_motif,
-        next_motif2,
-        next_motif3,
-        next_motif4,
-        next_motif5
-      ))
+      mutate(
+        ngrammotif = paste(
+          motifs,
+          next_motif,
+          next_motif2,
+          next_motif3,
+          next_motif4,
+          next_motif5
+        )
+      )
     
     # Sixgrams mots :
     
@@ -190,7 +212,11 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
         next_word5 = lead(mots, 5)
       ) %>%
       filter(
-        !is.na(next_word),!is.na(next_word2),!is.na(next_word3),!is.na(next_word4),!is.na(next_word5)
+        !is.na(next_word),
+        !is.na(next_word2),
+        !is.na(next_word3),
+        !is.na(next_word4),
+        !is.na(next_word5)
       ) %>%
       mutate(ngrammot = paste(
         mots,
@@ -206,7 +232,8 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
     corpus_spec_punct <-
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
     
-    names(corpus_spec_punct) <- c("mots", "ngrammot", "motifs", "Oeuvre")
+    names(corpus_spec_punct) <-
+      c("mots", "ngrammot", "motifs", "Oeuvre")
     
   }
   
@@ -223,7 +250,12 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
         next_motif6 = lead(motifs, 6)
       ) %>%
       filter(
-        !is.na(next_motif),!is.na(next_motif2),!is.na(next_motif3),!is.na(next_motif4),!is.na(next_motif5),!is.na(next_motif6)
+        !is.na(next_motif),
+        !is.na(next_motif2),
+        !is.na(next_motif3),
+        !is.na(next_motif4),
+        !is.na(next_motif5),
+        !is.na(next_motif6)
       ) %>%
       mutate(
         ngrammotif = paste(
@@ -249,7 +281,12 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
         next_word6 = lead(mots, 6)
       ) %>%
       filter(
-        !is.na(next_word),!is.na(next_word2),!is.na(next_word3),!is.na(next_word4),!is.na(next_word5),!is.na(next_word6)
+        !is.na(next_word),
+        !is.na(next_word2),
+        !is.na(next_word3),
+        !is.na(next_word4),
+        !is.na(next_word5),
+        !is.na(next_word6)
       ) %>%
       mutate(
         ngrammot = paste(
@@ -268,11 +305,14 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
     corpus_spec_punct <-
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
     
-    names(corpus_spec_punct) <- c("mots", "ngrammot", "motifs", "Oeuvre")
+    names(corpus_spec_punct) <-
+      c("mots", "ngrammot", "motifs", "Oeuvre")
     
   }
   
-  write.csv(corpus_spec_punct, "corpus_motifs_grams.csv", fileEncoding = "UTF-8")
+  write.csv(corpus_spec_punct,
+            "corpus_motifs_grams.csv",
+            fileEncoding = "UTF-8")
   
 }
 
