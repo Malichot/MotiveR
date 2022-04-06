@@ -1,41 +1,57 @@
-## Titre : Scripts motifs - Fonction génération de wordclouds
-## Auteurs : Dominique Legallois, Antoine de Sacy
-## Date : 15 mai 2021.
-
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
-
-# Entrée : un corpus sous format : mots || motifs || Oeuvre
-
-## Paramètres : 
-
-# path = chemin, préférablement celui où se trouve le csv.
-# csv = "corpus_motifs_grams.csv" ==> Sortie du script choix ngrams
-# nmots = 55 ==> sélection du nombre de motifs à afficher dans la visualisation.
-
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
-
-
-motifs_nuage <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/", 
-                         csv = "Corpus_motifs_UDPipe.csv", nmots = 25){
+#' Nuage des motifs
+#'
+#' Fonction génération de wordclouds
+#'
+#' @param corpus data.frame sous format mots || motifs || Oeuvre
+#'
+#' @param corpus_path string chemin du csv contenant les motifs en ngram
+#' 
+#' @param nmots int sélection du nombre de motifs à afficher
+#'
+#' @param freq string "rel" pour fréquence relative ou "abs" pour fréquence absolue
+#' 
+#' @example
+#' corpus_annote <- motifs_nuage(corpus_path="corpus_motifs_grams.csv", nmots = 25)
+#'
+#' @export
+motifs_nuage <- function(corpus = NULL, corpus_path = NULL, nmots = 25, freq = "rel"){
   
   # Librairies :
   
-  require("dplyr")
-  require("tidytext")
-  require("tidyverse")
-  require("ggwordcloud")
-  require("RColorBrewer")
-  require("reshape2")
-  require("ggsci")
-  require("data.table")
+  # require("dplyr")
+  # require("tidytext")
+  # require("tidyverse")
+  # require("ggwordcloud")
+  # require("RColorBrewer")
+  # require("reshape2")
+  # require("ggsci")
+  # require("data.table")
   
   # Lecture des données :
-  
-  setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8", header = TRUE, stringsAsFactors = FALSE)
+  if (is.null(corpus) & is.null(corpus_path)) {
+    corpus_path = file.path(OUTPUT_DIR, "corpus_motifs_grams.csv")
+    message("Chargement du corpus depuis le fichier ", corpus_path)
+    if (file.exists(corpus_path)) {
+      corpus <- data.table::fread(corpus_path, encoding = "UTF-8", header = TRUE, stringsAsFactors = FALSE)
+    } else {
+      stop("Le fichier ", corpus_path, " n'existe pas.")
+    }
+  } else if (is.null(corpus) & (!is.null(corpus_path))) {
+    message("Chargement du corpus depuis le fichier ", corpus_path)
+    if (file.exists(corpus_path)) {
+      corpus <- data.table::fread(corpus_path, encoding = "UTF-8", header = TRUE, stringsAsFactors = FALSE)
+    } else {
+      stop("Le fichier ", corpus_path, " n'existe pas.")
+    }
+  } else if (!is.null(corpus) & (is.null(corpus_path))) {
+    # nothing to do
+  } else {
+    stopifnot(!is.null(corpus) & (!is.null(corpus_path)))
+    stop("Vous ne pouvez pas passer à la fois 'corpus' et 'corpus_path' en argument.")
+  }
   
   # Vérification okazou (pb index) :
-  corpus <- corpus_spec[,c("mots", "motifs", "Oeuvre")]
+  corpus <- corpus[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
   corpus <- corpus[complete.cases(corpus),]
@@ -59,55 +75,35 @@ motifs_nuage <- function(path = "~/Dropbox/2020-2021/Corpus-test-motifs/",
   # Ordonnancement par fréquences relatives :
   corpus_words_ngrams <- corpus_words_ngrams[order(corpus_words_ngrams$rel_freq, decreasing = T),] 
   
-  ## Visualisation sur les fréquences absolues :
-  
-  plot_abs <- ggplot(
-    corpus[1:nmots,], # TOdo : changer 50 par une variable dans la fonction
-    aes(
-      label = motifs, size = n,
-      x = Oeuvre, color = Oeuvre, fill = Oeuvre 
-    )
-  ) +
-    geom_text_wordcloud_area(shape = "diamond") +
-    scale_size_area(max_size = 15) +
-    scale_x_discrete() +
-    theme_minimal()
-  
-  ## Visualisation sur les fréquences relatives :
-  
-  plot_freq <- ggplot(
-    corpus_words_ngrams[1:nmots,], # Choix du nombre de motifs à faire apparaître
-    aes(
-      label = motifs, size = rel_freq,
-      x = Oeuvre, color = Oeuvre, fill = Oeuvre 
-    )
-  ) +
-    geom_text_wordcloud_area(shape = "diamond") +
-    scale_size_area(max_size = 15) + # à moduler suivant le nb de motifs
-    scale_x_discrete() +
-    theme_minimal()
-  
-  
-  freq_rel <- as.numeric(readline("Fréquences relatives, tapez 1 et enter \n Fréquences absolues, tapez 2 et enter"))
-  
-  if(freq_rel == 1){
-    return(plot_freq)
-    
+  if (freq == "abs"){
+    ## Visualisation sur les fréquences absolues :
+    world_cloud_plot <- ggplot2::ggplot(
+      corpus[1:nmots,], # TOdo : changer 50 par une variable dans la fonction
+      ggplot2::aes(
+        label = motifs, size = n,
+        x = Oeuvre, color = Oeuvre, fill = Oeuvre 
+      )
+    ) +
+      ggwordcloud::geom_text_wordcloud_area(shape = "diamond") +
+      ggplot2::scale_size_area(max_size = 15) +
+      ggplot2::scale_x_discrete() +
+      ggplot2::theme_minimal()
+  } else if (freq == "rel") {
+    ## Visualisation sur les fréquences relatives :
+    world_cloud_plot <- ggplot2::ggplot(
+      corpus_words_ngrams[1:nmots,], # Choix du nombre de motifs à faire apparaître
+      ggplot2::aes(
+        label = motifs, size = rel_freq,
+        x = Oeuvre, color = Oeuvre, fill = Oeuvre 
+      )
+    ) +
+      ggwordcloud::geom_text_wordcloud_area(shape = "diamond") +
+      ggplot2::scale_size_area(max_size = 15) + # à moduler suivant le nb de motifs
+      ggplot2::scale_x_discrete() +
+      ggplot2::theme_minimal()
+  } else {
+    stop("L'argument freq=", freq," n'est pas valide...")
   }
-  
-  
-  if(freq_rel == 2){
-    return(plot_abs)
-  }
-  
-  else{
-    print("Votre choix ne correspond pas aux critères binaires proposés...!")
-  }
+  return(world_cloud_plot)
   
 }
-
-  
-motifs_nuage(path = "~/Desktop/Motifs/", 
-             csv = "corpus_motifs_grams.csv", nmots = 25)
-
-
