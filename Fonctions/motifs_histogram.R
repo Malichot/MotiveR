@@ -2,21 +2,21 @@
 #' Auteurs : Dominique Legallois, Antoine de Sacy
 #' Date: 6 octobre 2021.
 
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
 # Entrée : un corpus sous format : mots || motifs || Oeuvre
 
-## Paramètres : 
+## Paramètres :
 
 # path = chemin, préférablement celui où se trouve le csv.
 # csv = "corpus_motifs_grams.csv"==> Sortie du script choix de ngrams.
 # nmots = 55 ==> sélection du nombre de motifs à afficher dans la visualisation.
 
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
-motifs_histograms <- function(path = "~/Dropbox/2020-2021/Motifs/", 
-                              csv = "corpus_motifs_grams.csv", nmots = 25){
-  
+motifs_histogram <- function(path = "~/Dropbox/2020-2021/Motifs/",
+                             csv = "corpus_motifs_grams.csv",
+                             nmots = 25) {
   # Librairies :
   
   require("dplyr")
@@ -31,13 +31,19 @@ motifs_histograms <- function(path = "~/Dropbox/2020-2021/Motifs/",
   # Lecture des données :
   
   setwd(path)
-  corpus_grams <- fread(csv, encoding = "UTF-8", header = TRUE, stringsAsFactors = FALSE)
+  corpus_grams <-
+    fread(
+      csv,
+      encoding = "UTF-8",
+      header = TRUE,
+      stringsAsFactors = FALSE
+    )
   
   # Vérification okazou :
-  corpus_grams <- corpus_grams[,c("mots", "motifs", "Oeuvre")]
+  corpus_grams <- corpus_grams[, c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
+  corpus_grams <- corpus_grams[complete.cases(corpus_grams), ]
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
   corpus_grams <- corpus_grams %>%
@@ -49,33 +55,42 @@ motifs_histograms <- function(path = "~/Dropbox/2020-2021/Motifs/",
     group_by(Oeuvre) %>%
     summarize(total = sum(n))
   
-  corpus_words_ngrams <- left_join(corpus_grams, total_words, by = "Oeuvre") 
+  corpus_words_ngrams <-
+    left_join(corpus_grams, total_words, by = "Oeuvre")
   
   ## Calcul de la fréquence relative :
   
-  corpus_words_ngrams$rel_freq <- corpus_words_ngrams$n / corpus_words_ngrams$total
+  corpus_words_ngrams$rel_freq <-
+    corpus_words_ngrams$n / corpus_words_ngrams$total
   
   # Ordonnancement par fréquences relatives :
-  corpus_words_ngrams <- corpus_words_ngrams[order(corpus_words_ngrams$rel_freq, decreasing = T),] 
+  corpus_words_ngrams <-
+    corpus_words_ngrams[order(corpus_words_ngrams$rel_freq, decreasing = T), ]
   
-  # Visualisation en histogrammes : 
+  # Visualisation en histogrammes :
   
   ## Pour visualisation par fréquences décroissantes :
   
   #Turn your 'treatment' column into a character vector
-  corpus_words_ngrams$motifs <- as.character(corpus_words_ngrams$motifs)
+  corpus_words_ngrams$motifs <-
+    as.character(corpus_words_ngrams$motifs)
   #Then turn it back into a factor with the levels in the correct order
-  corpus_words_ngrams$motifs <- factor(corpus_words_ngrams$motifs, levels=unique(corpus_words_ngrams$motifs))
+  corpus_words_ngrams$motifs <-
+    factor(corpus_words_ngrams$motifs,
+           levels = unique(corpus_words_ngrams$motifs))
   
   ## Fréquences absolues :
   
-  plot_abs <- ggplot(data = corpus_words_ngrams[1:nmots,],
+  plot_abs <- ggplot(data = corpus_words_ngrams[1:nmots, ],
                      aes(x = motifs, y = n, fill = Oeuvre)) +
-    geom_histogram(stat = "identity", position = "dodge", show.legend = T) + 
+    geom_histogram(stat = "identity",
+                   position = "dodge",
+                   show.legend = T) +
     theme_minimal() +
-    theme(legend.position="top")
+    theme(legend.position = "top")
   
-  plot_abs <- plot_abs + theme(axis.text.x= element_text(angle = 50, hjust = 1))
+  plot_abs <-
+    plot_abs + theme(axis.text.x = element_text(angle = 50, hjust = 1))
   
   ## Fréquences relatives
   
@@ -86,23 +101,31 @@ motifs_histograms <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
   # Visualisation :
   
-  plot_freq <- ggplot(data = df_freq_rel[1:nmots,],
+  plot_freq <- ggplot(data = df_freq_rel[1:nmots, ],
                       aes(x = motifs, y = rel_freq, fill = Oeuvre)) +
-    geom_histogram(stat = "identity", position = "dodge", show.legend = T) + 
+    geom_histogram(stat = "identity",
+                   position = "dodge",
+                   show.legend = T) +
     theme_minimal() +
-    theme(legend.position="top")
+    theme(legend.position = "top")
   
-  plot_freq <- plot_freq + theme(axis.text.x= element_text(angle = 50, hjust = 1))
+  plot_freq <-
+    plot_freq + theme(axis.text.x = element_text(angle = 50, hjust = 1))
   
-  freq_rel <- as.numeric(readline("Fréquences relatives, tapez 1 et enter \n Fréquences absolues, tapez 2 et enter"))
+  freq_rel <-
+    as.numeric(
+      readline(
+        "Fréquences relatives, tapez 1 et enter \n Fréquences absolues, tapez 2 et enter"
+      )
+    )
   
-  if(freq_rel == 1){
+  if (freq_rel == 1) {
     return(plot_freq)
     
   }
   
   
-  if(freq_rel == 2){
+  if (freq_rel == 2) {
     return(plot_abs)
   }
   
