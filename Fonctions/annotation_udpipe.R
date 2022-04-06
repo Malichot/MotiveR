@@ -14,18 +14,6 @@
 #' bmi.vals <- annotation_udpipe("curpus-test")
 #'
 #' @export
-
-
-# path  = chemin du répertoire dans lequel se trouve votre corpus sous format .txt avec un fichier par oeuvre.
-# model = chemin vers le modèle téléchargé ci-dessus. 
-
-# Sortie : mots || lemmes || POS || feats || Oeuvre
-
-# path = "~/Desktop/Motifs/Corpus-nettoye-05-10-21/"
-# model = "~/Desktop/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe"
-
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
-
 UDPIPE_DIR = file.path(getwd(), "udpipe")
 UDPIPE_MODEL_NAME = "french-gsd-ud-2.5-191206.udpipe"
 UDPIPE_MODEL_PATH = file.path(UDPIPE_DIR, UDPIPE_MODEL_NAME)
