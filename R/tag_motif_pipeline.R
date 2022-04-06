@@ -19,7 +19,7 @@
 #' @export
 
 
-source("./Fonctions/regex_corpus_UDPipe.R")
+source("./Fonctions/regex_corpus_udpipe.R")
 source("./Fonctions/annotation_udpipe.R")
 tag_motif_pipeline <-
   function(path,
@@ -29,7 +29,7 @@ tag_motif_pipeline <-
     corpus_annote = annotation_udpipe(path = "./Corpus-torun",
                                       save_output = save_output,
                                       overwrite = overwrite)
-    corpus_motifs = regex_corpus_UDPipe(corpus = corpus_annote,
+    corpus_motifs = regex_corpus_udpipe(corpus = corpus_annote,
                                         save_output = save_output,
                                         overwrite = overwrite)
     

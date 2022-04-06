@@ -1,4 +1,4 @@
-#' Regex UDPipe
+#' Regex corpus UDPipe
 #'
 #' Transformation en motifs UDPpipe
 #'
@@ -16,7 +16,7 @@
 #' corpus_motifs <- regex_corpus_UDPipe("./output/UDPipe_corpus_complet.csv", save_output = TRUE)
 #'
 #' @export
-regex_corpus_UDPipe <- function(corpus = NULL, corpus_path = NULL, save_output = FALSE, overwrite=FALSE){
+regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output = FALSE, overwrite=FALSE){
   ## Importation du corpus : 
   if (is.null(corpus) & is.null(corpus_path)) {
     corpus_path = file.path(OUTPUT_DIR, "UDPipe_corpus_complet.csv")
