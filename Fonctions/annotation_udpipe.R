@@ -1,30 +1,31 @@
-#' Titre : Scripts motifs - Étiquetage UDPipe
-#' Auteurs : Dominique Legallois, Antoine de Sacy
-#' Date: 6 octobre 2021.
+#' Étiquetage UDPipe
+#'
+#' Étiquetage du corpus situé dans path
+#'
+#' @param path Chemin du dossier contenant les différents corpus.
+#'
+#' @param model Chemin du modèle UDPipe, chemin par défault: "./french-gsd-ud-2.5-191206.udpipe".
+#' Si NULL, le modèle est d'abord téléchargé.
+#'
+#'
+#' @return DataFrame: corpus_annote
+#'
+#' @example inst/examples/example_annotation_udpipe.R
+#' bmi.vals <- annotation_udpipe("curpus-test")
+#'
+#' @export
 
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
-
-                        # A LIRE AVANT : 
-
-# Télécharger une seule fois le modèle avec la commande suivante :
-
-setwd("~/Desktop/Motifs/")
-
-library("udpipe")
-dl <- udpipe_download_model(language = "french")
-
-# Une fois téléchargé, un fichier "french-gsd-ud-2.4-190531.udpipe" apparaît dans votre répertoire.
 
 # path  = chemin du répertoire dans lequel se trouve votre corpus sous format .txt avec un fichier par oeuvre.
 # model = chemin vers le modèle téléchargé ci-dessus. 
 
 # Sortie : mots || lemmes || POS || feats || Oeuvre
 
-path = "~/Desktop/Motifs/Corpus-nettoye-05-10-21/"
-model = "~/Desktop/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe"
+# path = "~/Desktop/Motifs/Corpus-nettoye-05-10-21/"
+# model = "~/Desktop/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe"
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
-annotation_udpipe <- function(path = "~/Documents/Huma-num/2021-2022/Motifs/Corpus-test/", 
+annotation_udpipe <- function(path,
                               model = "~/Documents/Huma-num/2021-2022/Motifs/model_udpipe/french-gsd-ud-2.5-191206.udpipe"){
   
   # Librairies: 
@@ -68,13 +69,13 @@ annotation_udpipe <- function(path = "~/Documents/Huma-num/2021-2022/Motifs/Corp
   corpus_annote$doc_id <- gsub("\\.\\/", "", corpus_annote$doc_id)
   
   # Sélection des colonnes qui nous intéressent : 
-  corpus_annote_cols <- corpus_annote[,c("token", "lemma", "upos", "feats", "doc_id")]
-  colnames(corpus_annote_cols) <- c("mots", "lemmes", "POS", "feats", "Oeuvre")
+  corpus_annote <- corpus_annote[,c("token", "lemma", "upos", "feats", "doc_id")]
+  colnames(corpus_annote) <- c("mots", "lemmes", "POS", "feats", "Oeuvre")
   
-  head(corpus_annote_cols)
+  head(corpus_annote)
   
   # Exportation csv : 
-  write.csv(corpus_annote_cols, "UDPipe_corpus_complet.csv", fileEncoding = "UTF-8")
+  write.csv(corpus_annote, "UDPipe_corpus_complet.csv", fileEncoding = "UTF-8")
   
 }
 
