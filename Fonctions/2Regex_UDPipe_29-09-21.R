@@ -1,23 +1,22 @@
-#' Titre : Scripts motifs - Regex UDPipe
-#' Auteurs : Dominique Legallois, Antoine de Sacy
-#' Date: 6 octobre 2021.
-
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
-
-# Fonction Transformation en motifs UDPpipe (màj septembre 2021) :
-
-path = "~/Motifs/Test/"
-corpus = "UDPipe_corpus_complet.csv"
-
-regex_corpus_entier_UDPipe <- function(path = "~/Desktop/Motifs/", corpus = "UDPipe_corpus_complet.csv"){
-  
+#' Regex UDPipe
+#'
+#' Transformation en motifs UDPpipe
+#'
+#' @param corpus Chemin du dossier contenant les différents corpus.
+#'
+#' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
+#'
+#' @example inst/examples/example_annotation_udpipe.R
+#' bmi.vals <- annotation_udpipe("curpus-test")
+#'
+#' @export
+regex_corpus_UDPipe <- function(corpus = "UDPipe_corpus_complet.csv"){
   # Librairies : 
-  
-  require("stringr")
-  require("dplyr")
-  require("readr")
-  require("data.table")
-  setwd(path)
+  # require("stringr")
+  # require("dplyr")
+  # require("readr")
+  # require("data.table")
+  # setwd(path)
   
   ## Importation du corpus : 
   
@@ -525,7 +524,7 @@ regex_corpus_entier_UDPipe <- function(path = "~/Desktop/Motifs/", corpus = "UDP
  criminellement", "idiotement", "judicieusement", "perversement", "sottement", "stupidement", "bizarrement", "
  curieusement", "étonnamment", "étrangement", "fâcheusement", "inexplicablement", "paradoxalement", "regrettablement"), c("lemmes", "POS")] <- "ADVMAN"
   
-
+  
   ## Cas où l'on part des POS pour changer les lemmes :
   ## Ici, transformation des adverbes restants en ADV
   corpus <- corpus %>%
@@ -728,13 +727,13 @@ regex_corpus_entier_UDPipe <- function(path = "~/Desktop/Motifs/", corpus = "UDP
     mutate(lemmes = replace(lemmes, mots == "ils", "ils")) %>%
     mutate(lemmes = replace(lemmes, mots == "Elles", "elles")) %>%
     mutate(lemmes = replace(lemmes, mots == "elles", "elles"))
-    
+  
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
   
   ## Retrait des lignes vides :
   corpus <- as_tibble(corpus)
-
+  
   
   # Dernières vérifications :
   
@@ -743,7 +742,7 @@ regex_corpus_entier_UDPipe <- function(path = "~/Desktop/Motifs/", corpus = "UDP
   f <- which(corpus$mots == "des")
   g <- which(corpus$mots == "au")
   d <- which(corpus$lemmes == "")
-
+  
   if(length(d) > 0) {
     corpus = corpus[-d,1:4] 
   }
@@ -826,5 +825,3 @@ regex_corpus_entier_UDPipe <- function(path = "~/Desktop/Motifs/", corpus = "UDP
     corpus_motifs <<- corpus
   }
 }
-
-regex_corpus_entier_UDPipe(path = "~/Documents/Huma-num/2021-2022/Motifs/", corpus = "UDPipe_corpus_complet.csv")
