@@ -6,20 +6,16 @@
 
 # Fonction de choix du nb de ngrams (màj septembre 2021) :
 
-choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
-                            csv = "Corpus_motifs_UDPipe.csv") {
+choix_nb_ngrams <- function(corpus_motifs) {
   require("dplyr")
   require("tidytext")
   require("tidyverse")
   require("data.table")
   
   # Lecture des données :
-  
-  setwd(path)
-  
   corpus_spec <-
-    fread(
-      csv,
+    data.table::fread(
+      corpus_motifs,
       encoding = "UTF-8",
       header = TRUE,
       stringsAsFactors = FALSE
@@ -40,78 +36,61 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
   if (choix_nb_grams == 2) {
     # bigrams motifs :
-    
     corpus_spec_punct <- corpus_spec  %>%
-      mutate(next_motif = lead(motifs)) %>%
-      filter(!is.na(next_motif)) %>%
+      mutate(next_motif = dplyr::lead(motifs)) %>%
+      dplyr::filter(!is.na(next_motif)) %>%
       mutate(ngrammotif = paste(motifs, next_motif))
     
     # bigrams mots :
-    
     corpus_spec_punct <- corpus_spec_punct  %>%
-      mutate(next_word = lead(mots)) %>%
-      filter(!is.na(next_word)) %>%
+      mutate(next_word = dplyr::lead(mots)) %>%
+      dplyr::filter(!is.na(next_word)) %>%
       mutate(ngrammot = paste(mots, next_word))
     
     # Sélection et renommage des colonnes :
-    
     corpus_spec_punct <-
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
-    
     names(corpus_spec_punct) <-
       c("mots", "ngrammot", "motifs", "Oeuvre")
-    
-    
-  }
-  
-  if (choix_nb_grams == 3) {
+  } else if (choix_nb_grams == 3) {
     # 3-grams motifs :
-    
     corpus_spec_punct <- corpus_spec  %>%
-      mutate(next_motif = lead(motifs),
-             next_motif2 = lead(motifs, 2)) %>%
-      filter(!is.na(next_motif),!is.na(next_motif2)) %>%
+      mutate(next_motif = dplyr::lead(motifs),
+             next_motif2 = dplyr::lead(motifs, 2)) %>%
+      dplyr::filter(!is.na(next_motif),!is.na(next_motif2)) %>%
       mutate(ngrammotif = paste(motifs, next_motif, next_motif2))
     
     # 3-grams mots :
-    
     corpus_spec_punct <- corpus_spec_punct  %>%
-      mutate(next_word = lead(mots),
-             next_word2 = lead(mots, 2)) %>%
-      filter(!is.na(next_word),!is.na(next_word2)) %>%
+      mutate(next_word = dplyr::lead(mots),
+             next_word2 = dplyr::lead(mots, 2)) %>%
+      dplyr::filter(!is.na(next_word),!is.na(next_word2)) %>%
       mutate(ngrammot = paste(mots, next_word, next_word2))
     
     # Sélection et renommage des colonnes :
-    
     corpus_spec_punct <-
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
-    
     names(corpus_spec_punct) <-
       c("mots", "ngrammot", "motifs", "Oeuvre")
-    
-  }
-  
-  if (choix_nb_grams == 4) {
+  } else if (choix_nb_grams == 4) {
     # 4-grams motifs :
-    
     corpus_spec_punct <- corpus_spec  %>%
       mutate(
-        next_motif = lead(motifs),
-        next_motif2 = lead(motifs, 2),
-        next_motif3 = lead(motifs, 3)
+        next_motif = dplyr::lead(motifs),
+        next_motif2 = dplyr::lead(motifs, 2),
+        next_motif3 = dplyr::lead(motifs, 3)
       ) %>%
-      filter(!is.na(next_motif),
+      dplyr::filter(!is.na(next_motif),
              !is.na(next_motif2),
              !is.na(next_motif3)) %>%
       mutate(ngrammotif = paste(motifs, next_motif, next_motif2, next_motif3))
     
     # 4-grams mots :
-    
     corpus_spec_punct <- corpus_spec_punct  %>%
       mutate(
-        next_word = lead(mots),
-        next_word2 = lead(mots, 2),
-        next_word3 = lead(mots, 3)
+        next_word = dplyr::lead(mots),
+        next_word2 = dplyr::lead(mots, 2),
+        next_word3 = dplyr::lead(mots, 3)
       ) %>%
       filter(!is.na(next_word),
              !is.na(next_word2),
@@ -119,26 +98,20 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
       mutate(ngrammot = paste(mots, next_word, next_word2, next_word3))
     
     # Sélection et renommage des colonnes :
-    
     corpus_spec_punct <-
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
-    
     names(corpus_spec_punct) <-
       c("mots", "ngrammot", "motifs", "Oeuvre")
-    
-  }
-  
-  if (choix_nb_grams == 5) {
+  } else if (choix_nb_grams == 5) {
     # Fivegrams motifs :
-    
     corpus_spec_punct <- corpus_spec  %>%
       mutate(
-        next_motif = lead(motifs),
-        next_motif2 = lead(motifs, 2),
-        next_motif3 = lead(motifs, 3),
-        next_motif4 = lead(motifs, 4)
+        next_motif = dplyr::lead(motifs),
+        next_motif2 = dplyr::lead(motifs, 2),
+        next_motif3 = dplyr::lead(motifs, 3),
+        next_motif4 = dplyr::lead(motifs, 4)
       ) %>%
-      filter(
+      dplyr::filter(
         !is.na(next_motif),
         !is.na(next_motif2),
         !is.na(next_motif3),
@@ -147,41 +120,33 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
       mutate(ngrammotif = paste(motifs, next_motif, next_motif2, next_motif3, next_motif4))
     
     # Fivegrams mots :
-    
     corpus_spec_punct <- corpus_spec_punct  %>%
       mutate(
-        next_word = lead(mots),
-        next_word2 = lead(mots, 2),
-        next_word3 = lead(mots, 3),
-        next_word4 = lead(mots, 4)
+        next_word = dplyr::lead(mots),
+        next_word2 = dplyr::lead(mots, 2),
+        next_word3 = dplyr::lead(mots, 3),
+        next_word4 = dplyr::lead(mots, 4)
       ) %>%
-      filter(!is.na(next_word),
+      dplyr::filter(!is.na(next_word),
              !is.na(next_word2),
              !is.na(next_word3),
              !is.na(next_word4)) %>%
       mutate(ngrammot = paste(mots, next_word, next_word2, next_word3, next_word4))
     
     # Sélection et renommage des colonnes :
-    
     corpus_spec_punct <-
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
-    
     names(corpus_spec_punct) <-
       c("mots", "ngrammot", "motifs", "Oeuvre")
-    
-    
-  }
-  
-  if (choix_nb_grams == 6) {
+  } else if (choix_nb_grams == 6) {
     # Sixgrams motifs :
-    
     corpus_spec_punct <- corpus_spec  %>%
       mutate(
-        next_motif = lead(motifs),
-        next_motif2 = lead(motifs, 2),
-        next_motif3 = lead(motifs, 3),
-        next_motif4 = lead(motifs, 4),
-        next_motif5 = lead(motifs, 5)
+        next_motif = dplyr::lead(motifs),
+        next_motif2 = dplyr::lead(motifs, 2),
+        next_motif3 = dplyr::lead(motifs, 3),
+        next_motif4 = dplyr::lead(motifs, 4),
+        next_motif5 = dplyr::lead(motifs, 5)
       ) %>%
       filter(
         !is.na(next_motif),
@@ -202,16 +167,15 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
       )
     
     # Sixgrams mots :
-    
     corpus_spec_punct <- corpus_spec_punct  %>%
       mutate(
-        next_word = lead(mots),
-        next_word2 = lead(mots, 2),
-        next_word3 = lead(mots, 3),
-        next_word4 = lead(mots, 4),
-        next_word5 = lead(mots, 5)
+        next_word = dplyr::lead(mots),
+        next_word2 = dplyr::lead(mots, 2),
+        next_word3 = dplyr::lead(mots, 3),
+        next_word4 = dplyr::lead(mots, 4),
+        next_word5 = dplyr::lead(mots, 5)
       ) %>%
-      filter(
+      dplyr::filter(
         !is.na(next_word),
         !is.na(next_word2),
         !is.na(next_word3),
@@ -228,28 +192,22 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
       ))
     
     # Sélection et renommage des colonnes :
-    
     corpus_spec_punct <-
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
-    
     names(corpus_spec_punct) <-
       c("mots", "ngrammot", "motifs", "Oeuvre")
-    
-  }
-  
-  if (choix_nb_grams == 7) {
+  } else if (choix_nb_grams == 7) {
     # 7-grams motifs :
-    
     corpus_spec_punct <- corpus_spec  %>%
       mutate(
-        next_motif = lead(motifs),
-        next_motif2 = lead(motifs, 2),
-        next_motif3 = lead(motifs, 3),
-        next_motif4 = lead(motifs, 4),
-        next_motif5 = lead(motifs, 5),
-        next_motif6 = lead(motifs, 6)
+        next_motif = dplyr::lead(motifs),
+        next_motif2 = dplyr::lead(motifs, 2),
+        next_motif3 = dplyr::lead(motifs, 3),
+        next_motif4 = dplyr::lead(motifs, 4),
+        next_motif5 = dplyr::lead(motifs, 5),
+        next_motif6 = dplyr::lead(motifs, 6)
       ) %>%
-      filter(
+      dplyr::filter(
         !is.na(next_motif),
         !is.na(next_motif2),
         !is.na(next_motif3),
@@ -273,14 +231,14 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
     
     corpus_spec_punct <- corpus_spec_punct  %>%
       mutate(
-        next_word = lead(mots),
-        next_word2 = lead(mots, 2),
-        next_word3 = lead(mots, 3),
-        next_word4 = lead(mots, 4),
-        next_word5 = lead(mots, 5),
-        next_word6 = lead(mots, 6)
+        next_word = dplyr::lead(mots),
+        next_word2 = dplyr::lead(mots, 2),
+        next_word3 = dplyr::lead(mots, 3),
+        next_word4 = dplyr::lead(mots, 4),
+        next_word5 = dplyr::lead(mots, 5),
+        next_word6 = dplyr::lead(mots, 6)
       ) %>%
-      filter(
+      dplyr::filter(
         !is.na(next_word),
         !is.na(next_word2),
         !is.na(next_word3),
@@ -301,13 +259,10 @@ choix_nb_ngrams <- function(path = "~/Dropbox/2020-2021/Motifs/",
       )
     
     # Sélection et renommage des colonnes :
-    
     corpus_spec_punct <-
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
-    
     names(corpus_spec_punct) <-
       c("mots", "ngrammot", "motifs", "Oeuvre")
-    
   }
   
   write.csv(corpus_spec_punct,
