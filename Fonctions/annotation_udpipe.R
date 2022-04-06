@@ -10,7 +10,7 @@
 #'
 #' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
 #'
-#' @example inst/examples/example_annotation_udpipe.R
+#' @example
 #' corpus_annote <- annotation_udpipe("curpus-test")
 #'
 #' @export
