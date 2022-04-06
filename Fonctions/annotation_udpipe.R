@@ -14,10 +14,9 @@
 #' corpus_annote <- annotation_udpipe("curpus-test")
 #'
 #' @export
-UDPIPE_DIR = file.path(getwd(), "udpipe")
-UDPIPE_MODEL_NAME = "french-gsd-ud-2.5-191206.udpipe"
-UDPIPE_MODEL_PATH = file.path(UDPIPE_DIR, UDPIPE_MODEL_NAME)
-OUTPUT_DIR = file.path(getwd(), "output")
+UDPIPE_DIR <<- file.path(getwd(), "udpipe")
+UDPIPE_MODEL_NAME <<- "french-gsd-ud-2.5-191206.udpipe"
+UDPIPE_MODEL_PATH <<- file.path(UDPIPE_DIR, UDPIPE_MODEL_NAME)
 annotation_udpipe <- function(path, save=TRUE, overwrite=FALSE){
   
   # Librairies: 
@@ -72,6 +71,8 @@ annotation_udpipe <- function(path, save=TRUE, overwrite=FALSE){
   
   # Exportation csv :
   if (save) {
+    OUTPUT_DIR <<- file.path(".", paste0("output-", basename(path)))
+    message("Sauve les résultats dans le dossier ", OUTPUT_DIR)
     if (!file.exists(OUTPUT_DIR)) {
       dir.create(OUTPUT_DIR)
     }
