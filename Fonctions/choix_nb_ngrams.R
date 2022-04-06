@@ -1,42 +1,58 @@
-#' Titre : Scripts motifs - Choix ngrams
-#' Auteurs : Dominique Legallois, Antoine de Sacy
-#' Date: 6 octobre 2021.
-
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
-
-# Fonction de choix du nb de ngrams (màj septembre 2021) :
-
-choix_nb_ngrams <- function(corpus_motifs) {
-  require("dplyr")
-  require("tidytext")
-  require("tidyverse")
-  require("data.table")
-  
+#' Choix ngrams
+#'
+#' Choix du nb de ngrams sur le corpus de motifs
+#'
+#' @param n_grams int choix de l'encodage en n-grams
+#' 
+#' @param corpus data.frame corpus_motifs motifs pour chaque corpus
+#'
+#' @param corpus_path string Chemin du csv contenant les corpus_motifs motifs pour chaque corpus
+#' 
+#' @param save_output boolean: Sauvegarde les résultats
+#'
+#' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
+#'
+#' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
+#'
+#' @example
+#' corpus_annote <- annotation_udpipe("curpus-test")
+#'
+#' @export
+choix_nb_ngrams <- function(n_grams, corpus = NULL, corpus_path = NULL, save_output = FALSE, overwrite=FALSE){
+  stopifnot(n_grams >= 2)
   # Lecture des données :
-  corpus_spec <-
-    data.table::fread(
-      corpus_motifs,
-      encoding = "UTF-8",
-      header = TRUE,
-      stringsAsFactors = FALSE
-    )
+  if (is.null(corpus) & is.null(corpus_path)) {
+    corpus_path = file.path(OUTPUT_DIR, "UDPipe_corpus_motifs.csv")
+    message("Chargement du corpus depuis le fichier ", corpus_path)
+    if (file.exists(corpus_path)){
+      corpus <- data.table::fread(corpus_path, encoding = "UTF-8", header = TRUE, stringsAsFactors = FALSE)
+    } else {
+      stop("Le fichier ", corpus_path, " n'existe pas.")
+    }
+  } else if (is.null(corpus) & (!is.null(corpus_path))){
+    message("Chargement du corpus depuis le fichier ", corpus_path)
+    if (file.exists(corpus_path)){
+      corpus <- data.table::fread(corpus_path, encoding = "UTF-8", header = TRUE, stringsAsFactors = FALSE)
+    } else {
+      stop("Le fichier ", corpus_path, " n'existe pas.")
+    }
+  } else if (!is.null(corpus) & (is.null(corpus_path))){
+    # nothing to do
+  } else {
+    stopifnot(!is.null(corpus) & (!is.null(corpus_path)))
+    stop("Vous ne pouvez pas passer à la fois 'corpus' et 'corpus_path' en argument.")
+  }
   
   # Vérification okazou :
-  
-  corpus_spec <- corpus_spec[, c('mots', 'motifs', 'Oeuvre')]
+  corpus <- corpus[, c('mots', 'motifs', 'Oeuvre')]
   
   ## Retrait des cases vides okazou :
+  corpus <- corpus[complete.cases(corpus), ]
+  dplyr::lead(corpus)
   
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec), ]
-  
-  # Choix du nombre de ngrams :
-  
-  choix_nb_grams <-
-    as.numeric(readline("Sélectionner le nombre de ngrams (2 à 7) et tapez enter"))
-  
-  if (choix_nb_grams == 2) {
+  if (n_grams == 2) {
     # bigrams motifs :
-    corpus_spec_punct <- corpus_spec  %>%
+    corpus_spec_punct <- corpus  %>%
       mutate(next_motif = dplyr::lead(motifs)) %>%
       dplyr::filter(!is.na(next_motif)) %>%
       mutate(ngrammotif = paste(motifs, next_motif))
@@ -52,9 +68,9 @@ choix_nb_ngrams <- function(corpus_motifs) {
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
     names(corpus_spec_punct) <-
       c("mots", "ngrammot", "motifs", "Oeuvre")
-  } else if (choix_nb_grams == 3) {
+  } else if (n_grams == 3) {
     # 3-grams motifs :
-    corpus_spec_punct <- corpus_spec  %>%
+    corpus_spec_punct <- corpus  %>%
       mutate(next_motif = dplyr::lead(motifs),
              next_motif2 = dplyr::lead(motifs, 2)) %>%
       dplyr::filter(!is.na(next_motif),!is.na(next_motif2)) %>%
@@ -72,9 +88,9 @@ choix_nb_ngrams <- function(corpus_motifs) {
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
     names(corpus_spec_punct) <-
       c("mots", "ngrammot", "motifs", "Oeuvre")
-  } else if (choix_nb_grams == 4) {
+  } else if (n_grams == 4) {
     # 4-grams motifs :
-    corpus_spec_punct <- corpus_spec  %>%
+    corpus_spec_punct <- corpus  %>%
       mutate(
         next_motif = dplyr::lead(motifs),
         next_motif2 = dplyr::lead(motifs, 2),
@@ -102,9 +118,9 @@ choix_nb_ngrams <- function(corpus_motifs) {
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
     names(corpus_spec_punct) <-
       c("mots", "ngrammot", "motifs", "Oeuvre")
-  } else if (choix_nb_grams == 5) {
+  } else if (n_grams == 5) {
     # Fivegrams motifs :
-    corpus_spec_punct <- corpus_spec  %>%
+    corpus_spec_punct <- corpus  %>%
       mutate(
         next_motif = dplyr::lead(motifs),
         next_motif2 = dplyr::lead(motifs, 2),
@@ -138,9 +154,9 @@ choix_nb_ngrams <- function(corpus_motifs) {
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
     names(corpus_spec_punct) <-
       c("mots", "ngrammot", "motifs", "Oeuvre")
-  } else if (choix_nb_grams == 6) {
+  } else if (n_grams == 6) {
     # Sixgrams motifs :
-    corpus_spec_punct <- corpus_spec  %>%
+    corpus_spec_punct <- corpus  %>%
       mutate(
         next_motif = dplyr::lead(motifs),
         next_motif2 = dplyr::lead(motifs, 2),
@@ -196,9 +212,9 @@ choix_nb_ngrams <- function(corpus_motifs) {
       corpus_spec_punct[, c("mots", "ngrammot", "ngrammotif", "Oeuvre")]
     names(corpus_spec_punct) <-
       c("mots", "ngrammot", "motifs", "Oeuvre")
-  } else if (choix_nb_grams == 7) {
+  } else if (n_grams == 7) {
     # 7-grams motifs :
-    corpus_spec_punct <- corpus_spec  %>%
+    corpus_spec_punct <- corpus  %>%
       mutate(
         next_motif = dplyr::lead(motifs),
         next_motif2 = dplyr::lead(motifs, 2),
@@ -265,11 +281,20 @@ choix_nb_ngrams <- function(corpus_motifs) {
       c("mots", "ngrammot", "motifs", "Oeuvre")
   }
   
-  write.csv(corpus_spec_punct,
-            "corpus_motifs_grams.csv",
-            fileEncoding = "UTF-8")
-  
+  if (save_output) {
+    save_path = file.path(OUTPUT_DIR, "corpus_motifs_grams.csv")
+    message("Sauvegarde des motifs dans ", save_path)
+    if (!file.exists(save_path)) {
+      write.csv(corpus_spec_punct, save_path, fileEncoding = "UTF-8")
+    } else {
+      if (overwrite) {
+        warning("Le fichier ", save_path, " existe dèjà, écrase et sauve nouveau. Pour éviter ce comportement, utiliser overwrite = FALSE.")
+        write.csv(corpus_spec_punct, save_path, fileEncoding = "UTF-8")
+      } else {
+        stop("Le fichier ", save_path, " existe dèjà. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE.")
+      }
+    }
+  }
+  return(corpus_spec_punct)
 }
 
-choix_nb_ngrams(path = "~/Documents/Huma-num/2021-2022/Motifs/",
-                csv = "Corpus_motifs_UDPipe.csv")
