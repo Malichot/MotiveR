@@ -46,34 +46,34 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output =
   # Auxiliaires : 
   
   corpus <- corpus %>%
-    mutate(POS = replace(POS, lemmes == "être", "être")) %>% # Auxiliaires
-    mutate(POS = replace(POS, lemmes == "avoir", "avoir")) # Auxiliaires
+    dplyr::mutate(POS = replace(POS, lemmes == "être", "être")) %>% # Auxiliaires
+    dplyr::mutate(POS = replace(POS, lemmes == "avoir", "avoir")) # Auxiliaires
   
   # Remplacement des feats avoir et être pour qu'ils ne soient pas transformés :
   # (on garde les auxiliaires)
   
   corpus <- corpus %>%
-    mutate(feats = replace(feats, lemmes == "avoir", "avoir")) %>%
-    mutate(feats = replace(feats, lemmes == "être", "être"))
+    dplyr::mutate(feats = replace(feats, lemmes == "avoir", "avoir")) %>%
+    dplyr::mutate(feats = replace(feats, lemmes == "être", "être"))
   
   # Infinitifs :
   
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, feats == "Typo=Yes|VerbForm=Inf", "INF")) %>%
-    mutate(lemmes = replace(lemmes, feats == "VerbForm=Inf", "INF")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Typo=No|VerbForm=Inf", "INF"))
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Typo=Yes|VerbForm=Inf", "INF")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "VerbForm=Inf", "INF")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Typo=No|VerbForm=Inf", "INF"))
   
   # Participes : 
   
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% # PPsé masc sing
-    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part", "PPAS")) %>% 
-    mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% # PPsé fem sin
-    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% ## PPsé mas plu
-    mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Plur|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPsé fem plu
-    mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPsé fem sing
-    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPsé masc plu
-    mutate(lemmes = replace(lemmes, feats == "Tense=Pres|VerbForm=Part", "PPRES")) # Pprésnt.
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% # PPsé masc sing
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part", "PPAS")) %>% 
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% # PPsé fem sin
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% ## PPsé mas plu
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Plur|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPsé fem plu
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPsé fem sing
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPsé masc plu
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Tense=Pres|VerbForm=Part", "PPRES")) # Pprésnt.
   
   
   
@@ -83,88 +83,88 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output =
   # Subjonctif présent :
   
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin", "VSUBP"))
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin", "VSUBP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin", "VSUBP"))
   
   # Subjonctif imparfait :
   
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=1|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=2|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=3|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=1|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=2|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=3|Tense=Imp|VerbForm=Fin", "VSUBI"))
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=1|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=2|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Sing|Person=3|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=1|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=2|Tense=Imp|VerbForm=Fin", "VSUBI")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Sub|Number=Plur|Person=3|Tense=Imp|VerbForm=Fin", "VSUBI"))
   
   # Impératif présent :
   
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Imp|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin", "IMP")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Imp|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin", "IMP")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Imp|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin", "IMP"))
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Imp|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin", "IMP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Imp|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin", "IMP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Imp|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin", "IMP"))
   
   # Conditionnel :
   
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin", "VCOND"))
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin", "VCOND")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Cnd|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin", "VCOND"))
   
   # Indicatif présent :
   
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin", "PRES")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin", "PRES")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin", "PRES")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin", "PRES")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin", "PRES")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin", "PRES"))
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin", "PRES")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=2|Tense=Pres|VerbForm=Fin", "PRES")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin", "PRES")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin", "PRES")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=2|Tense=Pres|VerbForm=Fin", "PRES")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin", "PRES"))
   
   # Imparfait :
   
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=1|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=2|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=3|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=1|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=2|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=3|Tense=Imp|VerbForm=Fin", "VIMP"))
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=1|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=2|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=3|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=1|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=2|Tense=Imp|VerbForm=Fin", "VIMP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=3|Tense=Imp|VerbForm=Fin", "VIMP"))
   
   # Passé simple : 
   
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=1|Tense=Past|VerbForm=Fin", "VPS")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=2|Tense=Past|VerbForm=Fin", "VPS")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin", "VPS")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=1|Tense=Past|VerbForm=Fin", "VPS")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=2|Tense=Past|VerbForm=Fin", "VPS")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=3|Tense=Past|VerbForm=Fin", "VPS"))
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=1|Tense=Past|VerbForm=Fin", "VPS")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=2|Tense=Past|VerbForm=Fin", "VPS")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin", "VPS")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=1|Tense=Past|VerbForm=Fin", "VPS")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=2|Tense=Past|VerbForm=Fin", "VPS")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=3|Tense=Past|VerbForm=Fin", "VPS"))
   
   # Futur :
   
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=1|Tense=Fut|VerbForm=Fin", "VF")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=2|Tense=Fut|VerbForm=Fin", "VF")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=3|Tense=Fut|VerbForm=Fin", "VF")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=1|Tense=Fut|VerbForm=Fin", "VF")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=2|Tense=Fut|VerbForm=Fin", "VF")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=3|Tense=Fut|VerbForm=Fin", "VF"))
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=1|Tense=Fut|VerbForm=Fin", "VF")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=2|Tense=Fut|VerbForm=Fin", "VF")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Sing|Person=3|Tense=Fut|VerbForm=Fin", "VF")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=1|Tense=Fut|VerbForm=Fin", "VF")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=2|Tense=Fut|VerbForm=Fin", "VF")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Mood=Ind|Number=Plur|Person=3|Tense=Fut|VerbForm=Fin", "VF"))
   
   # Déterminants possessifs :
   
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Poss=Yes|PronType=Prs", "DEPOSS")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Poss=Yes|PronType=Prs", "DETPOSS")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Poss=Yes|PronType=Prs", "DETPOSS")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Poss=Yes|PronType=Prs", "DETPOSS")) %>%
-    mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Plur|Poss=Yes|PronType=Prs", "DETPOSS"))
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Poss=Yes|PronType=Prs", "DEPOSS")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Poss=Yes|PronType=Prs", "DETPOSS")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Poss=Yes|PronType=Prs", "DETPOSS")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Poss=Yes|PronType=Prs", "DETPOSS")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Plur|Poss=Yes|PronType=Prs", "DETPOSS"))
   
   
   # Retrait colonne morphologie :
@@ -185,155 +185,155 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output =
   # pour qu'il demeure dans les motifs. Pour cela, obligation de transformer le POS.
   
   corpus <- corpus %>%
-    #mutate(POS = replace(POS, lemmes == "être", "être")) %>% # Auxiliaires
-    # mutate(POS = replace(POS, lemmes == "avoir", "avoir")) %>% # Auxiliaires
-    mutate(POS = replace(POS, lemmes == "ne", "ne")) %>%
-    mutate(POS = replace(POS, lemmes == "plusieurs", "plusieurs")) %>% # Noms communs
-    mutate(POS = replace(POS, lemmes == "fois", "fois")) %>%
-    mutate(POS = replace(POS, lemmes == "façon", "façon")) %>%
-    mutate(POS = replace(POS, lemmes == "sorte", "sorte")) %>%
-    mutate(POS = replace(POS, lemmes == "espèce", "espèce")) %>%
-    mutate(POS = replace(POS, lemmes == "jour", "jour")) %>%
-    mutate(POS = replace(POS, lemmes == "nuit", "nuit")) %>%
-    mutate(POS = replace(POS, lemmes == "tel", "tel")) %>%
-    mutate(POS = replace(POS, lemmes == "pas vrai", "pas vrai")) %>%
-    mutate(POS = replace(POS, lemmes == "à peu près", "à peu près")) %>%
-    mutate(POS = replace(POS, lemmes == "de le côté du", "de le côté de le")) %>%
-    mutate(POS = replace(POS, lemmes == "tenir", "tenir")) %>%
-    mutate(POS = replace(POS, lemmes == "prendre", "prendre")) %>%
-    mutate(POS = replace(POS, lemmes == "pouvoir", "pouvoir")) %>%
-    mutate(POS = replace(POS, lemmes == "passer", "passer")) %>%
-    mutate(POS = replace(POS, lemmes == "parler", "parler")) %>%
-    mutate(POS = replace(POS, lemmes == "laisser", "laisser")) %>%
-    mutate(POS = replace(POS, lemmes == "donner", "donner")) %>%
-    mutate(POS = replace(POS, lemmes == "penser", "penser")) %>%
-    mutate(POS = replace(POS, lemmes == "arriver", "arriver")) %>%
-    mutate(POS = replace(POS, lemmes == "mettre", "mettre")) %>%
-    #mutate(POS = replace(POS, lemmes == "faire", "faire")) %>%
-    #mutate(POS = replace(POS, lemmes == "aller", "aller")) %>%
-    mutate(POS = replace(POS, lemmes == "falloir", "falloir")) %>%
-    mutate(POS = replace(POS, lemmes == "finir", "finir")) %>%
-    mutate(POS = replace(POS, lemmes == "commencer", "commencer")) %>%
-    mutate(POS = replace(POS, lemmes == "venir", "venir")) %>%
-    mutate(POS = replace(POS, lemmes == "devoir", "devoir")) %>%
-    mutate(POS = replace(POS, lemmes == "paraître", "paraître")) %>%
-    mutate(POS = replace(POS, lemmes == "sembler", "sembler")) %>%
-    mutate(POS = replace(POS, lemmes == "rester", "rester")) %>%
-    mutate(POS = replace(POS, lemmes == "devenir", "devenir")) %>%
-    mutate(POS = replace(POS, lemmes == "meilleur", "meilleur")) %>% # adjectifs
-    mutate(POS = replace(POS, lemmes == "vrai", "vrai")) %>%
-    mutate(POS = replace(POS, lemmes == "véritable", "véritable")) %>%
-    mutate(POS = replace(POS, lemmes == "autre", "autre")) %>%
-    mutate(POS = replace(POS, lemmes == "même", "même")) %>%
-    mutate(POS = replace(POS, lemmes == "au contraire", "au contraire")) %>%
-    mutate(POS = replace(POS, lemmes == "est-ce que", "est-ce que")) %>%
-    mutate(POS = replace(POS, lemmes == "mal", "mal")) %>%
-    mutate(POS = replace(POS, lemmes == "plutôt", "plutôt")) %>%
-    mutate(POS = replace(POS, lemmes == "à demi", "à demi")) %>%
-    mutate(POS = replace(POS, lemmes == "à peu près", "à peu près")) %>%
-    mutate(POS = replace(POS, lemmes == "ainsi", "ainsi")) %>% # ADV
-    mutate(POS = replace(POS, lemmes == "alors", "alors")) %>%
-    mutate(POS = replace(POS, lemmes == "aussi", "aussi")) %>%
-    mutate(POS = replace(POS, lemmes == "autant", "autant")) %>%
-    mutate(POS = replace(POS, lemmes == "aucunement", "aucunement")) %>%
-    mutate(POS = replace(POS, lemmes == "autrement", "autrement")) %>%
-    mutate(POS = replace(POS, lemmes == "avant", "avant")) %>%
-    mutate(POS = replace(POS, lemmes == "beaucoup", "beaucoup")) %>%
-    mutate(POS = replace(POS, lemmes == "bien plus", "bien plus")) %>%
-    mutate(POS = replace(POS, lemmes == "bien moins", "bien moins")) %>%
-    mutate(POS = replace(POS, lemmes == "bien", "bien")) %>%
-    mutate(POS = replace(POS, lemmes == "cependant", "cependant")) %>%
-    mutate(POS = replace(POS, lemmes == "combien", "combien")) %>%
-    mutate(POS = replace(POS, lemmes == "comment", "comment")) %>%
-    mutate(POS = replace(POS, lemmes == "davantage", "davantage")) %>%
-    mutate(POS = replace(POS, lemmes == "déjà", "déjà")) %>%
-    mutate(POS = replace(POS, lemmes == "depuis", "depuis")) %>%
-    mutate(POS = replace(POS, lemmes == "de très près", "de très près")) %>%
-    mutate(POS = replace(POS, lemmes == "dorénavant", "dorénavant")) %>%
-    mutate(POS = replace(POS, lemmes == "encore", "encore")) %>%
-    mutate(POS = replace(POS, lemmes == "en plus", "en plus")) %>%
-    mutate(POS = replace(POS, lemmes == "ensemble", "ensemble")) %>%
-    mutate(POS = replace(POS, lemmes == "environ", "environ")) %>%
-    mutate(POS = replace(POS, lemmes == "delà", "delà")) %>%
-    mutate(POS = replace(POS, lemmes == "tandis", "tandis")) %>%
-    mutate(POS = replace(POS, lemmes == "fort", "fort")) %>%
-    mutate(POS = replace(POS, lemmes == "grandement", "grandement")) %>%
-    mutate(POS = replace(POS, lemmes == "guère", "guère")) %>%
-    mutate(POS = replace(POS, lemmes == "longtemps", "longtemps")) %>%
-    mutate(POS = replace(POS, lemmes == "sous", "sous")) %>%
-    mutate(POS = replace(POS, lemmes == "lors", "lors")) %>%
-    mutate(POS = replace(POS, lemmes == "parfois", "parfois")) %>%
-    mutate(POS = replace(POS, lemmes == "ici", "ici")) %>%
-    mutate(POS = replace(POS, lemmes == "travers", "travers")) %>%
-    mutate(POS = replace(POS, lemmes == "où", "où")) %>%
-    mutate(POS = replace(POS, lemmes == "là", "là")) %>%
-    mutate(POS = replace(POS, lemmes == "puis", "puis")) %>%
-    mutate(POS = replace(POS, lemmes == "au-dessus", "au-dessus")) %>%
-    mutate(POS = replace(POS, lemmes == "jusque", "jusque")) %>%
-    mutate(POS = replace(POS, lemmes == "au-dessous", "au-dessous")) %>%
-    mutate(POS = replace(POS, lemmes == "an", "ans")) %>%
-    mutate(POS = replace(POS, lemmes == "mais", "mais")) %>%
-    mutate(POS = replace(POS, lemmes == "mieux", "mieux")) %>%
-    mutate(POS = replace(POS, lemmes == "moins", "moins")) %>%
-    mutate(POS = replace(POS, lemmes == "nullement", "nullement")) %>%
-    mutate(POS = replace(POS, lemmes == "par conséquent", "par conséquent")) %>%
-    mutate(POS = replace(POS, lemmes == "par hasard", "par hasard")) %>%
-    mutate(POS = replace(POS, lemmes == "pas", "pas")) %>%
-    mutate(POS = replace(POS, lemmes == "plus", "plus")) %>%
-    # mutate(POS = replace(POS, lemmes == "point", "point")) %>% # ATTENTION : ici pb car si NC ne fonctionne pas...
-    mutate(POS = replace(POS, lemmes == "presque", "presque")) %>%
-    mutate(POS = replace(POS, lemmes == "prou", "prou")) %>%
-    mutate(POS = replace(POS, lemmes == "pourquoi", "pourquoi")) %>%
-    mutate(POS = replace(POS, lemmes == "quasi", "quasi")) %>%
-    mutate(POS = replace(POS, lemmes == "quasiment", "quasiment")) %>%
-    mutate(POS = replace(POS, lemmes == "quelque", "quelque")) %>%
-    mutate(POS = replace(POS, lemmes == "soudain", "soudain")) %>%
-    mutate(POS = replace(POS, lemmes == "tant de", "tant de")) %>%
-    mutate(POS = replace(POS, lemmes == "tard", "tard")) %>%
-    mutate(POS = replace(POS, lemmes == "tôt", "tôt")) %>%
-    mutate(POS = replace(POS, lemmes == "bientôt", "bientôt")) %>%
-    mutate(POS = replace(POS, lemmes == "aussitôt", "aussitôt")) %>%
-    mutate(POS = replace(POS, lemmes == "non plus", "non plus")) %>%
-    mutate(POS = replace(POS, lemmes == "tout", "tout")) %>%
-    mutate(POS = replace(POS, lemmes == "tout à coup", "tout à coup")) %>%
-    mutate(POS = replace(POS, lemmes == "très", "très")) %>%
-    mutate(POS = replace(POS, lemmes == "trop", "trop")) %>%
-    mutate(POS = replace(POS, lemmes == "après", "après")) %>% 
-    mutate(POS = replace(POS, lemmes == "voire", "voire")) %>%
-    mutate(POS = replace(POS, lemmes == "peu", "peu")) %>%
-    mutate(POS = replace(POS, lemmes == "heureusement", "heureusement")) %>%
-    mutate(POS = replace(POS, lemmes == "malheureusement", "malheureusement")) %>%
-    mutate(POS = replace(POS, lemmes == "également", "également")) %>%
-    mutate(POS = replace(POS, lemmes == "pourquoi", "pourquoi")) %>%
-    mutate(POS = replace(POS, lemmes == "par trop", "par trop")) %>%
-    mutate(POS = replace(POS, lemmes == "tous les jours", "tous les jours")) %>%
-    mutate(POS = replace(POS, lemmes == "de loin", "de loin")) %>%
-    mutate(POS = replace(POS, lemmes == "comme toujours", "comme toujours")) %>%
-    mutate(POS = replace(POS, lemmes == "d'ailleurs", "d'ailleurs")) %>%
-    mutate(POS = replace(POS, lemmes == "dans l'ensemble", "dans l'ensemble")) %>%
-    mutate(POS = replace(POS, lemmes == "surtout", "surtout")) %>%
-    mutate(POS = replace(POS, lemmes == "pourtant", "pourtant")) %>%
-    mutate(POS = replace(POS, lemmes == "réellement", "réellement")) %>%
-    mutate(POS = replace(POS, lemmes == "à la fin", "à la fin")) %>%
-    mutate(POS = replace(POS, lemmes == "à peine", "à peine")) %>%
-    mutate(POS = replace(POS, lemmes == "au début", "au début")) %>%
-    mutate(POS = replace(POS, lemmes == "d'abord", "d'abord")) %>%
-    mutate(POS = replace(POS, lemmes == "tout d'abord", "tout d'abord")) %>%
-    mutate(POS = replace(POS, lemmes == "enfin", "enfin")) %>%
-    mutate(POS = replace(POS, lemmes == "ensuite", "ensuite")) %>%
-    mutate(POS = replace(POS, lemmes == "jamais", "jamais")) %>%
-    mutate(POS = replace(POS, lemmes == "toujours", "toujours")) %>%
-    mutate(POS = replace(POS, lemmes == "maintenant", "maintenant")) %>%
-    mutate(POS = replace(POS, lemmes == "si", "si")) %>%
-    mutate(POS = replace(POS, lemmes == "oui", "oui")) %>%
-    mutate(POS = replace(POS, lemmes == "non", "non")) %>%
-    mutate(POS = replace(POS, lemmes == "peut-être", "peut-être")) %>%
-    mutate(POS = replace(POS, lemmes == "monsieur", "monsieur")) %>%
-    mutate(POS = replace(POS, lemmes == "quel", "quel")) %>%
-    mutate(POS = replace(POS, lemmes == "chose", "chose")) %>%
-    mutate(POS = replace(POS, lemmes == "tant", "tant")) %>%
-    mutate(POS = replace(POS, lemmes == "milieu", "milieu")) %>%
-    mutate(POS = replace(POS, lemmes == "madame", "monsieur"))
+    #dplyr::mutate(POS = replace(POS, lemmes == "être", "être")) %>% # Auxiliaires
+    # dplyr::mutate(POS = replace(POS, lemmes == "avoir", "avoir")) %>% # Auxiliaires
+    dplyr::mutate(POS = replace(POS, lemmes == "ne", "ne")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "plusieurs", "plusieurs")) %>% # Noms communs
+    dplyr::mutate(POS = replace(POS, lemmes == "fois", "fois")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "façon", "façon")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "sorte", "sorte")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "espèce", "espèce")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "jour", "jour")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "nuit", "nuit")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "tel", "tel")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "pas vrai", "pas vrai")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "à peu près", "à peu près")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "de le côté du", "de le côté de le")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "tenir", "tenir")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "prendre", "prendre")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "pouvoir", "pouvoir")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "passer", "passer")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "parler", "parler")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "laisser", "laisser")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "donner", "donner")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "penser", "penser")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "arriver", "arriver")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "mettre", "mettre")) %>%
+    #dplyr::mutate(POS = replace(POS, lemmes == "faire", "faire")) %>%
+    #dplyr::mutate(POS = replace(POS, lemmes == "aller", "aller")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "falloir", "falloir")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "finir", "finir")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "commencer", "commencer")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "venir", "venir")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "devoir", "devoir")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "paraître", "paraître")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "sembler", "sembler")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "rester", "rester")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "devenir", "devenir")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "meilleur", "meilleur")) %>% # adjectifs
+    dplyr::mutate(POS = replace(POS, lemmes == "vrai", "vrai")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "véritable", "véritable")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "autre", "autre")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "même", "même")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "au contraire", "au contraire")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "est-ce que", "est-ce que")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "mal", "mal")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "plutôt", "plutôt")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "à demi", "à demi")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "à peu près", "à peu près")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "ainsi", "ainsi")) %>% # ADV
+    dplyr::mutate(POS = replace(POS, lemmes == "alors", "alors")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "aussi", "aussi")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "autant", "autant")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "aucunement", "aucunement")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "autrement", "autrement")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "avant", "avant")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "beaucoup", "beaucoup")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "bien plus", "bien plus")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "bien moins", "bien moins")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "bien", "bien")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "cependant", "cependant")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "combien", "combien")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "comment", "comment")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "davantage", "davantage")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "déjà", "déjà")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "depuis", "depuis")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "de très près", "de très près")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "dorénavant", "dorénavant")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "encore", "encore")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "en plus", "en plus")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "ensemble", "ensemble")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "environ", "environ")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "delà", "delà")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "tandis", "tandis")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "fort", "fort")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "grandement", "grandement")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "guère", "guère")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "longtemps", "longtemps")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "sous", "sous")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "lors", "lors")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "parfois", "parfois")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "ici", "ici")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "travers", "travers")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "où", "où")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "là", "là")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "puis", "puis")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "au-dessus", "au-dessus")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "jusque", "jusque")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "au-dessous", "au-dessous")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "an", "ans")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "mais", "mais")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "mieux", "mieux")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "moins", "moins")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "nullement", "nullement")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "par conséquent", "par conséquent")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "par hasard", "par hasard")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "pas", "pas")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "plus", "plus")) %>%
+    # dplyr::mutate(POS = replace(POS, lemmes == "point", "point")) %>% # ATTENTION : ici pb car si NC ne fonctionne pas...
+    dplyr::mutate(POS = replace(POS, lemmes == "presque", "presque")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "prou", "prou")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "pourquoi", "pourquoi")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "quasi", "quasi")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "quasiment", "quasiment")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "quelque", "quelque")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "soudain", "soudain")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "tant de", "tant de")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "tard", "tard")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "tôt", "tôt")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "bientôt", "bientôt")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "aussitôt", "aussitôt")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "non plus", "non plus")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "tout", "tout")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "tout à coup", "tout à coup")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "très", "très")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "trop", "trop")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "après", "après")) %>% 
+    dplyr::mutate(POS = replace(POS, lemmes == "voire", "voire")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "peu", "peu")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "heureusement", "heureusement")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "malheureusement", "malheureusement")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "également", "également")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "pourquoi", "pourquoi")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "par trop", "par trop")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "tous les jours", "tous les jours")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "de loin", "de loin")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "comme toujours", "comme toujours")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "d'ailleurs", "d'ailleurs")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "dans l'ensemble", "dans l'ensemble")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "surtout", "surtout")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "pourtant", "pourtant")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "réellement", "réellement")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "à la fin", "à la fin")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "à peine", "à peine")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "au début", "au début")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "d'abord", "d'abord")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "tout d'abord", "tout d'abord")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "enfin", "enfin")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "ensuite", "ensuite")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "jamais", "jamais")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "toujours", "toujours")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "maintenant", "maintenant")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "si", "si")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "oui", "oui")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "non", "non")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "peut-être", "peut-être")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "monsieur", "monsieur")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "quel", "quel")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "chose", "chose")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "tant", "tant")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "milieu", "milieu")) %>%
+    dplyr::mutate(POS = replace(POS, lemmes == "madame", "monsieur"))
   
   
   # if lemmes == x
@@ -545,7 +545,7 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output =
   ## Cas où l'on part des POS pour changer les lemmes :
   ## Ici, transformation des adverbes restants en ADV
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, POS == "ADV", "ADV"))
+    dplyr::mutate(lemmes = replace(lemmes, POS == "ADV", "ADV"))
   
   ## Noms communs :
   
@@ -708,48 +708,48 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output =
   
   ## Cas où l'on part des POS pour changer les lemmes :
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, POS == "ADJ", "ADJ")) %>%
-    mutate(lemmes = replace(lemmes, POS == "NUM", "NUM")) %>%  
-    mutate(lemmes = replace(lemmes, POS == "DETPOSS", "DETPOSS")) %>%
-    mutate(lemmes = replace(lemmes, POS == "NOUN", "NC")) %>%
-    mutate(lemmes = replace(lemmes, POS == "PROPN", "NP")) %>%
-    mutate(lemmes = replace(lemmes, POS == "INTJ", "INTJ")) %>%
-    mutate(lemmes = replace(lemmes, lemmes == "«", '"')) %>% # Remplacement des guillemets français en anglais.
-    mutate(lemmes = replace(lemmes, lemmes == "»", '"'))
+    dplyr::mutate(lemmes = replace(lemmes, POS == "ADJ", "ADJ")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, POS == "NUM", "NUM")) %>%  
+    dplyr::mutate(lemmes = replace(lemmes, POS == "DETPOSS", "DETPOSS")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, POS == "NOUN", "NC")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, POS == "PROPN", "NP")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, POS == "INTJ", "INTJ")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, lemmes == "«", '"')) %>% # Remplacement des guillemets français en anglais.
+    dplyr::mutate(lemmes = replace(lemmes, lemmes == "»", '"'))
   
   # Les pronoms personnels et réfléchis : on part des mots pour changer les lemmes : 
   
   corpus <- corpus %>%
-    mutate(lemmes = replace(lemmes, mots == "je", "je")) %>%
-    mutate(lemmes = replace(lemmes, mots == "Je", "je")) %>%
-    mutate(lemmes = replace(lemmes, mots == "j'", "je")) %>%
-    mutate(lemmes = replace(lemmes, mots == "J'", "je")) %>%
-    mutate(lemmes = replace(lemmes, mots == "me", "me")) %>%
-    mutate(lemmes = replace(lemmes, mots == "Me", "me")) %>%
-    mutate(lemmes = replace(lemmes, mots == "tu", "tu")) %>%
-    mutate(lemmes = replace(lemmes, mots == "Tu", "tu")) %>%
-    mutate(lemmes = replace(lemmes, mots == "te", "te")) %>%
-    mutate(lemmes = replace(lemmes, mots == "Te", "te")) %>%
-    mutate(lemmes = replace(lemmes, mots == "Il", "il")) %>%
-    mutate(lemmes = replace(lemmes, mots == "il", "il")) %>%
-    mutate(lemmes = replace(lemmes, mots == "Elle", "elle")) %>%
-    mutate(lemmes = replace(lemmes, mots == "elle", "elle")) %>%
-    mutate(lemmes = replace(lemmes, mots == "Se", "se")) %>%
-    mutate(lemmes = replace(lemmes, mots == "se", "se")) %>%
-    mutate(lemmes = replace(lemmes, mots == "Nous", "nous")) %>%
-    mutate(lemmes = replace(lemmes, mots == "nous", "nous")) %>%
-    mutate(lemmes = replace(lemmes, mots == "Vous", "vous")) %>%
-    mutate(lemmes = replace(lemmes, mots == "vous", "vous")) %>%
-    mutate(lemmes = replace(lemmes, mots == "Ils", "ils")) %>%
-    mutate(lemmes = replace(lemmes, mots == "ils", "ils")) %>%
-    mutate(lemmes = replace(lemmes, mots == "Elles", "elles")) %>%
-    mutate(lemmes = replace(lemmes, mots == "elles", "elles"))
+    dplyr::mutate(lemmes = replace(lemmes, mots == "je", "je")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "Je", "je")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "j'", "je")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "J'", "je")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "me", "me")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "Me", "me")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "tu", "tu")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "Tu", "tu")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "te", "te")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "Te", "te")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "Il", "il")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "il", "il")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "Elle", "elle")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "elle", "elle")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "Se", "se")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "se", "se")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "Nous", "nous")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "nous", "nous")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "Vous", "vous")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "vous", "vous")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "Ils", "ils")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "ils", "ils")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "Elles", "elles")) %>%
+    dplyr::mutate(lemmes = replace(lemmes, mots == "elles", "elles"))
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
   
   ## Retrait des lignes vides :
-  corpus <- as_tibble(corpus)
+  corpus <- dplyr::as_tibble(corpus)
   
   
   # Dernières vérifications :
@@ -789,22 +789,22 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output =
   # 
   # if(length(t) > 0){
   #   corpus <- corpus %>%
-  #     mutate(lemmes = replace(lemmes, mots == "aux", "à_le"))
+  #     dplyr::mutate(lemmes = replace(lemmes, mots == "aux", "à_le"))
   # }
   # 
   # if(length(e) > 0){
   #   corpus <- corpus %>%
-  #     mutate(lemmes = replace(lemmes, mots == "du", "de_le"))
+  #     dplyr::mutate(lemmes = replace(lemmes, mots == "du", "de_le"))
   # }
   # 
   # if(length(f) > 0){
   #   corpus <- corpus %>%
-  #     mutate(lemmes = replace(lemmes, mots == "des", "de_le"))
+  #     dplyr::mutate(lemmes = replace(lemmes, mots == "des", "de_le"))
   # }
   # 
   # if(length(g) > 0){
   #   corpus <- corpus %>%
-  #     mutate(lemmes = replace(lemmes, mots == "au", "à_le"))
+  #     dplyr::mutate(lemmes = replace(lemmes, mots == "au", "à_le"))
   # }
   
   
