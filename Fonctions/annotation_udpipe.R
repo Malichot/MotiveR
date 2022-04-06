@@ -11,7 +11,7 @@
 #' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
 #'
 #' @example inst/examples/example_annotation_udpipe.R
-#' bmi.vals <- annotation_udpipe("curpus-test")
+#' corpus_annote <- annotation_udpipe("curpus-test")
 #'
 #' @export
 UDPIPE_DIR = file.path(getwd(), "udpipe")
