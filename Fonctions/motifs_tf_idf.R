@@ -14,7 +14,9 @@
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
-tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Motifs/",
+# Fonction TF-IDF (màj : 15 mai 2021) :
+
+motifs_tf_idf <- function(path = "~/Dropbox/2020-2021/Motifs/",
                           csv = "corpus_motifs_grams.csv", nombre_motifs = 20){
   
   ## Importation des librairies : 
@@ -31,7 +33,7 @@ tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
   setwd(path)
   corpus_grams <- fread(csv, encoding = "UTF-8", 
-                       header = TRUE, stringsAsFactors = FALSE)
+                        header = TRUE, stringsAsFactors = FALSE)
   
   # Vérification okazou :
   corpus_grams <- corpus_grams[,c("mots", "motifs", "Oeuvre")]
@@ -117,8 +119,5 @@ tf_idf_motifs <- function(path = "~/Dropbox/2020-2021/Motifs/",
   else{
     print("Votre choix ne correspond pas aux critères ternaires proposés...!")
   }
-
+  
 }
-
-tf_idf_motifs(path = "~/Desktop/Motifs/",
-              csv = "corpus_motifs_grams.csv", nombre_motifs = 20)
