@@ -22,14 +22,14 @@ regex_corpus_UDPipe <- function(corpus = NULL, corpus_path = NULL, save_output =
     corpus_path = file.path(OUTPUT_DIR, "UDPipe_corpus_complet.csv")
     message("Chargement du corpus depuis le fichier ", corpus_path)
     if (file.exists(corpus_path)){
-      corpus = fread(corpus_path, encoding = "UTF-8", header = TRUE)
+      corpus = data.table::fread(corpus_path, encoding = "UTF-8", header = TRUE)
     } else {
       stop("Le fichier ", corpus_path, " n'existe pas.")
     }
   } else if (is.null(corpus) & (!is.null(corpus_path))){
     message("Chargement du corpus depuis le fichier ", corpus_path)
     if (file.exists(corpus_path)){
-      corpus = fread(corpus_path, encoding = "UTF-8", header = TRUE)
+      corpus = data.table::fread(corpus_path, encoding = "UTF-8", header = TRUE)
     } else {
       stop("Le fichier ", corpus_path, " n'existe pas.")
     }
