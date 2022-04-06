@@ -10,7 +10,7 @@
 #' 
 #' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
 #'
-#' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
+#' @return DataFrame: corpus_motifs motifs pour chaque corpus
 #'
 #' @example
 #' corpus_motifs <- regex_corpus_UDPipe("./output/UDPipe_corpus_complet.csv", save_output = TRUE)
@@ -40,16 +40,7 @@ regex_corpus_UDPipe <- function(corpus = NULL, corpus_path = NULL, save_output =
     stop("Vous ne pouvez pas passer à la fois 'corpus' et 'corpus_path' en argument.")
   }
   
-  # Librairies : 
-  # require("stringr")
-  # require("dplyr")
-  # require("readr")
-  # require("data.table")
-  # setwd(path)
-  
-  
-  ## Vérification que les colonnes sont les bonnes : 
-  
+  ## Vérification que les colonnes sont les bonnes :
   corpus <- corpus[,c('mots', 'lemmes', 'POS', 'feats', 'Oeuvre')] 
   
   # Auxiliaires : 

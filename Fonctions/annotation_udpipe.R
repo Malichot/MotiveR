@@ -36,13 +36,7 @@ annotation_udpipe <-
         }
       }
     }
-    # Librairies:
-    # require("udpipe")
-    # require("tidyverse")
-    # require("vroom")
-    # require("stringr")
     # Modèle
-    
     # Si le fichier modèle n'existe pas télécharge le
     if (!file.exists(UDPIPE_MODEL_PATH)) {
       message(paste0("Télécharge et sauve le modèle dans ", UDPIPE_MODEL_PATH))
