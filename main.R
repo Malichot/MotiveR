@@ -30,12 +30,6 @@ source("Fonctions/motifs_tf_idf.R")
 source("Fonctions/motifs_histogram.R")
 
 require("dplyr") # need to handle %>% or magrittr ?
-# require("udpipe")
-# require("tidyverse")
-# require("vroom")
-# require("stringr")
-# require("readr")
-# require("data.table")
 
 corpus_motifs = tag_motif_pipeline(path = "./Corpus-torun",
                                    save_output = save_output,
@@ -51,14 +45,7 @@ corpus_grams =  choix_nb_ngrams(
   overwrite = overwrite
 )
 
-# create corpus_motifs_grams.csv
-
 # Wordcloud :
-# require("tidytext")
-# require("ggwordcloud")
-# require("RColorBrewer")
-# require("reshape2")
-# require("ggsci")
 motifs_nuage(corpus_grams = corpus_grams,
              nmots = 10,
              freq = "rel")
