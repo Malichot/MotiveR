@@ -6,6 +6,8 @@
 #'
 #' @param save_output boolean: Sauvegarde les résultats
 #'
+#' @param save_path string: Chemin du fichier de sauvergarde
+#'
 #' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
 #'
 #' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
@@ -19,9 +21,9 @@ annotation_udpipe <-
            save_output = TRUE,
            save_path = NULL,
            overwrite = FALSE) {
-    
     # Modèle
-    UDPIPE_MODEL_PATH <- file.path(getwd(), "udpipe", "french-gsd-ud-2.5-191206.udpipe")
+    UDPIPE_MODEL_PATH <-
+      file.path(getwd(), "udpipe", "french-gsd-ud-2.5-191206.udpipe")
     # Si le fichier modèle n'existe pas télécharge le
     if (!file.exists(UDPIPE_MODEL_PATH)) {
       message(paste0("Télécharge et sauve le modèle dans ", UDPIPE_MODEL_PATH))
@@ -86,8 +88,14 @@ annotation_udpipe <-
       c("mots", "lemmes", "POS", "feats", "Oeuvre")
     
     # Exportation csv :
-    if (!is.null(save_path) | save_output){
-      save_data_to_csv(corpus_annote, "annotation_udpipe", save_path, fileEncoding = "UTF-8", overwrite = overwrite)
+    if (!is.null(save_path) | save_output) {
+      save_data_to_csv(
+        corpus_annote,
+        "annotation_udpipe",
+        save_path,
+        fileEncoding = "UTF-8",
+        overwrite = overwrite
+      )
     }
     return(corpus_annote)
   }
