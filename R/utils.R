@@ -1,8 +1,8 @@
 save_dir_parser <- function(save_path) {
   if (is.null(save_path)) {
-    message("save_path n'est pas spécifié")
     save_dir <<-
       file.path(getwd(), paste0("output-", basename(path)))
+    message("save_path n'est pas spécifié. Using default: ", save_dir)
   } else {
     if (grepl("/", save_path)) {
       save_dir = dirname(filepath)
@@ -37,7 +37,13 @@ default_output_path <- function(func_name, save_dir) {
 }
 
 save_data_to_csv <-
-  function(data, func_name, save_dir, fileEncoding = "UTF-8") {
+  function(data,
+           func_name,
+           save_path,
+           fileEncoding = "UTF-8",
+           overwrite = FALSE) {
+    save_dir = save_dir_parser(save_path)
+    dir.create(save_dir)
     if (is.null(save_path)) {
       save_path = default_output_path(func_name, save_dir)
     }

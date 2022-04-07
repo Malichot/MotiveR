@@ -17,9 +17,11 @@
 annotation_udpipe <-
   function(path,
            save_output = TRUE,
+           save_path = NULL,
            overwrite = FALSE) {
     
     # Modèle
+    UDPIPE_MODEL_PATH <- file.path(getwd(), "udpipe", "french-gsd-ud-2.5-191206.udpipe")
     # Si le fichier modèle n'existe pas télécharge le
     if (!file.exists(UDPIPE_MODEL_PATH)) {
       message(paste0("Télécharge et sauve le modèle dans ", UDPIPE_MODEL_PATH))
@@ -84,27 +86,8 @@ annotation_udpipe <-
       c("mots", "lemmes", "POS", "feats", "Oeuvre")
     
     # Exportation csv :
-    if (save_output) {
-      save_path = file.path(OUTPUT_DIR, "UDPipe_corpus_complet.csv")
-      message("Sauvegarde udpipe annotations dans ", save_path)
-      if (!file.exists(save_path)) {
-        write.csv(corpus_annote, save_path, fileEncoding = "UTF-8")
-      } else {
-        if (overwrite) {
-          warning(
-            "Le fichier d'annotation ",
-            save_path,
-            " existe dèjà, écrase et sauve nouveau. Pour éviter ce comportement, utiliser overwrite = FALSE."
-          )
-          write.csv(corpus_annote, save_path, fileEncoding = "UTF-8")
-        } else {
-          stop(
-            "Le fichier d'annotation ",
-            save_path,
-            " existe dèjà. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE."
-          )
-        }
-      }
+    if (!is.null(save_path) | save_output){
+      save_data_to_csv(corpus_annote, "annotation_udpipe", save_path, fileEncoding = "UTF-8", overwrite = overwrite)
     }
     return(corpus_annote)
   }
