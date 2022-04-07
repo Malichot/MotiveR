@@ -18,49 +18,8 @@ motifs_histogram <- function(corpus_grams = NULL,
                              corpus_path = NULL,
                              nmots = 25,
                              freq = "rel") {
-  # require("dplyr")
-  # require("tidytext")
-  # require("tidyverse")
-  # require("RColorBrewer")
-  # require("reshape2")
-  # require("ggsci")
-  # require("data.table")
-  # require("ggpubr")
-  
   # Lecture des données :
-  if (is.null(corpus_grams) & is.null(corpus_path)) {
-    corpus_path = file.path(OUTPUT_DIR, "corpus_motifs_grams.csv")
-    message("Chargement du corpus_grams depuis le fichier ", corpus_path)
-    if (file.exists(corpus_path)) {
-      corpus_grams <-
-        data.table::fread(
-          corpus_path,
-          encoding = "UTF-8",
-          header = TRUE,
-          stringsAsFactors = FALSE
-        )
-    } else {
-      stop("Le fichier ", corpus_path, " n'existe pas.")
-    }
-  } else if (is.null(corpus_grams) & (!is.null(corpus_path))) {
-    message("Chargement du corpus_grams depuis le fichier ", corpus_path)
-    if (file.exists(corpus_path)) {
-      corpus_grams <-
-        data.table::fread(
-          corpus_path,
-          encoding = "UTF-8",
-          header = TRUE,
-          stringsAsFactors = FALSE
-        )
-    } else {
-      stop("Le fichier ", corpus_path, " n'existe pas.")
-    }
-  } else if (!is.null(corpus_grams) & (is.null(corpus_path))) {
-    # nothing to do
-  } else {
-    stopifnot(!is.null(corpus_grams) & (!is.null(corpus_path)))
-    stop("Vous ne pouvez pas passer à la fois 'corpus_grams' et 'corpus_path' en argument.")
-  }
+  corpus_grams = import_corpus(corpus_grams, corpus_path, func_name="motifs_histogram")
   
   # Vérification okazou :
   corpus_grams <- corpus_grams[, c("mots", "motifs", "Oeuvre")]
