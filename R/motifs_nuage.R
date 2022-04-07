@@ -31,16 +31,16 @@ motifs_nuage <-
     
     ## Dénombrement + filtrage éventuel des données : ex : n > 10
     corpus_grams <- corpus_grams %>%
-      count(Oeuvre, motifs, sort = TRUE)
+      dplyr::count(Oeuvre, motifs, sort = TRUE)
     
     ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
     
     total_words <- corpus_grams %>%
-      group_by(Oeuvre) %>%
-      summarize(total = sum(n))
+      dplyr::group_by(Oeuvre) %>%
+      dplyr::summarize(total = sum(n))
     
     corpus_words_ngrams <-
-      left_join(corpus_grams, total_words, by = "Oeuvre")
+      dplyr::left_join(corpus_grams, total_words, by = "Oeuvre")
     
     ## Calcul de la fréquence relative :
     

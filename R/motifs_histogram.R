@@ -29,16 +29,16 @@ motifs_histogram <- function(corpus_grams = NULL,
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
   corpus_grams <- corpus_grams %>%
-    count(motifs, Oeuvre, sort = TRUE)
+    dplyr::count(motifs, Oeuvre, sort = TRUE)
   
   ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
   
   total_words <- corpus_grams %>%
-    group_by(Oeuvre) %>%
-    summarize(total = sum(n))
+    dplyr::group_by(Oeuvre) %>%
+    dplyr::summarize(total = sum(n))
   
   corpus_words_ngrams <-
-    left_join(corpus_grams, total_words, by = "Oeuvre")
+    dplyr::left_join(corpus_grams, total_words, by = "Oeuvre")
   
   ## Calcul de la fréquence relative :
   
@@ -65,7 +65,7 @@ motifs_histogram <- function(corpus_grams = NULL,
     ## Fréquences relatives
     # Réordonnancement de la df par fréquences relatives :
     df_freq_rel <- corpus_words_ngrams %>%
-      arrange(-rel_freq)
+      dplyr::arrange(-rel_freq)
     # Visualisation :
     hist_plot <- ggplot2::ggplot(data = df_freq_rel[1:nmots, ],
                                  ggplot2::aes(x = motifs, y = rel_freq, fill = Oeuvre)) +

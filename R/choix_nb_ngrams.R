@@ -41,15 +41,15 @@ choix_nb_ngrams <-
     if (n_grams == 2) {
       # bigrams motifs :
       corpus_spec_punct <- corpus  %>%
-        mutate(next_motif = dplyr::lead(motifs)) %>%
+        dplyr::mutate(next_motif = dplyr::lead(motifs)) %>%
         dplyr::filter(!is.na(next_motif)) %>%
-        mutate(ngrammotif = paste(motifs, next_motif))
+        dplyr::mutate(ngrammotif = paste(motifs, next_motif))
       
       # bigrams mots :
       corpus_spec_punct <- corpus_spec_punct  %>%
-        mutate(next_word = dplyr::lead(mots)) %>%
+        dplyr::mutate(next_word = dplyr::lead(mots)) %>%
         dplyr::filter(!is.na(next_word)) %>%
-        mutate(ngrammot = paste(mots, next_word))
+        dplyr::mutate(ngrammot = paste(mots, next_word))
       
       # Sélection et renommage des colonnes :
       corpus_spec_punct <-
@@ -59,17 +59,17 @@ choix_nb_ngrams <-
     } else if (n_grams == 3) {
       # 3-grams motifs :
       corpus_spec_punct <- corpus  %>%
-        mutate(next_motif = dplyr::lead(motifs),
+        dplyr::mutate(next_motif = dplyr::lead(motifs),
                next_motif2 = dplyr::lead(motifs, 2)) %>%
         dplyr::filter(!is.na(next_motif),!is.na(next_motif2)) %>%
-        mutate(ngrammotif = paste(motifs, next_motif, next_motif2))
+        dplyr::mutate(ngrammotif = paste(motifs, next_motif, next_motif2))
       
       # 3-grams mots :
       corpus_spec_punct <- corpus_spec_punct  %>%
-        mutate(next_word = dplyr::lead(mots),
+        dplyr::mutate(next_word = dplyr::lead(mots),
                next_word2 = dplyr::lead(mots, 2)) %>%
         dplyr::filter(!is.na(next_word),!is.na(next_word2)) %>%
-        mutate(ngrammot = paste(mots, next_word, next_word2))
+        dplyr::mutate(ngrammot = paste(mots, next_word, next_word2))
       
       # Sélection et renommage des colonnes :
       corpus_spec_punct <-
@@ -79,7 +79,7 @@ choix_nb_ngrams <-
     } else if (n_grams == 4) {
       # 4-grams motifs :
       corpus_spec_punct <- corpus  %>%
-        mutate(
+        dplyr::mutate(
           next_motif = dplyr::lead(motifs),
           next_motif2 = dplyr::lead(motifs, 2),
           next_motif3 = dplyr::lead(motifs, 3)
@@ -87,19 +87,19 @@ choix_nb_ngrams <-
         dplyr::filter(!is.na(next_motif),
                       !is.na(next_motif2),
                       !is.na(next_motif3)) %>%
-        mutate(ngrammotif = paste(motifs, next_motif, next_motif2, next_motif3))
+        dplyr::mutate(ngrammotif = paste(motifs, next_motif, next_motif2, next_motif3))
       
       # 4-grams mots :
       corpus_spec_punct <- corpus_spec_punct  %>%
-        mutate(
+        dplyr::mutate(
           next_word = dplyr::lead(mots),
           next_word2 = dplyr::lead(mots, 2),
           next_word3 = dplyr::lead(mots, 3)
         ) %>%
-        filter(!is.na(next_word),
+        dplyr::filter(!is.na(next_word),
                !is.na(next_word2),
                !is.na(next_word3)) %>%
-        mutate(ngrammot = paste(mots, next_word, next_word2, next_word3))
+        dplyr::mutate(ngrammot = paste(mots, next_word, next_word2, next_word3))
       
       # Sélection et renommage des colonnes :
       corpus_spec_punct <-
@@ -109,7 +109,7 @@ choix_nb_ngrams <-
     } else if (n_grams == 5) {
       # Fivegrams motifs :
       corpus_spec_punct <- corpus  %>%
-        mutate(
+        dplyr::mutate(
           next_motif = dplyr::lead(motifs),
           next_motif2 = dplyr::lead(motifs, 2),
           next_motif3 = dplyr::lead(motifs, 3),
@@ -121,11 +121,11 @@ choix_nb_ngrams <-
           !is.na(next_motif3),
           !is.na(next_motif4)
         ) %>%
-        mutate(ngrammotif = paste(motifs, next_motif, next_motif2, next_motif3, next_motif4))
+        dplyr::mutate(ngrammotif = paste(motifs, next_motif, next_motif2, next_motif3, next_motif4))
       
       # Fivegrams mots :
       corpus_spec_punct <- corpus_spec_punct  %>%
-        mutate(
+        dplyr::mutate(
           next_word = dplyr::lead(mots),
           next_word2 = dplyr::lead(mots, 2),
           next_word3 = dplyr::lead(mots, 3),
@@ -135,7 +135,7 @@ choix_nb_ngrams <-
                       !is.na(next_word2),
                       !is.na(next_word3),
                       !is.na(next_word4)) %>%
-        mutate(ngrammot = paste(mots, next_word, next_word2, next_word3, next_word4))
+        dplyr::mutate(ngrammot = paste(mots, next_word, next_word2, next_word3, next_word4))
       
       # Sélection et renommage des colonnes :
       corpus_spec_punct <-
@@ -145,21 +145,21 @@ choix_nb_ngrams <-
     } else if (n_grams == 6) {
       # Sixgrams motifs :
       corpus_spec_punct <- corpus  %>%
-        mutate(
+        dplyr::mutate(
           next_motif = dplyr::lead(motifs),
           next_motif2 = dplyr::lead(motifs, 2),
           next_motif3 = dplyr::lead(motifs, 3),
           next_motif4 = dplyr::lead(motifs, 4),
           next_motif5 = dplyr::lead(motifs, 5)
         ) %>%
-        filter(
+        dplyr::filter(
           !is.na(next_motif),
           !is.na(next_motif2),
           !is.na(next_motif3),
           !is.na(next_motif4),
           !is.na(next_motif5)
         ) %>%
-        mutate(
+        dplyr::mutate(
           ngrammotif = paste(
             motifs,
             next_motif,
@@ -172,7 +172,7 @@ choix_nb_ngrams <-
       
       # Sixgrams mots :
       corpus_spec_punct <- corpus_spec_punct  %>%
-        mutate(
+        dplyr::mutate(
           next_word = dplyr::lead(mots),
           next_word2 = dplyr::lead(mots, 2),
           next_word3 = dplyr::lead(mots, 3),
@@ -186,7 +186,7 @@ choix_nb_ngrams <-
           !is.na(next_word4),
           !is.na(next_word5)
         ) %>%
-        mutate(ngrammot = paste(
+        dplyr::mutate(ngrammot = paste(
           mots,
           next_word,
           next_word2,
@@ -203,7 +203,7 @@ choix_nb_ngrams <-
     } else if (n_grams == 7) {
       # 7-grams motifs :
       corpus_spec_punct <- corpus  %>%
-        mutate(
+        dplyr::mutate(
           next_motif = dplyr::lead(motifs),
           next_motif2 = dplyr::lead(motifs, 2),
           next_motif3 = dplyr::lead(motifs, 3),
@@ -219,7 +219,7 @@ choix_nb_ngrams <-
           !is.na(next_motif5),
           !is.na(next_motif6)
         ) %>%
-        mutate(
+        dplyr::mutate(
           ngrammotif = paste(
             motifs,
             next_motif,
@@ -234,7 +234,7 @@ choix_nb_ngrams <-
       # 7-grams mots :
       
       corpus_spec_punct <- corpus_spec_punct  %>%
-        mutate(
+        dplyr::mutate(
           next_word = dplyr::lead(mots),
           next_word2 = dplyr::lead(mots, 2),
           next_word3 = dplyr::lead(mots, 3),
@@ -250,7 +250,7 @@ choix_nb_ngrams <-
           !is.na(next_word5),
           !is.na(next_word6)
         ) %>%
-        mutate(
+        dplyr::mutate(
           ngrammot = paste(
             mots,
             next_word,
