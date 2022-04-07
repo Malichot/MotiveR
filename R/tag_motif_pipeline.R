@@ -19,8 +19,8 @@
 #' @export
 
 
-source("./Fonctions/regex_corpus_udpipe.R")
-source("./Fonctions/annotation_udpipe.R")
+source("./R/regex_corpus_udpipe.R")
+source("./R/annotation_udpipe.R")
 tag_motif_pipeline <-
   function(path,
            corpus = NULL,

@@ -14,28 +14,11 @@
 #' corpus_annote <- annotation_udpipe("curpus-test")
 #'
 #' @export
-UDPIPE_DIR <<- file.path(getwd(), "udpipe")
-UDPIPE_MODEL_NAME <<- "french-gsd-ud-2.5-191206.udpipe"
-UDPIPE_MODEL_PATH <<- file.path(UDPIPE_DIR, UDPIPE_MODEL_NAME)
 annotation_udpipe <-
   function(path,
            save_output = TRUE,
            overwrite = FALSE) {
-    if (save_output) {
-      OUTPUT_DIR <<- file.path(".", paste0("output-", basename(path)))
-      message("Sauvegarde les résultats dans le dossier ", OUTPUT_DIR)
-      if (!file.exists(OUTPUT_DIR)) {
-        dir.create(OUTPUT_DIR)
-      } else {
-        if (!overwrite) {
-          stop(
-            "Le dosser de sauvegarde",
-            OUTPUT_DIR,
-            " existe dèjà. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE."
-          )
-        }
-      }
-    }
+    
     # Modèle
     # Si le fichier modèle n'existe pas télécharge le
     if (!file.exists(UDPIPE_MODEL_PATH)) {

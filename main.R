@@ -23,11 +23,32 @@ save_output = TRUE # Sauvegarde résultats
 overwrite = TRUE # Écrase résultats précédents
 n_grams = 4 # n-gram encodage
 
+# Global variables
+UDPIPE_DIR <<- file.path(getwd(), "udpipe")
+UDPIPE_MODEL_NAME <<- "french-gsd-ud-2.5-191206.udpipe"
+UDPIPE_MODEL_PATH <<- file.path(UDPIPE_DIR, UDPIPE_MODEL_NAME)
+if (save_output) {
+  OUTPUT_DIR <<- file.path(".", paste0("output-", basename(path)))
+  message("Sauvegarde les résultats dans le dossier ", OUTPUT_DIR)
+  if (!file.exists(OUTPUT_DIR)) {
+    dir.create(OUTPUT_DIR)
+  } else {
+    if (!overwrite) {
+      stop(
+        "Le dosser de sauvegarde",
+        OUTPUT_DIR,
+        " existe dèjà. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE."
+      )
+    }
+  }
+}
+
+
 source("R/tag_motif_pipeline.R")
-source("Fonctions/choix_nb_ngrams.R")
-source("Fonctions/motifs_nuage.R")
-source("Fonctions/motifs_tf_idf.R")
-source("Fonctions/motifs_histogram.R")
+source("R/choix_nb_ngrams.R")
+source("R/motifs_nuage.R")
+source("R/motifs_tf_idf.R")
+source("R/motifs_histogram.R")
 
 require("dplyr") # need to handle %>% or magrittr ?
 
