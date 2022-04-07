@@ -1,30 +1,35 @@
-#' Titre : Scripts motifs - Calcul de spécificités
-#' Auteurs : Dominique Legallois, Antoine de Sacy
-#' Date: 6 octobre 2021.
-
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
-
-# Entrée : corpus de motifs avec : mots || motifs || Oeuvre
-# Sortie : Corpus_motifs_specificites.csv avec : Oeuvre || motifs || Spécificités par oeuvres.
-# Sortie : Corpus_spec_freq.csv avec : Oeuvre || motifs || n (fréq abs) || total (nb de mots dans l'oeuvre) || nrel (fréq relative) || Spécificités par oeuvres.
-
-calcul_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
-                                   csv = "corpus_motifs_grams.csv",
-                                   retrait_frequence_1 = TRUE){
+#' Calcul de spécificités
+#'
+#' Calcul de spécificités
+#'
+#' @param corpus_grams data.frame sous format mots || motifs || Oeuvre
+#'
+#' @param corpus_path string chemin du csv contenant les motifs en ngram
+#'
+#' @param save_freq boolean Suverage les résultats avec les fréquences
+#' 
+#' @param save_output boolean: Sauvegarde les résultats
+#'
+#' @param save_path string: Chemin du fichier de sauvergarde
+#'
+#' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
+#' 
+#' @param retrait_frequence_1 boolean
+#'
+#' @example
+#' calcul_specificites(corpus_path="corpus_motifs_grams.csv")
+#'
+#' @export
+calcul_specificites <- function(save_freq = FALSE,
+                                retrait_frequence_1 = TRUE,
+                                corpus_grams = NULL,
+                                corpus_path = NULL,
+                                save_output = FALSE,
+                                save_path = NULL,
+                                overwrite = FALSE){
   
-  ## Librairies :
-  require("dplyr")
-  require("tidytext")
-  require("tidyverse")
-  require("ggplot2")
-  require("tidyr")
-  require("data.table")
-  require("reshape2")
-  
-  ## Répertoire de travail :
-  setwd(path)
-  corpus_spec <- fread(csv, encoding = "UTF-8", 
-                       header = TRUE, stringsAsFactors = FALSE)
+  # Importation des données
+  corpus_spec = import_corpus(corpus_grams, corpus_path, func_name = "calcul_specificites")
   
   # Vérification okazou (pb index) :
   corpus_spec <- corpus_spec[,c("mots", "motifs", "Oeuvre")]
@@ -34,15 +39,15 @@ calcul_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
   corpus_spec <- corpus_spec %>%
-    count(Oeuvre, motifs, sort = TRUE)
+    dplyr::count(Oeuvre, motifs, sort = TRUE)
   
   ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
   
   total_words <- corpus_spec %>%
-    group_by(Oeuvre) %>%
-    summarize(total = sum(n))
+    dplyr::group_by(Oeuvre) %>%
+    dplyr::summarize(total = sum(n))
   
-  corpus_spec <- left_join(corpus_spec, total_words)
+  corpus_spec <- dplyr::left_join(corpus_spec, total_words)
   
   ## Calcul de la fréquence relative :
   
@@ -188,33 +193,54 @@ calcul_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
   
   # Transformation des lignes dans la variable motifs :
   
-  calcul_spec <- setDT(calcul_spec, keep.rownames = "motifs")[]
+  calcul_spec <- data.table::setDT(calcul_spec, keep.rownames = "motifs")[]
   
   ## Ajout de la table de fréquences :
   
   colnames(corpus_words_ngrams_spec) <- c("Oeuvre", "motifs", "n", "total", "nrel")
   
   # Fusion des dataframes :
-  calcul_spec_freq <- inner_join(corpus_words_ngrams_spec, calcul_spec)
+  calcul_spec_freq <- dplyr::inner_join(corpus_words_ngrams_spec, calcul_spec)
   
   # Retrait éventuel des fréquences < 1 pour réduction de la taille du corpus : 
-  
   if(retrait_frequence_1 == TRUE){
-    
     calcul_spec_freq <- calcul_spec_freq %>%
-      filter(n > 1)
+      dplyr::filter(n > 1)
+  }
+  
+  
+  # Exportation csv :
+  if (!is.null(save_path) | save_output) {
+    if(save_freq){
+      save_data_to_csv(
+        calcul_spec_freq,
+        "calcul_specificites",
+        save_path,
+        fileEncoding = "UTF-8",
+        overwrite = overwrite
+      )
+      
+      write.csv(calcul_spec_freq, "corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
+    } else {
+      save_data_to_csv(
+        calcul_spec,
+        "calcul_specificites",
+        save_path,
+        fileEncoding = "UTF-8",
+        overwrite = overwrite
+      )
+      
+      write.csv(calcul_spec, "corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
+    }
     
   }
   
-  toprint<-as.numeric((readline("Sauvegarder les résultats en csv, 'Corpus_motifs_specificites.csv', tapez 1 et enter\nSauvegarder les résulats avec fréquences 'Corpus_spec_freq' (pour retour au texte) tapez 2\nSavegarder les résultats dans une variable 'res', tapez 3")))
-  if(toprint==1){
-    write.csv(calcul_spec, "Corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
-  }
-  if(toprint==2){
-    write.csv(calcul_spec_freq, "Corpus_spec_freq.csv", fileEncoding = "UTF-8")
-  }
-  if(toprint==3){
-    res <<- calcul_spec_freq
+  
+  if(save_freq){
+    write.csv(calcul_spec_freq, "corpus_spec_freq.csv", fileEncoding = "UTF-8")
+  } else {
+    write.csv(calcul_spec, "corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
   }
   
+  return(calcul_spec_freq)
 }

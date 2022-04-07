@@ -44,6 +44,8 @@ default_output_path <- function(func_name, save_dir) {
     save_path = file.path(save_dir, "tf-idf.csv")
   } else if (func_name == "motifs_stats"){
     save_path = file.path(save_dir, "motifs_stats.csv")
+  } else if (func_name == "calcul_specificites"){
+    save_path = file.path(save_dir, "corpus_motifs_specificites.csv")
   } else {
     stop("func_name argument invalide: ", func_name)
   }
@@ -92,7 +94,7 @@ import_corpus <- function(corpus = NULL,
       corpus_path = file.path(output_dir, "udpipe_corpus_complet.csv")
     } else if (func_name == "choix_nb_ngrams") {
       corpus_path = file.path(getwd(), "output", "udpipe_corpus_motifs.csv")
-    } else if (func_name %in% c("motifs_nuage", "motifs_histogram", "motifs_tf_idf", "motifs_acp", "motifs_stats")) {
+    } else if (func_name %in% c("motifs_nuage", "motifs_histogram", "motifs_tf_idf", "motifs_acp", "motifs_stats", "calcul_specificites")) {
       corpus_path = file.path(getwd(), "output", "corpus_motifs_grams.csv")
     }
     else{
