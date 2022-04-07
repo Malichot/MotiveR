@@ -8,6 +8,8 @@
 #' 
 #' @param save_output boolean: Sauvegarde les résultats
 #' 
+#' @param save_path string: Chemin du fichier de sauvergarde
+#' 
 #' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
 #'
 #' @return DataFrame: corpus_motifs motifs pour chaque corpus
@@ -16,35 +18,13 @@
 #' corpus_motifs <- regex_corpus_UDPipe("./output/UDPipe_corpus_complet.csv", save_output = TRUE)
 #'
 #' @export
-regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output = FALSE, overwrite=FALSE){
+regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output = FALSE, save_path = NULL, overwrite=FALSE){
   ## Importation du corpus : 
-  if (is.null(corpus) & is.null(corpus_path)) {
-    corpus_path = file.path(OUTPUT_DIR, "UDPipe_corpus_complet.csv")
-    message("Chargement du corpus depuis le fichier ", corpus_path)
-    if (file.exists(corpus_path)){
-      corpus = data.table::fread(corpus_path, encoding = "UTF-8", header = TRUE)
-    } else {
-      stop("Le fichier ", corpus_path, " n'existe pas.")
-    }
-  } else if (is.null(corpus) & (!is.null(corpus_path))){
-    message("Chargement du corpus depuis le fichier ", corpus_path)
-    if (file.exists(corpus_path)){
-      corpus = data.table::fread(corpus_path, encoding = "UTF-8", header = TRUE)
-    } else {
-      stop("Le fichier ", corpus_path, " n'existe pas.")
-    }
-  } else if (!is.null(corpus) & (is.null(corpus_path))){
-    # nothing to do
-  } else {
-    stopifnot(!is.null(corpus) & (!is.null(corpus_path)))
-    stop("Vous ne pouvez pas passer à la fois 'corpus' et 'corpus_path' en argument.")
-  }
-  
+  corpus = import_corpus(corpus, corpus_path, func_name="regex_corpus_udpipe")
   ## Vérification que les colonnes sont les bonnes :
   corpus <- corpus[,c('mots', 'lemmes', 'POS', 'feats', 'Oeuvre')] 
   
-  # Auxiliaires : 
-  
+  # Auxiliaires :
   corpus <- corpus %>%
     dplyr::mutate(POS = replace(POS, lemmes == "être", "être")) %>% # Auxiliaires
     dplyr::mutate(POS = replace(POS, lemmes == "avoir", "avoir")) # Auxiliaires
@@ -831,20 +811,11 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output =
   
   # Export des motifs simples :
   
-  if (save_output) {
-    save_path = file.path(OUTPUT_DIR, "UDPipe_corpus_motifs.csv")
-    message("Sauvegarde des motifs dans ", save_path)
-    if (!file.exists(save_path)) {
-      write.csv(corpus, save_path, fileEncoding = "UTF-8")
-    } else {
-      if (overwrite) {
-        warning("Le fichier ", save_path, " existe dèjà, écrase et sauve nouveau. Pour éviter ce comportement, utiliser overwrite = FALSE.")
-        write.csv(corpus, save_path, fileEncoding = "UTF-8")
-      } else {
-        stop("Le fichier ", save_path, " existe dèjà. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE.")
-      }
-    }
+  
+  # Exportation csv :
+  if (!is.null(save_path) | save_output){
+    save_data_to_csv(corpus, "regex_corpus_udpipe", save_path, fileEncoding = "UTF-8", overwrite = overwrite)
   }
-  corpus_motifs <<- corpus
-  return (corpus)
+  return(corpus)
+
 }
