@@ -9,7 +9,7 @@
 #' @param corpus_path string Chemin du csv contenant les corpus_motifs motifs pour chaque corpus
 #'
 #' @param save_output boolean: Sauvegarde les résultats
-#' 
+#'
 #' @param save_path string: Chemin du fichier de sauvergarde
 #'
 #' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
@@ -25,17 +25,17 @@ choix_nb_ngrams <-
            corpus = NULL,
            corpus_path = NULL,
            save_output = FALSE,
-           save_path = NULL, 
+           save_path = NULL,
            overwrite = FALSE) {
     stopifnot(n_grams >= 2)
     # Lecture des données :
-    corpus = import_corpus(corpus, corpus_path, func_name="choix_nb_ngrams")
+    corpus = import_corpus(corpus, corpus_path, func_name = "choix_nb_ngrams")
     
     # Vérification okazou :
     corpus <- corpus[, c('mots', 'motifs', 'Oeuvre')]
     
     ## Retrait des cases vides okazou :
-    corpus <- corpus[complete.cases(corpus),]
+    corpus <- corpus[complete.cases(corpus), ]
     dplyr::lead(corpus)
     
     if (n_grams == 2) {
@@ -61,14 +61,14 @@ choix_nb_ngrams <-
       corpus_spec_punct <- corpus  %>%
         mutate(next_motif = dplyr::lead(motifs),
                next_motif2 = dplyr::lead(motifs, 2)) %>%
-        dplyr::filter(!is.na(next_motif), !is.na(next_motif2)) %>%
+        dplyr::filter(!is.na(next_motif),!is.na(next_motif2)) %>%
         mutate(ngrammotif = paste(motifs, next_motif, next_motif2))
       
       # 3-grams mots :
       corpus_spec_punct <- corpus_spec_punct  %>%
         mutate(next_word = dplyr::lead(mots),
                next_word2 = dplyr::lead(mots, 2)) %>%
-        dplyr::filter(!is.na(next_word), !is.na(next_word2)) %>%
+        dplyr::filter(!is.na(next_word),!is.na(next_word2)) %>%
         mutate(ngrammot = paste(mots, next_word, next_word2))
       
       # Sélection et renommage des colonnes :
@@ -84,7 +84,9 @@ choix_nb_ngrams <-
           next_motif2 = dplyr::lead(motifs, 2),
           next_motif3 = dplyr::lead(motifs, 3)
         ) %>%
-        dplyr::filter(!is.na(next_motif),!is.na(next_motif2),!is.na(next_motif3)) %>%
+        dplyr::filter(!is.na(next_motif),
+                      !is.na(next_motif2),
+                      !is.na(next_motif3)) %>%
         mutate(ngrammotif = paste(motifs, next_motif, next_motif2, next_motif3))
       
       # 4-grams mots :
@@ -94,7 +96,9 @@ choix_nb_ngrams <-
           next_word2 = dplyr::lead(mots, 2),
           next_word3 = dplyr::lead(mots, 3)
         ) %>%
-        filter(!is.na(next_word),!is.na(next_word2),!is.na(next_word3)) %>%
+        filter(!is.na(next_word),
+               !is.na(next_word2),
+               !is.na(next_word3)) %>%
         mutate(ngrammot = paste(mots, next_word, next_word2, next_word3))
       
       # Sélection et renommage des colonnes :
@@ -112,7 +116,10 @@ choix_nb_ngrams <-
           next_motif4 = dplyr::lead(motifs, 4)
         ) %>%
         dplyr::filter(
-          !is.na(next_motif),!is.na(next_motif2),!is.na(next_motif3),!is.na(next_motif4)
+          !is.na(next_motif),
+          !is.na(next_motif2),
+          !is.na(next_motif3),
+          !is.na(next_motif4)
         ) %>%
         mutate(ngrammotif = paste(motifs, next_motif, next_motif2, next_motif3, next_motif4))
       
@@ -124,7 +131,10 @@ choix_nb_ngrams <-
           next_word3 = dplyr::lead(mots, 3),
           next_word4 = dplyr::lead(mots, 4)
         ) %>%
-        dplyr::filter(!is.na(next_word),!is.na(next_word2),!is.na(next_word3),!is.na(next_word4)) %>%
+        dplyr::filter(!is.na(next_word),
+                      !is.na(next_word2),
+                      !is.na(next_word3),
+                      !is.na(next_word4)) %>%
         mutate(ngrammot = paste(mots, next_word, next_word2, next_word3, next_word4))
       
       # Sélection et renommage des colonnes :
@@ -143,7 +153,11 @@ choix_nb_ngrams <-
           next_motif5 = dplyr::lead(motifs, 5)
         ) %>%
         filter(
-          !is.na(next_motif),!is.na(next_motif2),!is.na(next_motif3),!is.na(next_motif4),!is.na(next_motif5)
+          !is.na(next_motif),
+          !is.na(next_motif2),
+          !is.na(next_motif3),
+          !is.na(next_motif4),
+          !is.na(next_motif5)
         ) %>%
         mutate(
           ngrammotif = paste(
@@ -166,7 +180,11 @@ choix_nb_ngrams <-
           next_word5 = dplyr::lead(mots, 5)
         ) %>%
         dplyr::filter(
-          !is.na(next_word),!is.na(next_word2),!is.na(next_word3),!is.na(next_word4),!is.na(next_word5)
+          !is.na(next_word),
+          !is.na(next_word2),
+          !is.na(next_word3),
+          !is.na(next_word4),
+          !is.na(next_word5)
         ) %>%
         mutate(ngrammot = paste(
           mots,
@@ -194,7 +212,12 @@ choix_nb_ngrams <-
           next_motif6 = dplyr::lead(motifs, 6)
         ) %>%
         dplyr::filter(
-          !is.na(next_motif),!is.na(next_motif2),!is.na(next_motif3),!is.na(next_motif4),!is.na(next_motif5),!is.na(next_motif6)
+          !is.na(next_motif),
+          !is.na(next_motif2),
+          !is.na(next_motif3),
+          !is.na(next_motif4),
+          !is.na(next_motif5),
+          !is.na(next_motif6)
         ) %>%
         mutate(
           ngrammotif = paste(
@@ -220,7 +243,12 @@ choix_nb_ngrams <-
           next_word6 = dplyr::lead(mots, 6)
         ) %>%
         dplyr::filter(
-          !is.na(next_word),!is.na(next_word2),!is.na(next_word3),!is.na(next_word4),!is.na(next_word5),!is.na(next_word6)
+          !is.na(next_word),
+          !is.na(next_word2),
+          !is.na(next_word3),
+          !is.na(next_word4),
+          !is.na(next_word5),
+          !is.na(next_word6)
         ) %>%
         mutate(
           ngrammot = paste(
@@ -242,8 +270,14 @@ choix_nb_ngrams <-
     }
     
     # Exportation csv :
-    if (!is.null(save_path) | save_output){
-      save_data_to_csv(corpus, "choix_nb_ngrams", save_path, fileEncoding = "UTF-8", overwrite = overwrite)
+    if (!is.null(save_path) | save_output) {
+      save_data_to_csv(
+        corpus,
+        "choix_nb_ngrams",
+        save_path,
+        fileEncoding = "UTF-8",
+        overwrite = overwrite
+      )
     }
     return(corpus_spec_punct)
   }

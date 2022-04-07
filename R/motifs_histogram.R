@@ -19,7 +19,7 @@ motifs_histogram <- function(corpus_grams = NULL,
                              nmots = 25,
                              freq = "rel") {
   # Lecture des données :
-  corpus_grams = import_corpus(corpus_grams, corpus_path, func_name="motifs_histogram")
+  corpus_grams = import_corpus(corpus_grams, corpus_path, func_name = "motifs_histogram")
   
   # Vérification okazou :
   corpus_grams <- corpus_grams[, c("mots", "motifs", "Oeuvre")]
@@ -77,11 +77,12 @@ motifs_histogram <- function(corpus_grams = NULL,
     
     hist_plot <-
       hist_plot + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 50, hjust = 1))
-
+    
   } else if (freq == "abs") {
     ## Fréquences absolues :
-    hist_plot <- ggplot2::ggplot(data = corpus_words_ngrams[1:nmots, ],
-                                ggplot2::aes(x = motifs, y = n, fill = Oeuvre)) +
+    hist_plot <-
+      ggplot2::ggplot(data = corpus_words_ngrams[1:nmots, ],
+                      ggplot2::aes(x = motifs, y = n, fill = Oeuvre)) +
       ggplot2::geom_histogram(stat = "identity",
                               position = "dodge",
                               show.legend = T) +
