@@ -15,7 +15,7 @@
 
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
-stats_motifs <- function(path = "~/Dropbox/2020-2021/Motifs/", 
+motifs_stats <- function(path = "~/Dropbox/2020-2021/Motifs/", 
                          csv = "corpus_motifs_grams.csv"){
   
   ## Librairies :
