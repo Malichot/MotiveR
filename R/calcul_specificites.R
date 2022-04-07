@@ -5,13 +5,10 @@
 ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
 
 # Entrée : corpus de motifs avec : mots || motifs || Oeuvre
+# Sortie : Corpus_motifs_specificites.csv avec : Oeuvre || motifs || Spécificités par oeuvres.
+# Sortie : Corpus_spec_freq.csv avec : Oeuvre || motifs || n (fréq abs) || total (nb de mots dans l'oeuvre) || nrel (fréq relative) || Spécificités par oeuvres.
 
-path = "~/Documents/Huma-num/2021-2022/Motifs/"
-csv = "corpus_motifs_grams.csv"
-retrait_frequence_1 = TRUE
-
-
-calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
+calcul_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
                                    csv = "corpus_motifs_grams.csv",
                                    retrait_frequence_1 = TRUE){
   
@@ -221,9 +218,3 @@ calcul_de_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
   }
   
 }
-
-calcul_de_specificites(path = "~/Documents/Huma-num/2021-2022/Motifs/",
-                       csv = "corpus_motifs_grams.csv", retrait_frequence_1 = TRUE)
-
-# Sortie : Corpus_motifs_specificites.csv avec : Oeuvre || motifs || Spécificités par oeuvres.
-# Sortie : Corpus_spec_freq.csv avec : Oeuvre || motifs || n (fréq abs) || total (nb de mots dans l'oeuvre) || nrel (fréq relative) || Spécificités par oeuvres.
