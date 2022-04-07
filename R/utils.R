@@ -31,9 +31,9 @@ save_dir_handler <- function(save_dir, overwrite = FALSE) {
 
 default_output_path <- function(func_name, save_dir) {
   if (func_name == "annotation_udpipe") {
-    save_path = file.path(save_dir, "UDPipe_corpus_complet.csv")
+    save_path = file.path(save_dir, "udpipe_corpus_complet.csv")
   } else if (func_name == "regex_corpus_udpipe") {
-    save_path = file.path(save_dir, "UDPipe_corpus_motifs.csv")
+    save_path = file.path(save_dir, "udpipe_corpus_motifs.csv")
   } else if (func_name == "choix_nb_ngrams"){
     save_path = file.path(save_dir, "corpus_motifs_grams.csv")
   } else {
@@ -81,10 +81,13 @@ import_corpus <- function(corpus = NULL,
     # Load from default paths
     output_dir = file.path(getwd(), "output")
     if (func_name == "regex_corpus_udpipe") {
-      corpus_path = file.path(output_dir, "UDPipe_corpus_complet.csv")
+      corpus_path = file.path(output_dir, "udpipe_corpus_complet.csv")
     } else if (func_name == "choix_nb_ngrams"){
-      corpus_path = file.path(getwd(), "output", "UDPipe_corpus_motifs.csv")
-    } else{
+      corpus_path = file.path(getwd(), "output", "udpipe_corpus_motifs.csv")
+    } else if (func_name == "motifs_nuage"){
+      corpus_path = file.path(getwd(), "output", "corpus_motifs_grams.csv")
+    }
+    else{
       stop("func_name argument invalide: ", func_name)
     }
     message("Loading default corpus from ",
