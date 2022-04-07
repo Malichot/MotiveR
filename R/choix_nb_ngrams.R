@@ -9,6 +9,8 @@
 #' @param corpus_path string Chemin du csv contenant les corpus_motifs motifs pour chaque corpus
 #'
 #' @param save_output boolean: Sauvegarde les résultats
+#' 
+#' @param save_path string: Chemin du fichier de sauvergarde
 #'
 #' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
 #'
@@ -23,42 +25,11 @@ choix_nb_ngrams <-
            corpus = NULL,
            corpus_path = NULL,
            save_output = FALSE,
+           save_path = NULL, 
            overwrite = FALSE) {
     stopifnot(n_grams >= 2)
     # Lecture des données :
-    if (is.null(corpus) & is.null(corpus_path)) {
-      corpus_path = file.path(OUTPUT_DIR, "UDPipe_corpus_motifs.csv")
-      message("Chargement du corpus depuis le fichier ", corpus_path)
-      if (file.exists(corpus_path)) {
-        corpus <-
-          data.table::fread(
-            corpus_path,
-            encoding = "UTF-8",
-            header = TRUE,
-            stringsAsFactors = FALSE
-          )
-      } else {
-        stop("Le fichier ", corpus_path, " n'existe pas.")
-      }
-    } else if (is.null(corpus) & (!is.null(corpus_path))) {
-      message("Chargement du corpus depuis le fichier ", corpus_path)
-      if (file.exists(corpus_path)) {
-        corpus <-
-          data.table::fread(
-            corpus_path,
-            encoding = "UTF-8",
-            header = TRUE,
-            stringsAsFactors = FALSE
-          )
-      } else {
-        stop("Le fichier ", corpus_path, " n'existe pas.")
-      }
-    } else if (!is.null(corpus) & (is.null(corpus_path))) {
-      # nothing to do
-    } else {
-      stopifnot(!is.null(corpus) & (!is.null(corpus_path)))
-      stop("Vous ne pouvez pas passer à la fois 'corpus' et 'corpus_path' en argument.")
-    }
+    corpus = import_corpus(corpus, corpus_path, func_name="choix_nb_ngrams")
     
     # Vérification okazou :
     corpus <- corpus[, c('mots', 'motifs', 'Oeuvre')]
@@ -270,27 +241,9 @@ choix_nb_ngrams <-
         c("mots", "ngrammot", "motifs", "Oeuvre")
     }
     
-    if (save_output) {
-      save_path = file.path(OUTPUT_DIR, "corpus_motifs_grams.csv")
-      message("Sauvegarde des motifs dans ", save_path)
-      if (!file.exists(save_path)) {
-        write.csv(corpus_spec_punct, save_path, fileEncoding = "UTF-8")
-      } else {
-        if (overwrite) {
-          warning(
-            "Le fichier ",
-            save_path,
-            " existe dèjà, écrase et sauve nouveau. Pour éviter ce comportement, utiliser overwrite = FALSE."
-          )
-          write.csv(corpus_spec_punct, save_path, fileEncoding = "UTF-8")
-        } else {
-          stop(
-            "Le fichier ",
-            save_path,
-            " existe dèjà. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE."
-          )
-        }
-      }
+    # Exportation csv :
+    if (!is.null(save_path) | save_output){
+      save_data_to_csv(corpus, "choix_nb_ngrams", save_path, fileEncoding = "UTF-8", overwrite = overwrite)
     }
     return(corpus_spec_punct)
   }

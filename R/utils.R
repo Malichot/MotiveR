@@ -34,6 +34,10 @@ default_output_path <- function(func_name, save_dir) {
     save_path = file.path(save_dir, "UDPipe_corpus_complet.csv")
   } else if (func_name == "regex_corpus_udpipe") {
     save_path = file.path(save_dir, "UDPipe_corpus_motifs.csv")
+  } else if (func_name == "choix_nb_ngrams"){
+    save_path = file.path(save_dir, "corpus_motifs_grams.csv")
+  } else {
+    stop("func_name argument invalide: ", func_name)
   }
   return(save_path)
 }
@@ -78,15 +82,16 @@ import_corpus <- function(corpus = NULL,
     output_dir = file.path(getwd(), "output")
     if (func_name == "regex_corpus_udpipe") {
       corpus_path = file.path(output_dir, "UDPipe_corpus_complet.csv")
-      message("Loading default corpus from ",
-              corpus_path,
-              " for ",
-              func_name)
-      corpus = data.table::fread(corpus_path, encoding = "UTF-8", header = TRUE)
-    }
-    else{
+    } else if (func_name == "choix_nb_ngrams"){
+      corpus_path = file.path(getwd(), "output", "UDPipe_corpus_motifs.csv")
+    } else{
       stop("func_name argument invalide: ", func_name)
     }
+    message("Loading default corpus from ",
+            corpus_path,
+            " for ",
+            func_name)
+    corpus = data.table::fread(corpus_path, encoding = "UTF-8", header = TRUE)
   } else if (is.null(corpus) & (!is.null(corpus_path))) {
     message("Chargement du corpus depuis le fichier ", corpus_path)
     if (file.exists(corpus_path)) {
