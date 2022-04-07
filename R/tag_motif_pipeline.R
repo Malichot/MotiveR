@@ -17,16 +17,12 @@
 #' corpus_annote <- annotation_udpipe("curpus-test")
 #'
 #' @export
-
-
-source("./R/regex_corpus_udpipe.R")
-source("./R/annotation_udpipe.R")
 tag_motif_pipeline <-
   function(path,
            corpus = NULL,
            save_output = TRUE,
            overwrite = FALSE) {
-    corpus_annote = annotation_udpipe(path = "./Corpus-torun",
+    corpus_annote = annotation_udpipe(path = path,
                                       save_output = save_output,
                                       overwrite = overwrite)
     corpus_motifs = regex_corpus_udpipe(corpus = corpus_annote,
