@@ -23,34 +23,20 @@ save_output = TRUE # Sauvegarde résultats
 overwrite = TRUE # Écrase résultats précédents
 n_grams = 4 # n-gram encodage
 
-# Global variables
-UDPIPE_DIR <<- file.path(getwd(), "udpipe")
-UDPIPE_MODEL_NAME <<- "french-gsd-ud-2.5-191206.udpipe"
-UDPIPE_MODEL_PATH <<- file.path(UDPIPE_DIR, UDPIPE_MODEL_NAME)
-if (save_output) {
-  OUTPUT_DIR <<- file.path(".", paste0("output-", basename(path)))
-  message("Sauvegarde les résultats dans le dossier ", OUTPUT_DIR)
-  if (!file.exists(OUTPUT_DIR)) {
-    dir.create(OUTPUT_DIR)
-  } else {
-    if (!overwrite) {
-      stop(
-        "Le dosser de sauvegarde",
-        OUTPUT_DIR,
-        " existe dèjà. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE."
-      )
-    }
-  }
-}
-
-
-source("R/tag_motif_pipeline.R")
-source("R/choix_nb_ngrams.R")
-source("R/motifs_nuage.R")
-source("R/motifs_tf_idf.R")
-source("R/motifs_histogram.R")
-
+# source("R/tag_motif_pipeline.R")
+# source("R/choix_nb_ngrams.R")
+# source("R/motifs_nuage.R")
+# source("R/motifs_tf_idf.R")
+# source("R/motifs_histogram.R")
+library(Motifs)
 require("dplyr") # need to handle %>% or magrittr ?
+
+# corpus_annote = annotation_udpipe(path = "./Corpus-torun",
+#                                   save_output = save_output,
+#                                   overwrite = overwrite)
+# corpus_motifs = regex_corpus_udpipe(corpus = corpus_annote,
+#                                     save_output = save_output,
+#                                     overwrite = overwrite)
 
 corpus_motifs = tag_motif_pipeline(path = "./Corpus-torun",
                                    save_output = save_output,
@@ -67,20 +53,38 @@ corpus_grams =  choix_nb_ngrams(
 )
 
 # Wordcloud :
+# require("dplyr")
+# require("tidytext")
+# require("tidyverse")
+# require("ggwordcloud")
+# require("RColorBrewer")
+# require("reshape2")
+# require("ggsci")
+# require("data.table")
 motifs_nuage(corpus_grams = corpus_grams,
              nmots = 10,
              freq = "rel")
 
 # Histogrammes :
+
+# require("dplyr")
+# require("tidytext")
+# require("tidyverse")
+# require("RColorBrewer")
+# require("reshape2")
+# require("ggsci")
+# require("data.table")
+# require("ggpubr")
+
 motifs_histogram(corpus_grams = corpus_grams,
                  nmots = 10,
                  freq = "rel")
 
 # TF-IDF :
 motifs_tf_idf(
-  corpus_grams = corpus_grams,
   n_motifs = 10,
   plot_type = "group",
+  corpus_grams = corpus_grams,
   save_output = FALSE,
   overwrite = TRUE
 )

@@ -32,25 +32,24 @@ setwd("/Users/brunospilak/Documents/Perso/Motifs/Motifs/")
 # overwrite = TRUE
 # DETACH_PACKAGE = TRUE
 
-TEST = "motifs_nuage"
-corpus_grams = NULL
-corpus_path = NULL # "./output/corpus_motifs_grams.csv"
-DETACH_PACKAGE = TRUE
+# TEST = "motifs_nuage"
+# corpus_grams = NULL
+# corpus_path = NULL # "./output/corpus_motifs_grams.csv"
+# DETACH_PACKAGE = TRUE
 
 
 # TEST = "motifs_histogram"
 # corpus_grams = NULL
 # corpus_path = NULL # "./output-Corpus-torun/corpus_motifs_grams.csv"
-# getwd(), "output" = "output-Corpus-torun"
 # DETACH_PACKAGE = TRUE
 
-# TEST = "motifs_tf_idf"
-# corpus_grams = NULL
-# corpus_path = NULL # "./output-Corpus-torun/corpus_motifs_grams.csv"
-# save_output = FALSE
-# overwrite = FALSE
-# plot_type = "group"
-# DETACH_PACKAGE = TRUE
+TEST = "motifs_tf_idf"
+corpus_grams = NULL
+corpus_path = NULL # "./output-Corpus-torun/corpus_motifs_grams.csv"
+save_output = FALSE
+overwrite = FALSE
+plot_type = "group"
+DETACH_PACKAGE = TRUE
 
 if (DETACH_PACKAGE) {
   if (!is.null(sessionInfo()$otherPkgs)) {
@@ -155,10 +154,10 @@ if (TEST == "annotation_udpipe") {
   # require("tidyr")
   # require("data.table")
   motifs_tf_idf(
-    corpus_grams = corpus_grams,
-    corpus_path = corpus_path,
     n_motifs = 10,
     plot_type = plot_type,
+    corpus_grams = corpus_grams,
+    corpus_path = corpus_path,
     save_output = save_output,
     overwrite = overwrite
   )
