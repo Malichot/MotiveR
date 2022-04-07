@@ -43,13 +43,23 @@ setwd("/Users/brunospilak/Documents/Perso/Motifs/Motifs/")
 # corpus_path = NULL # "./output-Corpus-torun/corpus_motifs_grams.csv"
 # DETACH_PACKAGE = TRUE
 
-TEST = "motifs_tf_idf"
+# TEST = "motifs_tf_idf"
+# corpus_grams = NULL
+# corpus_path = NULL # "./output-Corpus-torun/corpus_motifs_grams.csv"
+# save_output = FALSE
+# overwrite = FALSE
+# plot_type = "group"
+# DETACH_PACKAGE = TRUE
+
+TEST = "motifs_acp"
 corpus_grams = NULL
 corpus_path = NULL # "./output-Corpus-torun/corpus_motifs_grams.csv"
-save_output = FALSE
-overwrite = FALSE
-plot_type = "group"
+plot_type = "var"
+n_obs = 50
+freq_filter = 3
+n_obs = 20
 DETACH_PACKAGE = TRUE
+
 
 if (DETACH_PACKAGE) {
   if (!is.null(sessionInfo()$otherPkgs)) {
@@ -101,7 +111,7 @@ if (TEST == "annotation_udpipe") {
 } else if (TEST == "choix_nb_ngrams") {
   source("./R/utils.R")
   source("R/choix_nb_ngrams.R")
-  require("dplyr") # need to handle %>%
+  # require("dplyr") # need to handle %>%
   # require("tidytext")
   # require("tidyverse")
   # require("data.table")
@@ -160,6 +170,24 @@ if (TEST == "annotation_udpipe") {
     corpus_path = corpus_path,
     save_output = save_output,
     overwrite = overwrite
+  )
+} else if (TEST == "motifs_acp") {
+  source("./R/utils.R")
+  source("R/motifs_acp.R")
+  require("dplyr")
+  # require("tidyverse")
+  # require("tidytext")
+  # require("slider")
+  # require("FactoMineR")
+  # require("ggplot2")
+  # require("ggrepel")
+  # require("ca")
+  # require("factoextra")
+  # require("data.table")
+  motifs_acp(
+    plot_type = plot_type,
+    corpus_grams = corpus_grams,
+    corpus_path = corpus_path
   )
 } else {
   stop("Test is not valid: ", TEST)
