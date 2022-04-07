@@ -366,7 +366,7 @@ motifs_stats <- function(corpus_grams = NULL,
   # Exportation csv :
   if (!is.null(save_path) | save_output) {
     save_data_to_csv(
-      corpus,
+      df_stats,
       "motifs_stats",
       save_path,
       fileEncoding = "UTF-8",

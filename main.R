@@ -25,6 +25,7 @@ path = "./Corpus-torun" # chemin du corpus
 save_output = TRUE # Sauvegarde résultats
 overwrite = TRUE # Écrase résultats précédents
 n_grams = 4 # n-gram encodage
+corpus_grams_path = "./output/corpus_motifs_grams.csv"
 
 # source("R/tag_motif_pipeline.R")
 # source("R/choix_nb_ngrams.R")
@@ -97,3 +98,9 @@ motifs_acp(plot_type = "var", corpus_grams = corpus_grams)
 motifs_acp(plot_type = "motif", corpus_grams = corpus_grams)
 motifs_acp(plot_type = "var+motif", corpus_grams = corpus_grams)
 
+# Stats
+df_stats = motifs_stats(
+  corpus_grams = corpus_grams,
+  save_output = save_output,
+  overwrite = overwrite
+)
