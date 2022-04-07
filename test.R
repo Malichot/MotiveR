@@ -51,22 +51,30 @@ setwd("/Users/brunospilak/Documents/Perso/Motifs/Motifs/")
 # plot_type = "group"
 # DETACH_PACKAGE = TRUE
 
-TEST = "motifs_acp"
-corpus_grams = NULL
-corpus_path = NULL # "./output-Corpus-torun/corpus_motifs_grams.csv"
-plot_type = "var"
-n_obs = 50
-freq_filter = 3
-n_obs = 20
-DETACH_PACKAGE = TRUE
+# TEST = "motifs_acp"
+# corpus_grams = NULL
+# corpus_path = NULL # "./output-Corpus-torun/corpus_motifs_grams.csv"
+# plot_type = "var"
+# n_obs = 50
+# freq_filter = 3
+# n_obs = 20
+# DETACH_PACKAGE = TRUE
 
-TEST = "motifs_stats"
-corpus = NULL
+# TEST = "motifs_stats"
+# corpus_grams = NULL
+# corpus_path = NULL # "./output/corpus_motifs_grams.csv"
+# save_output = TRUE
+# overwrite = TRUE
+# DETACH_PACKAGE = TRUE
+
+TEST = "calcul_specificites"
+save_freq = FALSE
+retrait_frequence_1 = TRUE
+corpus_grams = NULL
 corpus_path = NULL # "./output/corpus_motifs_grams.csv"
 save_output = TRUE
 overwrite = TRUE
 DETACH_PACKAGE = TRUE
-
 
 if (DETACH_PACKAGE) {
   if (!is.null(sessionInfo()$otherPkgs)) {
@@ -207,6 +215,27 @@ if (TEST == "annotation_udpipe") {
   # require("data.table")
   # require("reshape2")
   df_stats = motifs_stats(
+    corpus_grams = corpus_grams,
+    corpus_path = corpus_path,
+    save_output = save_output,
+    overwrite = overwrite
+  )
+} else if (TEST == "calcul_specificites") {
+  source("./R/utils.R")
+  source("R/calcul_specificites.R")
+  require("magrittr")
+  
+  # require("dplyr")
+  # require("tidytext")
+  # require("tidyverse")
+  # require("ggplot2")
+  # require("tidyr")
+  # require("data.table")
+  # require("reshape2")
+  
+  calcul_spec_freq = calcul_specificites(
+    save_freq = save_freq,
+    retrait_frequence_1 = retrait_frequence_1,
     corpus_grams = corpus_grams,
     corpus_path = corpus_path,
     save_output = save_output,

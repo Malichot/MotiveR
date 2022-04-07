@@ -104,3 +104,12 @@ df_stats = motifs_stats(
   save_output = save_output,
   overwrite = overwrite
 )
+
+# Calcul de spécificités
+calcul_spec_freq = calcul_specificites(
+  save_freq = TRUE,
+  retrait_frequence_1 = TRUE,
+  corpus_grams = corpus_grams,
+  save_output = save_output,
+  overwrite = overwrite
+)
