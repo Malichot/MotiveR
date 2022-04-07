@@ -1,3 +1,7 @@
+#' @importFrom magrittr %>%
+#' @export
+magrittr::`%>%`
+
 save_dir_parser <- function(save_path = NULL) {
   if (is.null(save_path)) {
     save_dir <<-
