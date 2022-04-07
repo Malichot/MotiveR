@@ -2,58 +2,32 @@
 #'
 #' Fonction génération TF-IDF
 #'
+#' @param n_motifs int sélection du nombre de motifs à afficher
+#' 
+#' @param plot_type string "group" pour une visualisation groupée, "sep" pour une visualisation séparée
+#' 
 #' @param corpus_grams data.frame sous format mots || motifs || Oeuvre
 #'
 #' @param corpus_path string chemin du csv contenant les motifs en ngram
+#' 
+#' @param save_output boolean: Sauvegarde les résultats
 #'
-#' @param n_motifs int sélection du nombre de motifs à afficher
+#' @param save_path string: Chemin du fichier de sauvergarde
 #'
-#' @param plot_type string "group" pour une visualisation groupée, "sep" pour une visualisation séparée
-
 #' @example
 #' motifs_tf_idf(corpus_path="corpus_motifs_grams.csv", n_motifs = 20, plot_type="group")
 #'
 #' @export
-motifs_tf_idf <- function(corpus_grams=NULL,
-                          corpus_path=NULL, 
-                          n_motifs = 20, 
+motifs_tf_idf <- function(n_motifs = 20, 
                           plot_type = "group",
+                          corpus_grams=NULL,
+                          corpus_path=NULL, 
                           save_output = FALSE,
+                          save_path = NULL,
                           overwrite=FALSE){
   # Lecture des données :
-  if (is.null(corpus_grams) & is.null(corpus_path)) {
-    corpus_path = file.path(OUTPUT_DIR, "corpus_motifs_grams.csv")
-    message("Chargement du corpus_grams depuis le fichier ", corpus_path)
-    if (file.exists(corpus_path)) {
-      corpus_grams <-
-        data.table::fread(
-          corpus_path,
-          encoding = "UTF-8",
-          header = TRUE,
-          stringsAsFactors = FALSE
-        )
-    } else {
-      stop("Le fichier ", corpus_path, " n'existe pas.")
-    }
-  } else if (is.null(corpus_grams) & (!is.null(corpus_path))) {
-    message("Chargement du corpus_grams depuis le fichier ", corpus_path)
-    if (file.exists(corpus_path)) {
-      corpus_grams <-
-        data.table::fread(
-          corpus_path,
-          encoding = "UTF-8",
-          header = TRUE,
-          stringsAsFactors = FALSE
-        )
-    } else {
-      stop("Le fichier ", corpus_path, " n'existe pas.")
-    }
-  } else if (!is.null(corpus_grams) & (is.null(corpus_path))) {
-    # nothing to do
-  } else {
-    stopifnot(!is.null(corpus_grams) & (!is.null(corpus_path)))
-    stop("Vous ne pouvez pas passer à la fois 'corpus_grams' et 'corpus_path' en argument.")
-  }
+  corpus_grams = import_corpus(corpus_grams, corpus_path, func_name =
+                                 "motifs_tf_idf")
   
   # Vérification okazou :
   corpus_grams <- corpus_grams[,c("mots", "motifs", "Oeuvre")]
@@ -124,18 +98,13 @@ motifs_tf_idf <- function(corpus_grams=NULL,
     stop("L'argument plot_type=", plot_type, " n'est pas valide...")
   }
   
-  if (save_output) {
-    save_path = file.path(OUTPUT_DIR, "tf-idf.csv")
-    message("Sauvegarde des motifs dans ", save_path)
-    if (!file.exists(save_path)) {
-      write.csv(tf_idf_export, save_path)
-    } else {
-      if (overwrite) {
-        warning("Le fichier ", save_path, " existe dèjà, écrase et sauve nouveau. Pour éviter ce comportement, utiliser overwrite = FALSE.")
-        write.csv(tf_idf_export, save_path)
-      } else {
-        stop("Le fichier ", save_path, " existe dèjà. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE.")
-      }
-    }
+  # Exportation csv :
+  if (!is.null(save_path) | save_output) {
+    save_data_to_csv(
+      tf_idf_export,
+      "motifs_tf_idf",
+      save_path,
+      overwrite = overwrite
+    )
   }
 }
