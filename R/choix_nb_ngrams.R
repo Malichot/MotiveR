@@ -39,8 +39,7 @@ choix_nb_ngrams <-
     
     ## Retrait des cases vides okazou :
     corpus <- corpus[complete.cases(corpus), ]
-    dplyr::lead(corpus)
-    
+
     if (n_grams == 2) {
       # bigrams motifs :
       corpus_spec_punct <- corpus  %>%
