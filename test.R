@@ -78,12 +78,13 @@ DETACH_PACKAGE = TRUE
 
 
 TEST = "retour_texte_specificites"
-frequence = 150
-retrait_frequence_1 = TRUE
+frequence = 3
+n_grams = 4
+len_context = 4
 corpus_grams = NULL
 corpus_path = NULL # "./output/corpus_motifs_grams.csv"
 corpus_spec = NULL
-corpus_spec_path = NULL # "./output/corpus_motifs_grams.csv"
+corpus_spec_path = "./output/corpus_motifs_spec_freq.csv"
 save_output = TRUE
 overwrite = TRUE
 DETACH_PACKAGE = TRUE
@@ -269,13 +270,14 @@ if (TEST == "annotation_udpipe") {
   
   calcul_spec_freq = retour_texte_specificites(
     frequence = frequence,
+    len_context = len_context,
+    n_grams = n_grams,
     corpus_grams = corpus_grams,
-    corpus_spec = NULL,
-    corpus_spec_path = NULL, # "corpus_spec_freq.csv", 
     corpus_path = corpus_path,
+    corpus_spec = corpus_spec,
+    corpus_spec_path = corpus_spec_path,
     save_output = save_output,
     overwrite = overwrite
-    
   )
 } else {
   stop("Test is not valid: ", TEST)

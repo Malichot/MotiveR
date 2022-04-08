@@ -2,6 +2,10 @@
 #' @export
 magrittr::`%>%`
 
+#' @importFrom data.table :=
+#' @export
+data.table::`:=`
+
 save_dir_parser <- function(save_path = NULL) {
   if (is.null(save_path)) {
     save_dir <- file.path(getwd(), "output")

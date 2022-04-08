@@ -26,14 +26,10 @@ save_output = TRUE # Sauvegarde résultats
 overwrite = TRUE # Écrase résultats précédents
 n_grams = 4 # n-gram encodage
 corpus_grams_path = "./output/corpus_motifs_grams.csv"
+frequence = 3
+len_context = 4
 
-# source("R/tag_motif_pipeline.R")
-# source("R/choix_nb_ngrams.R")
-# source("R/motifs_nuage.R")
-# source("R/motifs_tf_idf.R")
-# source("R/motifs_histogram.R")
 library(Motifs)
-# require("dplyr") # need to handle %>% or magrittr ?
 
 corpus_annote = annotation_udpipe(path = "./Corpus-torun",
                                   save_output = save_output,
@@ -110,6 +106,29 @@ calcul_spec_freq = calcul_specificites(
   save_freq = TRUE,
   retrait_frequence_1 = TRUE,
   corpus_grams = corpus_grams,
+  save_output = save_output,
+  overwrite = overwrite
+)
+
+# Retour aux textes
+corpus_spec_path = NULL
+source("R/utils.R")
+
+
+corpus_spec = import_table(corpus_spec_path, file_name = "corpus_motifs_spec_freq.csv")
+head(corpus_spec)
+corpus_spec[,V1:=NULL]
+head(corpus_spec)
+
+calcul_spec_freq = retour_texte_specificites(
+  frequence = 3,
+  len_context = 4,
+  n_grams = 4,
+  # corpus_grams = corpus_grams,
+  # corpus_path = corpus_path,
+  # corpus_spec = calcul_spec_freq,
+  # corpus_spec_path = "./output/corpus_motifs_spec_freq.csv",
+  # corpus_spec_path = "./output/corpus_motifs_spec_freq.csv",
   save_output = save_output,
   overwrite = overwrite
 )

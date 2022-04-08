@@ -2,12 +2,16 @@
 #'
 #' Fonction pour retour aux textes à partir de la table de spécificités
 #'
-#' @param frequence int filtre de seuil de fréquence 
-#' 
+#' @param frequence int filtre de seuil de fréquence
+#'
+#' @param n_grams int n-grams
+#'
+#' @param len_context int nombre de mots du contexte à afficher
+#'
 #' @param corpus_grams data.frame corpus_motifs motifs pour chaque corpus mots | motifs | Oeuvre
 #'
 #' @param corpus_path string Chemin du csv contenant les corpus_motifs motifs pour chaque corpus
-#' 
+#'
 #' @param corpus_spec data.frame corpus specificités
 #'
 #' @param corpus_spec_path string Chemin du csv contenant les specificités du corpus
@@ -25,17 +29,18 @@
 #' corpus_annote <- annotation_udpipe("curpus-test")
 #'
 #' @export
-retour_texte_specificites <- function(frequence = 150,
+retour_texte_specificites <- function(frequence,
+                                      len_context,
+                                      n_grams,
                                       corpus_grams = NULL,
                                       corpus_path = NULL,
                                       corpus_spec = NULL,
-                                      corpus_spec_path = NULL, # "corpus_spec_freq.csv", 
+                                      corpus_spec_path = NULL,
+                                      # "corpus_spec_freq.csv",
                                       save_output = FALSE,
                                       save_path = NULL,
                                       overwrite = FALSE) {
-  
-  
-  ## Importation des librairies : 
+  ## Importation des librairies :
   require("tidytext")
   require("tidyverse")
   require("ggplot2")
@@ -47,17 +52,18 @@ retour_texte_specificites <- function(frequence = 150,
   # Chargement des deux corpus :
   check_object_param(corpus_grams, corpus_path)
   check_object_param(corpus_spec, corpus_spec_path)
-  if (is.null(corpus_grams)){
+  if (is.null(corpus_grams)) {
     corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
   }
   # Vérification okazou (pb index) :
-  corpus_grams <- corpus_grams[,c("mots", "ngrammot", "motifs", "Oeuvre")]
+  corpus_grams <-
+    corpus_grams[, c("mots", "ngrammot", "motifs", "Oeuvre")]
   
-  if (is.null(corpus_spec)){
+  if (is.null(corpus_spec)) {
     corpus_spec = import_table(corpus_spec_path, file_name = "corpus_motifs_spec_freq.csv")
   }
-  # Suppression colonne index : 
-  corpus_spec <- corpus_spec[,-c("V1")]
+  # Suppression colonne index :
+  corpus_spec[, V1 := NULL]
   
   ## Retrait des cases vides :
   corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
@@ -68,11 +74,11 @@ retour_texte_specificites <- function(frequence = 150,
   corpus_spec <- corpus_spec %>%
     dplyr::filter(n > frequence)
   
-  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
   
   # Retour aux textes :
   
-  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
   
   ## Référence : M. Jockers, Text analysis with R for students of literature, 2014.
   
@@ -80,32 +86,43 @@ retour_texte_specificites <- function(frequence = 150,
   
   
   
-  retour_aux_textes <- function(corpus_spec){
-    
-    context<- as.numeric(readline("Combien de mots de contexte voulez-vous afficher ? Entrez un nombre : \n"))
-    longueur_motif <- as.numeric(readline("Quelle longueur a votre motif : \n"))
+  retour_aux_textes <- function(corpus_spec) {
     #keyword<- (readline("Entrez le motif : \n"))
     hits <- which(corpus_grams$motifs %in% corpus_spec$motifs)
     
-    if(length(hits)>0){
-      result<-NULL
-      for(h in 1:length(hits))
+    if (length(hits) > 0) {
+      result <- NULL
+      for (h in 1:length(hits))
       {
-        start<- hits[h]-context
-        if(start < 1){ #if(start < 1 && h == 1){
-          start<-1}
+        start <- hits[h] - len_context
+        if (start < 1) {
+          #if(start < 1 && h == 1){
+          start <- 1
+        }
         
-        end<-hits[h]+context+as.numeric(longueur_motif) # La fin du motif contient aussi le motif en lui-même. 
+        end <-
+          hits[h] + len_context + as.numeric(n_grams) # La fin du motif contient aussi le motif en lui-même.
         
-        myrow<-cbind(hits[h], paste(corpus_grams$mots[start:(hits[h]-1)], collapse=" "), 
-                     paste(corpus_grams$ngrammot[hits[h]], collapse=" "), 
-                     paste(corpus_grams$mots[(hits[h]+longueur_motif):end], collapse=" "), 
-                     paste(corpus_grams$Oeuvre[hits[h]], collapse = " "),
-                     paste(corpus_grams$motifs[hits[h]], collapse = " "))
-        result<-rbind(result,myrow)
+        myrow <-
+          cbind(
+            hits[h],
+            paste(corpus_grams$mots[start:(hits[h] - 1)], collapse = " "),
+            paste(corpus_grams$ngrammot[hits[h]], collapse = " "),
+            paste(corpus_grams$mots[(hits[h] + n_grams):end], collapse =
+                    " "),
+            paste(corpus_grams$Oeuvre[hits[h]], collapse = " "),
+            paste(corpus_grams$motifs[hits[h]], collapse = " ")
+          )
+        result <- rbind(result, myrow)
         
       }
-      colnames(result)<-c("id", "contexte_gauche", "motif", "contexte_droit", "Oeuvre", "motifs")
+      colnames(result) <-
+        c("id",
+          "contexte_gauche",
+          "motif",
+          "contexte_droit",
+          "Oeuvre",
+          "motifs")
       result <- as_tibble(result)
       result <- inner_join(result, corpus_spec)
       result <- result[order(result$nrel),]
@@ -113,8 +130,8 @@ retour_texte_specificites <- function(frequence = 150,
       # Exportation csv :
       if (!is.null(save_path) | save_output) {
         save_data_to_csv(
-          df_stats,
-          "motifs_stats",
+          result,
+          "retour_texte_specificites.csv",
           save_path,
           fileEncoding = "UTF-8",
           overwrite = overwrite
