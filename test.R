@@ -11,12 +11,12 @@ setwd("/Users/brunospilak/Documents/Perso/Motifs/Motifs/")
 # overwrite = TRUE
 # DETACH_PACKAGE = TRUE
 
-# TEST = "regex_corpus_udpipe"
-# path = "./"
-# save_output = TRUE
-# overwrite = TRUE
-# corpus_path = "./output-Corpus-torun/udpipe_corpus_complet.csv"
-# DETACH_PACKAGE = TRUE
+TEST = "regex_corpus_udpipe"
+path = "./"
+save_output = TRUE
+overwrite = TRUE
+corpus_path = "./output-Corpus-torun/udpipe_corpus_complet.csv"
+DETACH_PACKAGE = TRUE
 
 # TEST = "tag_motif_pipeline"
 # path = "./Corpus-torun"
@@ -24,13 +24,13 @@ setwd("/Users/brunospilak/Documents/Perso/Motifs/Motifs/")
 # overwrite = TRUE
 # DETACH_PACKAGE = TRUE
 
-TEST = "choix_nb_ngrams"
-n_grams = 4
-corpus = NULL
-corpus_path = "./output/udpipe_corpus_motifs.csv"
-save_output = TRUE
-overwrite = TRUE
-DETACH_PACKAGE = TRUE
+# TEST = "choix_nb_ngrams"
+# n_grams = 4
+# corpus = NULL
+# corpus_path = "./output/udpipe_corpus_motifs.csv"
+# save_output = TRUE
+# overwrite = TRUE
+# DETACH_PACKAGE = TRUE
 
 # TEST = "motifs_nuage"
 # corpus_grams = NULL
@@ -76,18 +76,31 @@ DETACH_PACKAGE = TRUE
 # overwrite = TRUE
 # DETACH_PACKAGE = TRUE
 
+# 
+# TEST = "retour_texte_specificites"
+# frequence = 3
+# n_grams = 4
+# len_context = 4
+# corpus_grams = NULL
+# corpus_path = NULL # "./output/corpus_motifs_grams.csv"
+# corpus_spec = NULL
+# corpus_spec_path = "./output/corpus_motifs_spec_freq.csv"
+# save_output = TRUE
+# overwrite = TRUE
+# DETACH_PACKAGE = TRUE
 
-TEST = "retour_texte_specificites"
-frequence = 3
-n_grams = 4
-len_context = 4
-corpus_grams = NULL
-corpus_path = NULL # "./output/corpus_motifs_grams.csv"
-corpus_spec = NULL
-corpus_spec_path = "./output/corpus_motifs_spec_freq.csv"
-save_output = TRUE
-overwrite = TRUE
-DETACH_PACKAGE = TRUE
+# TEST = "retour_texte_specificites_un_motif"
+# motif_cible = "le NC de le"
+# n_grams = 4
+# len_context = 4
+# corpus_grams = NULL
+# corpus_path = NULL # "./output/corpus_motifs_grams.csv"
+# corpus_spec = NULL
+# corpus_spec_path = NULL # "./output/corpus_motifs_spec_freq.csv"
+# save_output = TRUE
+# overwrite = TRUE
+# DETACH_PACKAGE = TRUE
+
 
 if (DETACH_PACKAGE) {
   if (!is.null(sessionInfo()$otherPkgs)) {
@@ -270,6 +283,30 @@ if (TEST == "annotation_udpipe") {
   
   calcul_spec_freq = retour_texte_specificites(
     frequence = frequence,
+    len_context = len_context,
+    n_grams = n_grams,
+    corpus_grams = corpus_grams,
+    corpus_path = corpus_path,
+    corpus_spec = corpus_spec,
+    corpus_spec_path = corpus_spec_path,
+    save_output = save_output,
+    overwrite = overwrite
+  )
+} else if (TEST == "retour_texte_specificites_un_motif") {
+  source("./R/utils.R")
+  source("R/retour_texte_specificites_un_motif.R")
+  require("magrittr")
+
+  # require("tidytext")
+  # require("tidyverse")
+  # require("ggplot2")
+  # require("tidyr")
+  # require("data.table")
+  # require("reshape2")
+  # library("dplyr")
+  
+  calcul_spec_freq = retour_texte_specificites_un_motif(
+    motif_cible = motif_cible,
     len_context = len_context,
     n_grams = n_grams,
     corpus_grams = corpus_grams,

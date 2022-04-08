@@ -29,18 +29,33 @@ corpus_grams_path = "./output/corpus_motifs_grams.csv"
 frequence = 3
 len_context = 4
 
+# require("magrittr") 
+# source("R/utils.R")
+# source("R/annotation_udpipe.R")
+# source("R/regex_corpus_udpipe.R")
+# source("R/tag_motif_pipeline.R")
+# source("R/choix_nb_ngrams.R")
+# source("R/motifs_nuage.R")
+# source("R/motifs_histogram.R")
+# source("R/motifs_acp.R")
+# source("R/motifs_stats.R")
+# source("R/motifs_tf_idf.R")
+# source("R/calcul_specificites.R")
+# source("R/retour_texte_specificites.R")
+# source("R/retour_texte_specificites_un_motif.R")
+
 library(Motifs)
+ 
+# corpus_annote = annotation_udpipe(path = "./Corpus-torun",
+#                                   save_output = save_output,
+#                                   overwrite = overwrite)
+# corpus_motifs = regex_corpus_udpipe(corpus = corpus_annote,
+#                                     save_output = save_output,
+#                                     overwrite = overwrite)
 
-corpus_annote = annotation_udpipe(path = "./Corpus-torun",
-                                  save_output = save_output,
-                                  overwrite = overwrite)
-corpus_motifs = regex_corpus_udpipe(corpus = corpus_annote,
-                                    save_output = save_output,
-                                    overwrite = overwrite)
-
-# corpus_motifs = tag_motif_pipeline(path = "./Corpus-torun",
-#                                    save_output = save_output,
-#                                    overwrite = overwrite)
+corpus_motifs = tag_motif_pipeline(path = "./Corpus-torun",
+                                   save_output = save_output,
+                                   overwrite = overwrite)
 
 # Si nouvelle analyse avec different n gram reprendre d ici
 
@@ -110,25 +125,25 @@ calcul_spec_freq = calcul_specificites(
   overwrite = overwrite
 )
 
+
 # Retour aux textes
-corpus_spec_path = NULL
-source("R/utils.R")
-
-
-corpus_spec = import_table(corpus_spec_path, file_name = "corpus_motifs_spec_freq.csv")
-head(corpus_spec)
-corpus_spec[,V1:=NULL]
-head(corpus_spec)
-
 calcul_spec_freq = retour_texte_specificites(
-  frequence = 3,
-  len_context = 4,
-  n_grams = 4,
-  # corpus_grams = corpus_grams,
-  # corpus_path = corpus_path,
-  # corpus_spec = calcul_spec_freq,
-  # corpus_spec_path = "./output/corpus_motifs_spec_freq.csv",
-  # corpus_spec_path = "./output/corpus_motifs_spec_freq.csv",
+  frequence = frequence,
+  len_context = len_context,
+  n_grams = n_grams,
+  corpus_grams = corpus_grams,
+  corpus_spec = calcul_spec_freq,
   save_output = save_output,
   overwrite = overwrite
 )
+
+calcul_spec_freq = retour_texte_specificites_un_motif(
+  motif_cible = "le NC de le",
+  len_context = len_context,
+  n_grams = n_grams,
+  corpus_grams = corpus_grams,
+  corpus_spec = calcul_spec_freq,
+  save_output = save_output,
+  overwrite = overwrite
+)
+
