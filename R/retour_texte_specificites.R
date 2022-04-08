@@ -34,24 +34,12 @@ retour_texte_specificites <- function(frequence,
                                       n_grams,
                                       corpus_grams = NULL,
                                       corpus_path = NULL,
-                                      corpus_spec = NULL,
                                       corpus_spec_path = NULL,
-                                      # "corpus_spec_freq.csv",
                                       save_output = FALSE,
                                       save_path = NULL,
                                       overwrite = FALSE) {
-  ## Importation des librairies :
-  require("tidytext")
-  require("tidyverse")
-  require("ggplot2")
-  require("tidyr")
-  require("data.table")
-  require("reshape2")
-  require("dplyr")
-  
   # Chargement des deux corpus :
   check_object_param(corpus_grams, corpus_path)
-  check_object_param(corpus_spec, corpus_spec_path)
   if (is.null(corpus_grams)) {
     corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
   }
@@ -59,11 +47,9 @@ retour_texte_specificites <- function(frequence,
   corpus_grams <-
     corpus_grams[, c("mots", "ngrammot", "motifs", "Oeuvre")]
   
-  if (is.null(corpus_spec)) {
-    corpus_spec = import_table(corpus_spec_path, file_name = "corpus_motifs_spec_freq.csv")
-  }
-  # Suppression colonne index :
-  corpus_spec[, V1 := NULL]
+  corpus_spec = import_table(corpus_spec_path, file_name = " ")
+  # Suppression colonne index
+  corpus_spec[, V1 := NULL]  
   
   ## Retrait des cases vides :
   corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
@@ -123,8 +109,8 @@ retour_texte_specificites <- function(frequence,
           "contexte_droit",
           "Oeuvre",
           "motifs")
-      result <- as_tibble(result)
-      result <- inner_join(result, corpus_spec)
+      result <- dplyr::as_tibble(result)
+      result <- dplyr::inner_join(result, corpus_spec)
       result <- result[order(result$nrel),]
       
       # Exportation csv :
