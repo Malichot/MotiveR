@@ -4,10 +4,7 @@ magrittr::`%>%`
 
 save_dir_parser <- function(save_path = NULL) {
   if (is.null(save_path)) {
-    save_dir <<-
-      file.path(getwd(), "output")
-    message("save_path n'est pas spécifié. Utilise dossier de sortie par défault: ",
-            save_dir)
+    save_dir <- file.path(getwd(), "output")
   } else {
     if (grepl("/", save_path)) {
       save_dir = dirname(filepath)
@@ -33,35 +30,37 @@ save_dir_handler <- function(save_dir, overwrite = FALSE) {
   }
 }
 
-default_output_path <- function(func_name, save_dir) {
-  if (func_name == "annotation_udpipe") {
+default_output_path <- function(file_name, save_dir) {
+  if (file_name == "udpipe_corpus_complet") {
     save_path = file.path(save_dir, "udpipe_corpus_complet.csv")
-  } else if (func_name == "regex_corpus_udpipe") {
+  } else if (file_name == "udpipe_corpus_motifs") {
     save_path = file.path(save_dir, "udpipe_corpus_motifs.csv")
-  } else if (func_name == "choix_nb_ngrams") {
+  } else if (file_name == "corpus_motifs_grams") {
     save_path = file.path(save_dir, "corpus_motifs_grams.csv")
-  } else if (func_name == "motifs_tf_idf"){
+  } else if (file_name == "idf"){
     save_path = file.path(save_dir, "tf-idf.csv")
-  } else if (func_name == "motifs_stats"){
+  } else if (file_name == "motifs_stats"){
     save_path = file.path(save_dir, "motifs_stats.csv")
-  } else if (func_name == "calcul_specificites"){
+  } else if (file_name == "calcul_specificites"){
     save_path = file.path(save_dir, "corpus_motifs_specificites.csv")
+  } else if (file_name == "retour_texte_specificites") {
+    save_path = file.path(save_dir, file_name)
   } else {
-    stop("func_name argument invalide: ", func_name)
+    stop("file_name argument invalide: ", file_name)
   }
   return(save_path)
 }
 
 save_data_to_csv <-
   function(data,
-           func_name,
+           file_name = NULL,
            save_path = NULL,
            fileEncoding = "",
            overwrite = FALSE) {
     save_dir = save_dir_parser(save_path)
     dir.create(save_dir)
     if (is.null(save_path)) {
-      save_path = default_output_path(func_name, save_dir)
+      save_path = file.path(save_dir, file_name)
     }
     message("Sauvegarde sortie dans ", save_path)
     if (!file.exists(save_path)) {
@@ -84,39 +83,37 @@ save_data_to_csv <-
     }
   }
 
-import_corpus <- function(corpus = NULL,
-                          corpus_path = NULL,
-                          func_name = NULL) {
-  if (is.null(corpus) & is.null(corpus_path)) {
+get_default_path <- function(file){
+  output_dir = file.path(getwd(), "output")
+  path = file.path(output_dir, "udpipe_corpus_complet.csv")
+  return (path)
+}
+
+check_object_param <- function(object = NULL,
+                               object_path = NULL){
+  if (!is.null(object) & !is.null(object_path)) {
+    stop("Vous ne pouvez pas passer à la fois 'object' et 'object_path' en argument!")
+  }
+}
+
+import_table <- function(file_path = NULL,
+                          file_name = NULL) {
+  if (is.null(file_path)) {
+    if(is.null(file_name)) {
+      stop("Vous devez spécifié file_name")
+    }
     # Load from default paths
     output_dir = file.path(getwd(), "output")
-    if (func_name == "regex_corpus_udpipe") {
-      corpus_path = file.path(output_dir, "udpipe_corpus_complet.csv")
-    } else if (func_name == "choix_nb_ngrams") {
-      corpus_path = file.path(getwd(), "output", "udpipe_corpus_motifs.csv")
-    } else if (func_name %in% c("motifs_nuage", "motifs_histogram", "motifs_tf_idf", "motifs_acp", "motifs_stats", "calcul_specificites")) {
-      corpus_path = file.path(getwd(), "output", "corpus_motifs_grams.csv")
-    }
-    else{
-      stop("func_name argument invalide: ", func_name)
-    }
-    message("Loading default corpus from ",
-            corpus_path,
-            " for ",
-            func_name)
-    corpus = data.table::fread(corpus_path, encoding = "UTF-8", header = TRUE)
-  } else if (is.null(corpus) & (!is.null(corpus_path))) {
-    message("Chargement du corpus depuis le fichier ", corpus_path)
-    if (file.exists(corpus_path)) {
-      corpus = data.table::fread(corpus_path, encoding = "UTF-8", header = TRUE)
-      return(corpus)
-    } else {
-      stop("Le fichier ", corpus_path, " n'existe pas.")
-    }
-  } else if (!is.null(corpus) & (is.null(corpus_path))) {
-    return(corpus)
+    file_path = file.path(output_dir, file_name)
+    message("Chargmenet de la table par défault ", file_name, " depuis ", file_path)
+    object = data.table::fread(file_path, encoding = "UTF-8", header = TRUE)
   } else {
-    stopifnot(!is.null(corpus) & (!is.null(corpus_path)))
-    stop("Vous ne pouvez pas passer à la fois 'corpus' et 'corpus_path' en argument!")
+    message("Chargement de la table depuis ", file_path)
+    if (file.exists(file_path)) {
+      object = data.table::fread(file_path, encoding = "UTF-8", header = TRUE)
+      return(object)
+    } else {
+      stop("Le fichier ", file_path, " n'existe pas.")
+    }
   }
 }
