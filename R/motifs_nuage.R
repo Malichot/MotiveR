@@ -20,9 +20,10 @@ motifs_nuage <-
            nmots = 25,
            freq = "rel") {
     # Lecture des données :
-    corpus_grams = import_corpus(corpus_grams, corpus_path, func_name =
-                                   "motifs_nuage")
-    
+    check_object_param(corpus_grams, corpus_path)
+    if (is.null(corpus_grams)){
+      corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
+    }
     # Vérification okazou (pb index) :
     corpus_grams <- corpus_grams[, c("mots", "motifs", "Oeuvre")]
     

@@ -29,8 +29,11 @@ choix_nb_ngrams <-
            overwrite = FALSE) {
     stopifnot(n_grams >= 2)
     # Lecture des données :
-    corpus = import_corpus(corpus, corpus_path, func_name = "choix_nb_ngrams")
-    
+    check_object_param(corpus, corpus_path)
+    if (is.null(corpus)){
+      corpus = import_table(corpus_path, file_name = "udpipe_corpus_motifs.csv")
+    }
+
     # Vérification okazou :
     corpus <- corpus[, c('mots', 'motifs', 'Oeuvre')]
     
@@ -272,8 +275,8 @@ choix_nb_ngrams <-
     # Exportation csv :
     if (!is.null(save_path) | save_output) {
       save_data_to_csv(
-        corpus,
-        "choix_nb_ngrams",
+        corpus_spec_punct,
+        "corpus_motifs_grams.csv",
         save_path,
         fileEncoding = "UTF-8",
         overwrite = overwrite

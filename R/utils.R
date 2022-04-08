@@ -85,8 +85,8 @@ save_data_to_csv <-
 
 get_default_path <- function(file){
   output_dir = file.path(getwd(), "output")
-  path = file.path(output_dir, "udpipe_corpus_complet.csv")
-  return (path)
+  path = file.path(output_dir, file)
+  return (file)
 }
 
 check_object_param <- function(object = NULL,

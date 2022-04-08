@@ -29,31 +29,34 @@ calcul_specificites <- function(save_freq = FALSE,
                                 overwrite = FALSE){
   
   # Importation des données
-  corpus_spec = import_corpus(corpus_grams, corpus_path, func_name = "calcul_specificites")
-  
+  # Chargement des deux corpus :
+  check_object_param(corpus_grams, corpus_path)
+  if (is.null(corpus_grams)){
+    corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
+  }
   # Vérification okazou (pb index) :
-  corpus_spec <- corpus_spec[,c("mots", "motifs", "Oeuvre")]
+  corpus_grams <- corpus_grams[,c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec),]
+  corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
-  corpus_spec <- corpus_spec %>%
+  corpus_grams <- corpus_grams %>%
     dplyr::count(Oeuvre, motifs, sort = TRUE)
   
   ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
   
-  total_words <- corpus_spec %>%
+  total_words <- corpus_grams %>%
     dplyr::group_by(Oeuvre) %>%
     dplyr::summarize(total = sum(n))
   
-  corpus_spec <- dplyr::left_join(corpus_spec, total_words)
+  corpus_grams <- dplyr::left_join(corpus_grams, total_words)
   
   ## Calcul de la fréquence relative :
   
-  corpus_spec$rel_freq <- corpus_spec$n / corpus_spec$total
+  corpus_grams$rel_freq <- corpus_grams$n / corpus_grams$total
   
-  corpus_words_ngrams_spec <- corpus_spec
+  corpus_words_ngrams_spec <- corpus_grams
   
   ## Reshaping the data : colonnes = corpus, lignes = mots et freq
   corpus_lexical_table <- xtabs(n~motifs+Oeuvre, corpus_words_ngrams_spec)
@@ -214,32 +217,23 @@ calcul_specificites <- function(save_freq = FALSE,
     if(save_freq){
       save_data_to_csv(
         calcul_spec_freq,
-        "calcul_specificites",
+        "corpus_motifs_spec_freq.csv",
         save_path,
         fileEncoding = "UTF-8",
         overwrite = overwrite
       )
       
-      write.csv(calcul_spec_freq, "corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
     } else {
       save_data_to_csv(
         calcul_spec,
-        "calcul_specificites",
+        "corpus_motifs_spec.csv",
         save_path,
         fileEncoding = "UTF-8",
         overwrite = overwrite
       )
       
-      write.csv(calcul_spec, "corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
     }
     
-  }
-  
-  
-  if(save_freq){
-    write.csv(calcul_spec_freq, "corpus_spec_freq.csv", fileEncoding = "UTF-8")
-  } else {
-    write.csv(calcul_spec, "corpus_motifs_specificites.csv", fileEncoding = "UTF-8")
   }
   
   return(calcul_spec_freq)

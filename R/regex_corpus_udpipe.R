@@ -19,8 +19,11 @@
 #'
 #' @export
 regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output = FALSE, save_path = NULL, overwrite=FALSE){
-  ## Importation du corpus : 
-  corpus = import_corpus(corpus, corpus_path, func_name="regex_corpus_udpipe")
+  # Lecture des données :
+  check_object_param(corpus, corpus_path)
+  if (is.null(corpus)){
+    corpus = import_table(corpus_path, file_name = "udpipe_corpus_complet.csv")
+  }
   ## Vérification que les colonnes sont les bonnes :
   corpus <- corpus[,c('mots', 'lemmes', 'POS', 'feats', 'Oeuvre')] 
   
@@ -814,7 +817,7 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output =
   
   # Exportation csv :
   if (!is.null(save_path) | save_output){
-    save_data_to_csv(corpus, "regex_corpus_udpipe", save_path, fileEncoding = "UTF-8", overwrite = overwrite)
+    save_data_to_csv(corpus, "udpipe_corpus_motifs.csv", save_path, fileEncoding = "UTF-8", overwrite = overwrite)
   }
   return(corpus)
 

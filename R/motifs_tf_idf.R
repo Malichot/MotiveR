@@ -26,8 +26,10 @@ motifs_tf_idf <- function(n_motifs = 20,
                           save_path = NULL,
                           overwrite = FALSE) {
   # Lecture des données :
-  corpus_grams = import_corpus(corpus_grams, corpus_path, func_name =
-                                 "motifs_tf_idf")
+  check_object_param(corpus_grams, corpus_path)
+  if (is.null(corpus_grams)){
+    corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
+  }
   
   # Vérification okazou :
   corpus_grams <- corpus_grams[, c("mots", "motifs", "Oeuvre")]
@@ -102,7 +104,7 @@ motifs_tf_idf <- function(n_motifs = 20,
   # Exportation csv :
   if (!is.null(save_path) | save_output) {
     save_data_to_csv(tf_idf_export,
-                     "motifs_tf_idf",
+                     "motifs_tf_idf.csv",
                      save_path,
                      overwrite = overwrite)
   }

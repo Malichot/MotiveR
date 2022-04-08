@@ -91,7 +91,7 @@ annotation_udpipe <-
     if (!is.null(save_path) | save_output) {
       save_data_to_csv(
         corpus_annote,
-        "annotation_udpipe",
+        "udpipe_corpus_complet.csv",
         save_path,
         fileEncoding = "UTF-8",
         overwrite = overwrite

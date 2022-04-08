@@ -1,17 +1,38 @@
-#' Titre : Scripts motifs - Fonction pour retour aux textes à partir de la table de spécificités
-#' Auteurs : Dominique Legallois, Antoine de Sacy
-#' Date: 6 octobre 2021.
-
-# Entrée :
-
-# csv_corpus_motifs = sortie script choix ngrams
-# csv_corpus_specificites = sortie script de calcul des spécificités
-# frequence = filtre de seuil de fréquence 
-
-retour_texte_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
-                                      csv_corpus_motifs = "corpus_motifs_grams.csv",
-                                      csv_corpus_specificites = "Corpus_spec_freq.csv", 
-                                      frequence = 150){
+#' Retour au texte depuis les spécificiés
+#'
+#' Fonction pour retour aux textes à partir de la table de spécificités
+#'
+#' @param frequence int filtre de seuil de fréquence 
+#' 
+#' @param corpus_grams data.frame corpus_motifs motifs pour chaque corpus mots | motifs | Oeuvre
+#'
+#' @param corpus_path string Chemin du csv contenant les corpus_motifs motifs pour chaque corpus
+#' 
+#' @param corpus_spec data.frame corpus specificités
+#'
+#' @param corpus_spec_path string Chemin du csv contenant les specificités du corpus
+#'
+#' @param save_output boolean: Sauvegarde les résultats
+#'
+#' @param save_path string: Chemin du fichier de sauvergarde
+#'
+#' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
+#'
+#' @return DataFrame: Oeuvre | motifs | n (fréq absolue) | nb_total_mots (dans l'oeuvre) |
+#' n_rel (fréquence relative) | spécificités oeuvre par oeuvre | pourcentage (présence du motif par rapport au reste du corpus)
+#'
+#' @example
+#' corpus_annote <- annotation_udpipe("curpus-test")
+#'
+#' @export
+retour_texte_specificites <- function(frequence = 150,
+                                      corpus_grams = NULL,
+                                      corpus_path = NULL,
+                                      corpus_spec = NULL,
+                                      corpus_spec_path = NULL, # "corpus_spec_freq.csv", 
+                                      save_output = FALSE,
+                                      save_path = NULL,
+                                      overwrite = FALSE) {
   
   
   ## Importation des librairies : 
@@ -24,22 +45,22 @@ retour_texte_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
   require("dplyr")
   
   # Chargement des deux corpus :
+  check_object_param(corpus_grams, corpus_path)
+  check_object_param(corpus_spec, corpus_spec_path)
+  if (is.null(corpus_grams)){
+    corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
+  }
+  # Vérification okazou (pb index) :
+  corpus_grams <- corpus_grams[,c("mots", "ngrammot", "motifs", "Oeuvre")]
   
-  corpus_spec <- fread(csv_corpus_specificites, encoding = "UTF-8", 
-                       header = TRUE, stringsAsFactors = FALSE)
-  
+  if (is.null(corpus_spec)){
+    corpus_spec = import_table(corpus_spec_path, file_name = "corpus_motifs_spec_freq.csv")
+  }
   # Suppression colonne index : 
-  
   corpus_spec <- corpus_spec[,-c("V1")]
   
-  corpus <- fread(csv_corpus_motifs, encoding = "UTF-8", 
-                  header = TRUE, stringsAsFactors = FALSE)
-  
-  # Vérification okazou (pb index) :
-  corpus <- corpus[,c("mots", "ngrammot", "motifs", "Oeuvre")]
-  
   ## Retrait des cases vides :
-  corpus <- corpus[complete.cases(corpus),]
+  corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
   
   # Réduction du corpus_spec à nombre_motifs : évite de produire des trop grand csv,
   # réduit le temps de génération, inutile d'analyser des motifs à très basse fréquence...
@@ -64,7 +85,7 @@ retour_texte_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
     context<- as.numeric(readline("Combien de mots de contexte voulez-vous afficher ? Entrez un nombre : \n"))
     longueur_motif <- as.numeric(readline("Quelle longueur a votre motif : \n"))
     #keyword<- (readline("Entrez le motif : \n"))
-    hits <- which(corpus$motifs %in% corpus_spec$motifs)
+    hits <- which(corpus_grams$motifs %in% corpus_spec$motifs)
     
     if(length(hits)>0){
       result<-NULL
@@ -76,11 +97,11 @@ retour_texte_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
         
         end<-hits[h]+context+as.numeric(longueur_motif) # La fin du motif contient aussi le motif en lui-même. 
         
-        myrow<-cbind(hits[h], paste(corpus$mots[start:(hits[h]-1)], collapse=" "), 
-                     paste(corpus$ngrammot[hits[h]], collapse=" "), 
-                     paste(corpus$mots[(hits[h]+longueur_motif):end], collapse=" "), 
-                     paste(corpus$Oeuvre[hits[h]], collapse = " "),
-                     paste(corpus$motifs[hits[h]], collapse = " "))
+        myrow<-cbind(hits[h], paste(corpus_grams$mots[start:(hits[h]-1)], collapse=" "), 
+                     paste(corpus_grams$ngrammot[hits[h]], collapse=" "), 
+                     paste(corpus_grams$mots[(hits[h]+longueur_motif):end], collapse=" "), 
+                     paste(corpus_grams$Oeuvre[hits[h]], collapse = " "),
+                     paste(corpus_grams$motifs[hits[h]], collapse = " "))
         result<-rbind(result,myrow)
         
       }
@@ -88,19 +109,24 @@ retour_texte_specificites <- function(path = "~/Dropbox/2020-2021/Motifs/",
       result <- as_tibble(result)
       result <- inner_join(result, corpus_spec)
       result <- result[order(result$nrel),]
-      toprint<-as.numeric((readline("Sauvegarder les résultats en csv, tapez 1 et enter \n, Sauvegarder dans un objet R result_df, tapez 2 \n")))
-      if(toprint==1){
-        write.csv(result, "Retour_aux_textes_corpus_specificites.csv", fileEncoding = "UTF-8")
+      
+      # Exportation csv :
+      if (!is.null(save_path) | save_output) {
+        save_data_to_csv(
+          df_stats,
+          "motifs_stats",
+          save_path,
+          fileEncoding = "UTF-8",
+          overwrite = overwrite
+        )
       }
-      if(toprint==2){
-        result_df <<- result
-      }
+      return(result)
     }
     else {
-      print("Votre motif n'a pas été trouvé")
+      message("Votre motif n'a pas été trouvé")
     }
   }
   
-  retour_aux_textes(corpus_spec)
+  return(retour_aux_textes(corpus_spec))
   
 }

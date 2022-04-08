@@ -24,13 +24,13 @@ setwd("/Users/brunospilak/Documents/Perso/Motifs/Motifs/")
 # overwrite = TRUE
 # DETACH_PACKAGE = TRUE
 
-# TEST = "choix_nb_ngrams"
-# n_grams = 4
-# corpus = NULL
-# corpus_path = "./output/udpipe_corpus_motifs.csv"
-# save_output = TRUE
-# overwrite = TRUE
-# DETACH_PACKAGE = TRUE
+TEST = "choix_nb_ngrams"
+n_grams = 4
+corpus = NULL
+corpus_path = "./output/udpipe_corpus_motifs.csv"
+save_output = TRUE
+overwrite = TRUE
+DETACH_PACKAGE = TRUE
 
 # TEST = "motifs_nuage"
 # corpus_grams = NULL
@@ -67,11 +67,23 @@ setwd("/Users/brunospilak/Documents/Perso/Motifs/Motifs/")
 # overwrite = TRUE
 # DETACH_PACKAGE = TRUE
 
-TEST = "calcul_specificites"
-save_freq = FALSE
+# TEST = "calcul_specificites"
+# save_freq = TRUE
+# retrait_frequence_1 = TRUE
+# corpus_grams = NULL
+# corpus_path = NULL # "./output/corpus_motifs_grams.csv"
+# save_output = TRUE
+# overwrite = TRUE
+# DETACH_PACKAGE = TRUE
+
+
+TEST = "retour_texte_specificites"
+frequence = 150
 retrait_frequence_1 = TRUE
 corpus_grams = NULL
 corpus_path = NULL # "./output/corpus_motifs_grams.csv"
+corpus_spec = NULL
+corpus_spec_path = NULL # "./output/corpus_motifs_grams.csv"
 save_output = TRUE
 overwrite = TRUE
 DETACH_PACKAGE = TRUE
@@ -126,6 +138,7 @@ if (TEST == "annotation_udpipe") {
 } else if (TEST == "choix_nb_ngrams") {
   source("./R/utils.R")
   source("R/choix_nb_ngrams.R")
+  require("magrittr")
   # require("dplyr") # need to handle %>%
   # require("tidytext")
   # require("tidyverse")
@@ -240,6 +253,29 @@ if (TEST == "annotation_udpipe") {
     corpus_path = corpus_path,
     save_output = save_output,
     overwrite = overwrite
+  )
+} else if (TEST == "retour_texte_specificites") {
+  source("./R/utils.R")
+  source("R/retour_texte_specificites.R")
+  require("magrittr")
+  
+  # require("dplyr")
+  # require("tidytext")
+  # require("tidyverse")
+  # require("ggplot2")
+  # require("tidyr")
+  # require("data.table")
+  # require("reshape2")
+  
+  calcul_spec_freq = retour_texte_specificites(
+    frequence = frequence,
+    corpus_grams = corpus_grams,
+    corpus_spec = NULL,
+    corpus_spec_path = NULL, # "corpus_spec_freq.csv", 
+    corpus_path = corpus_path,
+    save_output = save_output,
+    overwrite = overwrite
+    
   )
 } else {
   stop("Test is not valid: ", TEST)

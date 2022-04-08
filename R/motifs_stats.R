@@ -25,13 +25,15 @@ motifs_stats <- function(corpus_grams = NULL,
                          save_path = NULL,
                          overwrite = FALSE) {
   # Importation des données
-  corpus_spec = import_corpus(corpus_grams, corpus_path, func_name = "motifs_stats")
-  
+  check_object_param(corpus_grams, corpus_path)
+  if (is.null(corpus_grams)){
+    corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
+  }  
   # Vérification okazou (pb index) :
-  corpus_spec <- corpus_spec[, c("mots", "motifs", "Oeuvre")]
+  corpus_grams <- corpus_grams[, c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  corpus_spec <- corpus_spec[complete.cases(corpus_spec), ]
+  corpus_grams <- corpus_grams[complete.cases(corpus_grams), ]
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
   
@@ -39,7 +41,7 @@ motifs_stats <- function(corpus_grams = NULL,
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
   
-  corpus_punct <- corpus_spec
+  corpus_punct <- corpus_grams
   
   corpus_punct$index <- cumsum(!duplicated(corpus_punct$Oeuvre))
   
@@ -115,22 +117,22 @@ motifs_stats <- function(corpus_grams = NULL,
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
   
-  corpus_spec <- corpus_spec %>%
+  corpus_grams <- corpus_grams %>%
     dplyr::count(Oeuvre, motifs, sort = TRUE)
   
   ## Ajout d'une colonne total words pour normaliser la fréquence (fréquence relative) :
   
-  total_words <- corpus_spec %>%
+  total_words <- corpus_grams %>%
     dplyr::group_by(Oeuvre) %>%
     dplyr::summarize(total = sum(n))
   
-  corpus_spec <- dplyr::left_join(corpus_spec, total_words)
+  corpus_grams <- dplyr::left_join(corpus_grams, total_words)
   
   ## Calcul de la fréquence relative :
   
-  corpus_spec$rel_freq <- corpus_spec$n / corpus_spec$total
+  corpus_grams$rel_freq <- corpus_grams$n / corpus_grams$total
   
-  corpus_words_ngrams_spec <- corpus_spec
+  corpus_words_ngrams_spec <- corpus_grams
   
   ## Reshaping the data : colonnes = corpus, lignes = motifs et freq
   corpus_lexical_table <-
@@ -367,7 +369,7 @@ motifs_stats <- function(corpus_grams = NULL,
   if (!is.null(save_path) | save_output) {
     save_data_to_csv(
       df_stats,
-      "motifs_stats",
+      "motifs_stats.csv",
       save_path,
       fileEncoding = "UTF-8",
       overwrite = overwrite
