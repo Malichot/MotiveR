@@ -2,7 +2,7 @@
 #'
 #' Fonction génération de statistiques générales
 #'
-#' @param corpus data.frame corpus_motifs motifs pour chaque corpus mots | motifs | Oeuvre
+#' @param corpus_grams data.frame corpus_motifs motifs pour chaque corpus mots | motifs | Oeuvre
 #'
 #' @param corpus_path string Chemin du csv contenant les corpus_motifs motifs pour chaque corpus
 #'
@@ -16,7 +16,7 @@
 #' n_rel (fréquence relative) | spécificités oeuvre par oeuvre | pourcentage (présence du motif par rapport au reste du corpus)
 #'
 #' @example
-#' corpus_annote <- annotation_udpipe("curpus-test")
+#' motifs_stats <- motifs_stats(corpus_path="corpus_motifs_grams.csv")
 #'
 #' @export
 motifs_stats <- function(corpus_grams = NULL,

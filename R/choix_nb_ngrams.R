@@ -17,7 +17,7 @@
 #' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
 #'
 #' @example
-#' corpus_annote <- annotation_udpipe("curpus-test")
+#' corpus_grams <- choix_nb_ngrams(n_grams=2, corpus_path="./output/udpipe_corpus_motifs.csv")
 #'
 #' @export
 choix_nb_ngrams <-

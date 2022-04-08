@@ -15,7 +15,7 @@
 #' @return DataFrame: corpus_motifs motifs pour chaque corpus
 #'
 #' @example
-#' corpus_motifs <- regex_corpus_UDPipe("./output/UDPipe_corpus_complet.csv", save_output = TRUE)
+#' corpus_motifs <- regex_corpus_UDPipe(corpus_path="./output/udpipe_corpus_complet.csv", save_output = TRUE)
 #'
 #' @export
 regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output = FALSE, save_path = NULL, overwrite=FALSE){

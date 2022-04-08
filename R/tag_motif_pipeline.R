@@ -14,7 +14,7 @@
 #' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
 #'
 #' @example
-#' corpus_annote <- annotation_udpipe("curpus-test")
+#' corpus_annote <- tag_motif_pipeline("curpus-test")
 #'
 #' @export
 tag_motif_pipeline <-

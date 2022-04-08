@@ -13,6 +13,8 @@
 #' @param save_output boolean: Sauvegarde les résultats
 #'
 #' @param save_path string: Chemin du fichier de sauvergarde
+#' 
+#' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
 #'
 #' @example
 #' motifs_tf_idf(corpus_path="corpus_motifs_grams.csv", n_motifs = 20, plot_type="group")

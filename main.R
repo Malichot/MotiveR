@@ -15,7 +15,7 @@ setwd("/Users/brunospilak/Documents/Perso/Motifs/Motifs")
 
 # Params
 library(Motifs)
-path = "./Corpus-torun" # chemin du corpus
+path = "../Corpus-torun" # chemin du corpus
 save_output = TRUE # Sauvegarde résultats
 overwrite = TRUE # Écrase résultats précédents
 n_grams = 4 # n-gram encodage

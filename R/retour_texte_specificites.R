@@ -26,7 +26,7 @@
 #' n_rel (fréquence relative) | spécificités oeuvre par oeuvre | pourcentage (présence du motif par rapport au reste du corpus)
 #'
 #' @example
-#' corpus_annote <- annotation_udpipe("curpus-test")
+#' corpus_annote <- retour_texte_specificites(frequence=10, len_context=4, n_grams=4)
 #'
 #' @export
 retour_texte_specificites <- function(frequence,
