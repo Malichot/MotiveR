@@ -30,16 +30,16 @@ choix_nb_ngrams <-
     stopifnot(n_grams >= 2)
     # Lecture des données :
     check_object_param(corpus, corpus_path)
-    if (is.null(corpus)){
+    if (is.null(corpus)) {
       corpus = import_table(corpus_path, file_name = "udpipe_corpus_motifs.csv")
     }
-
+    
     # Vérification okazou :
     corpus <- corpus[, c('mots', 'motifs', 'Oeuvre')]
     
     ## Retrait des cases vides okazou :
     corpus <- corpus[complete.cases(corpus), ]
-
+    
     if (n_grams == 2) {
       # bigrams motifs :
       corpus_spec_punct <- corpus  %>%
@@ -62,14 +62,14 @@ choix_nb_ngrams <-
       # 3-grams motifs :
       corpus_spec_punct <- corpus  %>%
         dplyr::mutate(next_motif = dplyr::lead(motifs),
-               next_motif2 = dplyr::lead(motifs, 2)) %>%
+                      next_motif2 = dplyr::lead(motifs, 2)) %>%
         dplyr::filter(!is.na(next_motif),!is.na(next_motif2)) %>%
         dplyr::mutate(ngrammotif = paste(motifs, next_motif, next_motif2))
       
       # 3-grams mots :
       corpus_spec_punct <- corpus_spec_punct  %>%
         dplyr::mutate(next_word = dplyr::lead(mots),
-               next_word2 = dplyr::lead(mots, 2)) %>%
+                      next_word2 = dplyr::lead(mots, 2)) %>%
         dplyr::filter(!is.na(next_word),!is.na(next_word2)) %>%
         dplyr::mutate(ngrammot = paste(mots, next_word, next_word2))
       
@@ -99,8 +99,8 @@ choix_nb_ngrams <-
           next_word3 = dplyr::lead(mots, 3)
         ) %>%
         dplyr::filter(!is.na(next_word),
-               !is.na(next_word2),
-               !is.na(next_word3)) %>%
+                      !is.na(next_word2),
+                      !is.na(next_word3)) %>%
         dplyr::mutate(ngrammot = paste(mots, next_word, next_word2, next_word3))
       
       # Sélection et renommage des colonnes :

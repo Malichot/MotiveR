@@ -21,14 +21,14 @@ motifs_nuage <-
            freq = "rel") {
     # Lecture des données :
     check_object_param(corpus_grams, corpus_path)
-    if (is.null(corpus_grams)){
+    if (is.null(corpus_grams)) {
       corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
     }
     # Vérification okazou (pb index) :
     corpus_grams <- corpus_grams[, c("mots", "motifs", "Oeuvre")]
     
     ## Retrait des cases vides :
-    corpus_grams <- corpus_grams[complete.cases(corpus_grams), ]
+    corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
     
     ## Dénombrement + filtrage éventuel des données : ex : n > 10
     corpus_grams <- corpus_grams %>%
@@ -50,12 +50,12 @@ motifs_nuage <-
     
     # Ordonnancement par fréquences relatives :
     corpus_words_ngrams <-
-      corpus_words_ngrams[order(corpus_words_ngrams$rel_freq, decreasing = T), ]
+      corpus_words_ngrams[order(corpus_words_ngrams$rel_freq, decreasing = T),]
     
     if (freq == "abs") {
       ## Visualisation sur les fréquences absolues :
       world_cloud_plot <- ggplot2::ggplot(
-        corpus_grams[1:nmots, ],
+        corpus_grams[1:nmots,],
         # TOdo : changer 50 par une variable dans la fonction
         ggplot2::aes(
           label = motifs,
@@ -72,7 +72,7 @@ motifs_nuage <-
     } else if (freq == "rel") {
       ## Visualisation sur les fréquences relatives :
       world_cloud_plot <- ggplot2::ggplot(
-        corpus_words_ngrams[1:nmots, ],
+        corpus_words_ngrams[1:nmots,],
         # Choix du nombre de motifs à faire apparaître
         ggplot2::aes(
           label = motifs,

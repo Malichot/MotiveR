@@ -27,7 +27,7 @@ motifs_tf_idf <- function(n_motifs = 20,
                           overwrite = FALSE) {
   # Lecture des données :
   check_object_param(corpus_grams, corpus_path)
-  if (is.null(corpus_grams)){
+  if (is.null(corpus_grams)) {
     corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
   }
   

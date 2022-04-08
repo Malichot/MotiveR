@@ -26,9 +26,9 @@ motifs_stats <- function(corpus_grams = NULL,
                          overwrite = FALSE) {
   # Importation des données
   check_object_param(corpus_grams, corpus_path)
-  if (is.null(corpus_grams)){
+  if (is.null(corpus_grams)) {
     corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
-  }  
+  }
   # Vérification okazou (pb index) :
   corpus_grams <- corpus_grams[, c("mots", "motifs", "Oeuvre")]
   
@@ -315,10 +315,12 @@ motifs_stats <- function(corpus_grams = NULL,
           whiteDrawn >= independance
         # index of observed frequencies above the theoretic frequencies.
         
-        specif[i, specif_negative] <- phyper (whiteDrawn[specif_negative], white[specif_negative], black[specif_negative], drawn)
+        specif[i, specif_negative] <-
+          phyper (whiteDrawn[specif_negative], white[specif_negative], black[specif_negative], drawn)
         
         
-        specif[i, specif_positive] <- phyper (whiteDrawn[specif_positive] - 1, white[specif_positive], black[specif_positive], drawn)
+        specif[i, specif_positive] <-
+          phyper (whiteDrawn[specif_positive] - 1, white[specif_positive], black[specif_positive], drawn)
         
       }
       

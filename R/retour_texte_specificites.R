@@ -53,10 +53,10 @@ retour_texte_specificites <- function(frequence,
     corpus_spec = import_table(corpus_spec_path, file_name = "corpus_motifs_spec_freq.csv")
   }
   # Suppression colonne index
-  corpus_spec[, V1 := NULL]  
+  corpus_spec[, V1 := NULL]
   
   ## Retrait des cases vides :
-  corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
+  corpus_grams <- corpus_grams[complete.cases(corpus_grams), ]
   
   # Réduction du corpus_spec à nombre_motifs : évite de produire des trop grand csv,
   # réduit le temps de génération, inutile d'analyser des motifs à très basse fréquence...
@@ -116,7 +116,7 @@ retour_texte_specificites <- function(frequence,
       # result <- dplyr::as_tibble(result)
       result <- data.table::as.data.table(result)
       result <- dplyr::inner_join(result, corpus_spec)
-      result <- result[order(result$nrel),]
+      result <- result[order(result$nrel), ]
       
       # Exportation csv :
       if (!is.null(save_path) | save_output) {

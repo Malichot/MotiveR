@@ -41,11 +41,11 @@ default_output_path <- function(file_name, save_dir) {
     save_path = file.path(save_dir, "udpipe_corpus_motifs.csv")
   } else if (file_name == "corpus_motifs_grams") {
     save_path = file.path(save_dir, "corpus_motifs_grams.csv")
-  } else if (file_name == "idf"){
+  } else if (file_name == "idf") {
     save_path = file.path(save_dir, "tf-idf.csv")
-  } else if (file_name == "motifs_stats"){
+  } else if (file_name == "motifs_stats") {
     save_path = file.path(save_dir, "motifs_stats.csv")
-  } else if (file_name == "calcul_specificites"){
+  } else if (file_name == "calcul_specificites") {
     save_path = file.path(save_dir, "corpus_motifs_specificites.csv")
   } else if (file_name == "retour_texte_specificites") {
     save_path = file.path(save_dir, file_name)
@@ -87,29 +87,32 @@ save_data_to_csv <-
     }
   }
 
-get_default_path <- function(file){
+get_default_path <- function(file) {
   output_dir = file.path(getwd(), "output")
   path = file.path(output_dir, file)
   return (file)
 }
 
 check_object_param <- function(object = NULL,
-                               object_path = NULL){
+                               object_path = NULL) {
   if (!is.null(object) & !is.null(object_path)) {
     stop("Vous ne pouvez pas passer à la fois 'object' et 'object_path' en argument!")
   }
 }
 
 import_table <- function(file_path = NULL,
-                          file_name = NULL) {
+                         file_name = NULL) {
   if (is.null(file_path)) {
-    if(is.null(file_name)) {
+    if (is.null(file_name)) {
       stop("Vous devez spécifié file_name")
     }
     # Load from default paths
     output_dir = file.path(getwd(), "output")
     file_path = file.path(output_dir, file_name)
-    message("Chargmenet de la table par défault ", file_name, " depuis ", file_path)
+    message("Chargmenet de la table par défault ",
+            file_name,
+            " depuis ",
+            file_path)
     object = data.table::fread(file_path, encoding = "UTF-8", header = TRUE)
   } else {
     message("Chargement de la table depuis ", file_path)

@@ -24,7 +24,7 @@ motifs_acp <-
            corpus_path = NULL) {
     # Lecture des données :
     check_object_param(corpus_grams, corpus_path)
-    if (is.null(corpus_grams)){
+    if (is.null(corpus_grams)) {
       corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
     }
     

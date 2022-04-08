@@ -18,17 +18,16 @@ motifs_histogram <- function(corpus_grams = NULL,
                              corpus_path = NULL,
                              nmots = 25,
                              freq = "rel") {
-  
   # Lecture des données :
   check_object_param(corpus_grams, corpus_path)
-  if (is.null(corpus_grams)){
+  if (is.null(corpus_grams)) {
     corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
   }
   # Vérification okazou :
   corpus_grams <- corpus_grams[, c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  corpus_grams <- corpus_grams[complete.cases(corpus_grams), ]
+  corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
   corpus_grams <- corpus_grams %>%
@@ -50,7 +49,7 @@ motifs_histogram <- function(corpus_grams = NULL,
   
   # Ordonnancement par fréquences relatives :
   corpus_words_ngrams <-
-    corpus_words_ngrams[order(corpus_words_ngrams$rel_freq, decreasing = T), ]
+    corpus_words_ngrams[order(corpus_words_ngrams$rel_freq, decreasing = T),]
   
   # Visualisation en histogrammes :
   
@@ -70,7 +69,7 @@ motifs_histogram <- function(corpus_grams = NULL,
     df_freq_rel <- corpus_words_ngrams %>%
       dplyr::arrange(-rel_freq)
     # Visualisation :
-    hist_plot <- ggplot2::ggplot(data = df_freq_rel[1:nmots, ],
+    hist_plot <- ggplot2::ggplot(data = df_freq_rel[1:nmots,],
                                  ggplot2::aes(x = motifs, y = rel_freq, fill = Oeuvre)) +
       ggplot2::geom_histogram(stat = "identity",
                               position = "dodge",
@@ -84,7 +83,7 @@ motifs_histogram <- function(corpus_grams = NULL,
   } else if (freq == "abs") {
     ## Fréquences absolues :
     hist_plot <-
-      ggplot2::ggplot(data = corpus_words_ngrams[1:nmots, ],
+      ggplot2::ggplot(data = corpus_words_ngrams[1:nmots,],
                       ggplot2::aes(x = motifs, y = n, fill = Oeuvre)) +
       ggplot2::geom_histogram(stat = "identity",
                               position = "dodge",
