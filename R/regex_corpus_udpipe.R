@@ -734,9 +734,7 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output =
   ## Retrait des lignes vides :
   corpus <- dplyr::as_tibble(corpus)
   
-  
   # Dernières vérifications :
-  
   t <- which(corpus$mots == "aux")
   e <- which(corpus$mots == "du")
   f <- which(corpus$mots == "des")
@@ -819,6 +817,7 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output =
   if (!is.null(save_path) | save_output){
     save_data_to_csv(corpus, "udpipe_corpus_motifs.csv", save_path, fileEncoding = "UTF-8", overwrite = overwrite)
   }
+  corpus = data.table::as.data.table(corpus)
   return(corpus)
 
 }
