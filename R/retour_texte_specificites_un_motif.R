@@ -1,43 +1,58 @@
-## Titre : Scripts motifs - Fonction pour retour aux textes à partir d'un motif de la table de spécificités
-## Auteurs : Dominique Legallois, Antoine de Sacy
-## Date : 15 mai 2021.
-
-## Script de retour aux textes 1 motif  ## 
-
-retour_texte_specificites_un_motif <- function(path = "~/Dropbox/2020-2021/Motifs/",
-                                               csv_corpus_motifs = "corpus_motifs_grams.csv",
-                                               csv_corpus_specificites = "Corpus_spec_freq.csv",
-                                               motif_cible = "de le NC de le NC ,"){
-  ## Importation des librairies : 
-  require("tidytext")
-  require("tidyverse")
-  require("ggplot2")
-  require("tidyr")
-  require("data.table")
-  require("reshape2")
-  library("dplyr")
-  
+#' Retour au texte d'un motif
+#'
+#' Fonction pour retour aux textes à partir d'un motif de la table de spécificités
+#'
+#' @param motif_cible string motif cible
+#'
+#' @param n_grams int n-grams
+#'
+#' @param len_context int nombre de mots du contexte à afficher
+#'
+#' @param corpus_grams data.frame corpus_motifs motifs pour chaque corpus mots | motifs | Oeuvre
+#'
+#' @param corpus_path string Chemin du csv contenant les corpus_motifs motifs pour chaque corpus
+#'
+#' @param corpus_spec data.frame corpus specificités
+#'
+#' @param corpus_spec_path string Chemin du csv contenant les specificités du corpus
+#'
+#' @param save_output boolean: Sauvegarde les résultats
+#'
+#' @param save_path string: Chemin du fichier de sauvergarde
+#'
+#' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
+#'
+#' @return DataFrame: Oeuvre | motifs | n (fréq absolue) | nb_total_mots (dans l'oeuvre) |
+#' n_rel (fréquence relative) | spécificités oeuvre par oeuvre | pourcentage (présence du motif par rapport au reste du corpus)
+#'
+#' @example
+#' corpus_annote <- retour_texte_specificites_un_motif(", à le NC", 4, 4)
+#'
+#' @export
+retour_texte_specificites_un_motif <- function(motif_cible,
+                                               len_context,
+                                               n_grams,
+                                               corpus_grams = NULL,
+                                               corpus_path = NULL,
+                                               corpus_spec_path = NULL,
+                                               save_output = FALSE,
+                                               save_path = NULL,
+                                               overwrite = FALSE){
   # Chargement des deux corpus :
-  
-  corpus_spec <- fread(csv_corpus_specificites, encoding = "UTF-8", 
-                       header = TRUE, stringsAsFactors = FALSE)
-  
-  # Suppression colonne index : 
-  
-  corpus_spec <- corpus_spec[,-c("V1")]
-  
-  corpus <- fread(csv_corpus_motifs, encoding = "UTF-8", 
-                  header = TRUE, stringsAsFactors = FALSE)
-  
+  check_object_param(corpus_grams, corpus_path)
+  if (is.null(corpus_grams)) {
+    corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
+  }
   # Vérification okazou (pb index) :
-  corpus <- corpus[,c("mots", "ngrammot", "motifs", "Oeuvre")]
-  
+  corpus_grams <-
+    corpus_grams[, c("mots", "ngrammot", "motifs", "Oeuvre")]
   ## Retrait des cases vides :
-  corpus <- corpus[complete.cases(corpus),]
+  corpus_grams <- corpus_grams[complete.cases(corpus_grams),]
+  corpus_grams <- corpus_grams[,c("mots", "ngrammot", "motifs", "Oeuvre")]
   
-  
-  corpus <- corpus[,c("mots", "ngrammot", "motifs", "Oeuvre")]
-  
+  corpus_spec = import_table(corpus_spec_path, file_name = "corpus_motifs_spec_freq.csv")
+  # Suppression colonne index
+  corpus_spec[, V1 := NULL]  
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
   
@@ -48,51 +63,51 @@ retour_texte_specificites_un_motif <- function(path = "~/Dropbox/2020-2021/Motif
   ## Référence : M. Jockers, Text analysis with R for students of literature, 2014.
   
   # Préalable : choix d'un motif pertinent ! Ex : le NC , le NC
-  retour_aux_textes <- function(corpus){
-    
-    context<- as.numeric(readline("Combien de mots de contexte voulez-vous afficher ? Entrez un nombre : \n"))
-    longueur_motif <- as.numeric(readline("Quelle longueur a votre motif : \n"))
+  retour_aux_textes <- function(corpus_grams){
     keyword<- as.character(motif_cible)
-    hits <- which(corpus$motifs == as.character(keyword))
+    hits <- which(corpus_grams$motifs == as.character(keyword))
     
     if(length(hits)>0){
       result<-NULL
       for(h in 1:length(hits))
       {
-        start<- hits[h]-context
+        start<- hits[h]-len_context
         if(start < 1){ #if(start < 1 && h == 1){
           start<-1}
         
-        end<-hits[h]+context+as.numeric(longueur_motif) # La fin du motif contient aussi le motif en lui-même. 
+        end<-hits[h]+len_context+as.numeric(n_grams) # La fin du motif contient aussi le motif en lui-même. 
         
-        myrow<-cbind(hits[h], paste(corpus$mots[start:(hits[h]-1)], collapse=" "), 
-                     paste(corpus$ngrammot[hits[h]], collapse=" "), 
-                     paste(corpus$mots[(hits[h]+longueur_motif):end], collapse=" "), 
-                     paste(corpus$Oeuvre[hits[h]], collapse = " "),
-                     paste(corpus$motifs[hits[h]], collapse = " "))
+        myrow<-cbind(hits[h], paste(corpus_grams$mots[start:(hits[h]-1)], collapse=" "), 
+                     paste(corpus_grams$ngrammot[hits[h]], collapse=" "), 
+                     paste(corpus_grams$mots[(hits[h]+n_grams):end], collapse=" "), 
+                     paste(corpus_grams$Oeuvre[hits[h]], collapse = " "),
+                     paste(corpus_grams$motifs[hits[h]], collapse = " "))
         result<-rbind(result,myrow)
         
       }
       colnames(result)<-c("id", "contexte_gauche", "motif", "contexte_droit", "Oeuvre", "motifs")
-      result <- as_tibble(result)
-      result <- inner_join(result, corpus_spec)
+      result <- dplyr::as_tibble(result)
+      result <- dplyr::inner_join(result, corpus_spec)
       result <- result[order(result$nrel),]
-      toprint<-as.numeric((readline("Sauvegarder les résultats en csv, tapez 1 et enter \n, affichez dans le terminal tapez 2 et enter\n Sauvegarder dans un objet R result_df, tapez 3 \n")))
-      if(toprint==1){
-        write.csv(result, paste(keyword,"_In_", context, ".csv"), fileEncoding = "UTF-8")
+
+      # Exportation csv :
+      if (!is.null(save_path) | save_output) {
+        save_data_to_csv(
+          result,
+          paste0(keyword,"_In_", len_context, ".csv"),
+          save_path,
+          fileEncoding = "UTF-8",
+          overwrite = overwrite
+        )
       }
-      if(toprint==2){
-        return(result)
-      }
-      if(toprint==3){
-        result_df <<- as_tibble(result)
-      }
+      
+      return(result)
     } 
     else {
-      print("Votre motif n'a pas été trouvé")
+      message("Votre motif n'a pas été trouvé")
     }
   }
   
-  retour_aux_textes(corpus = corpus)
+  return(retour_aux_textes(corpus_grams = corpus_grams))
   
 }
