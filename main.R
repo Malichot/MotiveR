@@ -1,14 +1,7 @@
-#' Titre : Script execution des fonctions
-#' Auteurs : Dominique Legallois, Antoine de Sacy
-#' Date: 6 octobre 2021.
-
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
-
 # Clean env
 rm(list = ls(all = TRUE))
 graphics.off()
 # Detach packages to test if relative imports are valid.
-
 if (!is.null(sessionInfo()$otherPkgs)) {
   lapply(
     paste('package:', names(sessionInfo()$otherPkgs), sep = ""),
@@ -21,43 +14,28 @@ if (!is.null(sessionInfo()$otherPkgs)) {
 setwd("/Users/brunospilak/Documents/Perso/Motifs/Motifs")
 
 # Params
+library(Motifs)
 path = "./Corpus-torun" # chemin du corpus
 save_output = TRUE # Sauvegarde résultats
 overwrite = TRUE # Écrase résultats précédents
 n_grams = 4 # n-gram encodage
-corpus_grams_path = "./output/corpus_motifs_grams.csv"
 frequence = 3
 len_context = 4
 
-# require("magrittr") 
-# source("R/utils.R")
-# source("R/annotation_udpipe.R")
-# source("R/regex_corpus_udpipe.R")
-# source("R/tag_motif_pipeline.R")
-# source("R/choix_nb_ngrams.R")
-# source("R/motifs_nuage.R")
-# source("R/motifs_histogram.R")
-# source("R/motifs_acp.R")
-# source("R/motifs_stats.R")
-# source("R/motifs_tf_idf.R")
-# source("R/calcul_specificites.R")
-# source("R/retour_texte_specificites.R")
-# source("R/retour_texte_specificites_un_motif.R")
-
-library(Motifs)
  
-# corpus_annote = annotation_udpipe(path = "./Corpus-torun",
-#                                   save_output = save_output,
-#                                   overwrite = overwrite)
-# corpus_motifs = regex_corpus_udpipe(corpus = corpus_annote,
-#                                     save_output = save_output,
-#                                     overwrite = overwrite)
+# UDpipe annotation
+corpus_annote = annotation_udpipe(path = path,
+                                  save_output = save_output,
+                                  overwrite = overwrite)
+# Étiquetage du corpus
+corpus_motifs = regex_corpus_udpipe(corpus = corpus_annote,
+                                    save_output = save_output,
+                                    overwrite = overwrite)
 
-corpus_motifs = tag_motif_pipeline(path = "./Corpus-torun",
+# Ou pipeline entière
+corpus_motifs = tag_motif_pipeline(path = path,
                                    save_output = save_output,
                                    overwrite = overwrite)
-
-# Si nouvelle analyse avec different n gram reprendre d ici
 
 # Choix du nombre de ngrams :
 corpus_grams =  choix_nb_ngrams(
@@ -68,29 +46,11 @@ corpus_grams =  choix_nb_ngrams(
 )
 
 # Wordcloud :
-# require("dplyr")
-# require("tidytext")
-# require("tidyverse")
-# require("ggwordcloud")
-# require("RColorBrewer")
-# require("reshape2")
-# require("ggsci")
-# require("data.table")
 motifs_nuage(corpus_grams = corpus_grams,
              nmots = 10,
              freq = "rel")
 
 # Histogrammes :
-
-# require("dplyr")
-# require("tidytext")
-# require("tidyverse")
-# require("RColorBrewer")
-# require("reshape2")
-# require("ggsci")
-# require("data.table")
-# require("ggpubr")
-
 motifs_histogram(corpus_grams = corpus_grams,
                  nmots = 10,
                  freq = "rel")
@@ -137,6 +97,7 @@ calcul_spec_freq = retour_texte_specificites(
   overwrite = overwrite
 )
 
+# Retour aux textes à partir d'un motif
 calcul_spec_freq = retour_texte_specificites_un_motif(
   motif_cible = "le NC de le",
   len_context = len_context,
