@@ -21,6 +21,10 @@ annotation_udpipe <-
            save_output = TRUE,
            save_path = NULL,
            overwrite = FALSE) {
+    # Vérfie path
+    if (!file.exists(path)) {
+      stop("The chemin spécifié ", path, " n'existe pas!")
+    }
     # Modèle
     UDPIPE_MODEL_PATH <-
       file.path(getwd(), "udpipe", "french-gsd-ud-2.5-191206.udpipe")
