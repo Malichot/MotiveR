@@ -56,8 +56,6 @@ retour_texte_specificites_un_motif <- function(motif_cible,
   if (is.null(corpus_spec)) {
     corpus_spec = import_table(corpus_spec_path, file_name = "corpus_motifs_spec_freq.csv")
   }
-  # Suppression colonne index
-  corpus_spec[, V1 := NULL]
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
   

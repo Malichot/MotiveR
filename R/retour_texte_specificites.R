@@ -52,8 +52,6 @@ retour_texte_specificites <- function(frequence,
   if (is.null(corpus_spec)) {
     corpus_spec = import_table(corpus_spec_path, file_name = "corpus_motifs_spec_freq.csv")
   }
-  # Suppression colonne index
-  corpus_spec[, V1 := NULL]
   
   ## Retrait des cases vides :
   corpus_grams <- corpus_grams[complete.cases(corpus_grams), ]
