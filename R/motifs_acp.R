@@ -6,7 +6,7 @@
 #'
 #' @param corpus_path string chemin du csv contenant les motifs en ngram
 #'
-#' @param plot_type sting  "var" plot variables, "motif" plot motifs, "var+motif" plot variables et motifs
+#' @param plot_type string: "var+motif" plot variables et motifs (défaut) "var" plot variables, "motif" plot motifs
 #'
 #' @param freq_filter int  filtre de fréquence pour alléger les normalisations de fréquences.
 #'
@@ -17,7 +17,7 @@
 #'
 #' @export
 motifs_acp <-
-  function(plot_type = "var",
+  function(plot_type = "var+motif",
            freq_filter = 1,
            n_obs = NULL,
            corpus_grams = NULL,
