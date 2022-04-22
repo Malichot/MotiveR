@@ -34,27 +34,6 @@ save_dir_handler <- function(save_dir, overwrite = FALSE) {
   }
 }
 
-default_output_path <- function(file_name, save_dir) {
-  if (file_name == "udpipe_corpus_complet") {
-    save_path = file.path(save_dir, "udpipe_corpus_complet.csv")
-  } else if (file_name == "udpipe_corpus_motifs") {
-    save_path = file.path(save_dir, "udpipe_corpus_motifs.csv")
-  } else if (file_name == "corpus_motifs_grams") {
-    save_path = file.path(save_dir, "corpus_motifs_grams.csv")
-  } else if (file_name == "idf") {
-    save_path = file.path(save_dir, "tf-idf.csv")
-  } else if (file_name == "motifs_stats") {
-    save_path = file.path(save_dir, "motifs_stats.csv")
-  } else if (file_name == "calcul_specificites") {
-    save_path = file.path(save_dir, "corpus_motifs_specificites.csv")
-  } else if (file_name == "retour_texte_specificites") {
-    save_path = file.path(save_dir, file_name)
-  } else {
-    stop("file_name argument invalide: ", file_name)
-  }
-  return(save_path)
-}
-
 save_data_to_csv <-
   function(data,
            file_name = NULL,
@@ -90,7 +69,7 @@ save_data_to_csv <-
 get_default_path <- function(file) {
   output_dir = file.path(getwd(), "output")
   path = file.path(output_dir, file)
-  return (file)
+  return(file)
 }
 
 check_object_param <- function(object = NULL,
