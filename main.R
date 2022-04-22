@@ -15,6 +15,7 @@ setwd("/Users/brunospilak/Documents/Perso/Motifs/Motifs")
 
 # Params
 library(Motifs)
+
 path = "../Corpus-torun" # chemin du corpus
 save_output = TRUE # Sauvegarde résultats
 overwrite = TRUE # Écrase résultats précédents
@@ -57,15 +58,15 @@ motifs_histogram(corpus_grams = corpus_grams,
 
 # TF-IDF :
 motifs_tf_idf(
-  n_motifs = 10,
-  plot_type = "group",
+  n_motifs = 2,
+  plot_type = "sep",
   corpus_grams = corpus_grams,
   save_output = FALSE,
   overwrite = TRUE
 )
 
 # ACP :
-motifs_acp(plot_type = "var", corpus_grams = corpus_grams)
+motifs_acp(plot_type = "var", corpus_grams = corpus_grams, freq_filter=3)
 motifs_acp(plot_type = "motif", corpus_grams = corpus_grams)
 motifs_acp(plot_type = "var+motif", corpus_grams = corpus_grams)
 
@@ -85,9 +86,8 @@ calcul_spec_freq = calcul_specificites(
   overwrite = overwrite
 )
 
-
 # Retour aux textes
-calcul_spec_freq = retour_texte_specificites(
+retour_text_spec = retour_texte_specificites(
   frequence = frequence,
   len_context = len_context,
   n_grams = n_grams,
@@ -98,7 +98,7 @@ calcul_spec_freq = retour_texte_specificites(
 )
 
 # Retour aux textes à partir d'un motif
-calcul_spec_freq = retour_texte_specificites_un_motif(
+retour_text_spec_un_motif = retour_texte_specificites_un_motif(
   motif_cible = "le NC de le",
   len_context = len_context,
   n_grams = n_grams,
@@ -107,4 +107,5 @@ calcul_spec_freq = retour_texte_specificites_un_motif(
   save_output = save_output,
   overwrite = overwrite
 )
+
 
