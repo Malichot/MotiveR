@@ -77,7 +77,7 @@ motifs_tf_idf <- function(n_motifs = 20,
       dplyr::mutate(motifs = factor(motifs, levels = rev(unique(motifs)))) %>%
       dplyr::group_by(Oeuvre) %>%
       dplyr::top_n(n_motifs) %>% # À moduler suivant les besoins : > x ; == x ; etc.
-      dplyr::ungroup %>%
+      dplyr::ungroup() %>%
       ggplot2::ggplot(ggplot2::aes(motifs, tf_idf, fill = Oeuvre)) +
       ggplot2::geom_col(show.legend = T) +
       ggplot2::labs(x = NULL, y = "TF-IDF") +
