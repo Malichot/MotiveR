@@ -2,7 +2,7 @@
 #'
 #' Choix du nb de ngrams sur le corpus de motifs
 #'
-#' @param n_grams int choix de l'encodage en n-grams
+#' @param n_grams int choix de l'encodage en n-grams, entre 2 et 7
 #'
 #' @param corpus data.frame corpus_motifs motifs pour chaque corpus
 #'
@@ -27,7 +27,7 @@ choix_nb_ngrams <-
            save_output = FALSE,
            save_path = NULL,
            overwrite = FALSE) {
-    stopifnot(n_grams >= 2)
+    stopifnot((n_grams >= 2) & (n_grams <= 7))
     # Lecture des données :
     check_object_param(corpus, corpus_path)
     if (is.null(corpus)) {

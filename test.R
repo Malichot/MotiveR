@@ -11,12 +11,12 @@ setwd("/Users/brunospilak/Documents/Perso/Motifs/Motifs/")
 # overwrite = TRUE
 # DETACH_PACKAGE = TRUE
 
-TEST = "regex_corpus_udpipe"
-path = "./"
-save_output = TRUE
-overwrite = TRUE
-corpus_path = "./output-Corpus-torun/udpipe_corpus_complet.csv"
-DETACH_PACKAGE = TRUE
+# TEST = "regex_corpus_udpipe"
+# path = "./"
+# save_output = TRUE
+# overwrite = TRUE
+# corpus_path = "./output-Corpus-torun/udpipe_corpus_complet.csv"
+# DETACH_PACKAGE = TRUE
 
 # TEST = "tag_motif_pipeline"
 # path = "./Corpus-torun"
@@ -24,13 +24,13 @@ DETACH_PACKAGE = TRUE
 # overwrite = TRUE
 # DETACH_PACKAGE = TRUE
 
-# TEST = "choix_nb_ngrams"
-# n_grams = 4
-# corpus = NULL
-# corpus_path = "./output/udpipe_corpus_motifs.csv"
-# save_output = TRUE
-# overwrite = TRUE
-# DETACH_PACKAGE = TRUE
+TEST = "choix_nb_ngrams"
+n_grams = 8
+corpus = NULL
+corpus_path = "./output/udpipe_corpus_motifs.csv"
+save_output = TRUE
+overwrite = TRUE
+DETACH_PACKAGE = TRUE
 
 # TEST = "motifs_nuage"
 # corpus_grams = NULL
