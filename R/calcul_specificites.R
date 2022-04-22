@@ -14,13 +14,13 @@
 #'
 #' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
 #'
-#' @param retrait_frequence_1 boolean
+#' @param retrait_frequence_1 boolean: Retire spécificité de fréquence 1 dans la sortie
 #'
 #' @example
 #' calcul_specificites(corpus_path="corpus_motifs_grams.csv")
 #'
 #' @export
-calcul_specificites <- function(save_freq = FALSE,
+calcul_specificites <- function(save_freq = TRUE,
                                 retrait_frequence_1 = TRUE,
                                 corpus_grams = NULL,
                                 corpus_path = NULL,
