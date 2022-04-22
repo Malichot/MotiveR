@@ -4,7 +4,7 @@
 #'
 #' @param n_motifs int sélection du nombre de motifs à afficher
 #'
-#' @param plot_type string "group" pour une visualisation groupée, "sep" pour une visualisation séparée
+#' @param plot_type string "group" pour une visualisation groupée, "sep" pour une visualisation séparée (par défaut)
 #'
 #' @param corpus_grams data.frame sous format mots || motifs || Oeuvre
 #'
@@ -21,7 +21,7 @@
 #'
 #' @export
 motifs_tf_idf <- function(n_motifs = 20,
-                          plot_type = "group",
+                          plot_type = "sep",
                           corpus_grams = NULL,
                           corpus_path = NULL,
                           save_output = FALSE,
