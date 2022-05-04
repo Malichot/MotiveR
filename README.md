@@ -7,7 +7,7 @@
 
 ``` r
 library(devtools)
-install_github("Malichot/Motifs", ref="dev")
+install_github("Malichot/Motifs")
 ```
 
 
