@@ -76,7 +76,7 @@ motifs_histogram(corpus_grams = corpus_grams,
 # TF-IDF :
 motifs_tf_idf(
   n_motifs = 10,
-  plot_type = "group",
+  plot_type = "sep",
   corpus_grams = corpus_grams,
   save_output = FALSE,
   overwrite = TRUE
