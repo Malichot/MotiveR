@@ -69,6 +69,14 @@ motifs_tf_idf <- function(n_motifs = 20,
     dplyr::select(-total) %>%
     dplyr::arrange(desc(tf_idf))
   
+  # Exportation csv :
+  if (!is.null(save_path) | save_output) {
+    save_data_to_csv(tf_idf_export,
+                     "motifs_tf_idf.csv",
+                     save_path,
+                     overwrite = overwrite)
+  }
+  
   # Visualisation :
   if (plot_type == "sep") {
     tf_idf_grid <- corpus_words_ngrams %>%
@@ -90,6 +98,7 @@ motifs_tf_idf <- function(n_motifs = 20,
       dplyr::select(-total) %>%
       dplyr::arrange(dplyr::desc(tf_idf)) %>%
       dplyr::mutate(motifs = factor(motifs, levels = rev(unique(motifs)))) %>%
+      dplyr::group_by(Oeuvre) %>%
       dplyr::top_n(n_motifs) %>% # À moduler suivant les besoins : > x ; == x ; etc.
       dplyr::ungroup() %>%
       dplyr::mutate(word = stats::reorder(motifs, tf_idf)) %>%
@@ -101,13 +110,5 @@ motifs_tf_idf <- function(n_motifs = 20,
     return(tf_idf_all)
   } else{
     stop("L'argument plot_type=", plot_type, " n'est pas valide...")
-  }
-  
-  # Exportation csv :
-  if (!is.null(save_path) | save_output) {
-    save_data_to_csv(tf_idf_export,
-                     "motifs_tf_idf.csv",
-                     save_path,
-                     overwrite = overwrite)
   }
 }
