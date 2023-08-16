@@ -5,17 +5,20 @@
 \title{ACP des motifs}
 \usage{
 motifs_acp(
-  plot_type = "var",
-  freq_filter = 1,
+  plot_type = "var+motif",
+  freq_filter = 2,
+  n_motifs = NULL,
   n_obs = NULL,
   corpus_grams = NULL,
   corpus_path = NULL
 )
 }
 \arguments{
-\item{plot_type}{sting  "var" plot variables, "motif" plot motifs, "var+motif" plot variables et motifs}
+\item{plot_type}{string: "var+motif" plot variables et motifs (défaut) "var" plot variables, "motif" plot motifs}
 
-\item{freq_filter}{int  filtre de fréquence pour alléger les normalisations de fréquences.}
+\item{freq_filter}{int filtre de fréquence pour alléger les normalisations de fréquences. Les motifs qui ont une fréquence au moins égale a freq_filter sont sélectionnés.}
+
+\item{n_motifs}{int Nombre maximum de motifs par oeuvre pour réaliser l'ACP. Si spécifié, freq_filter est ignoré.}
 
 \item{n_obs}{int Nombre maximum d'observations pour réaliser l'ACP. Si NULL, toutes les observations sont utilisées.}
 

@@ -90,12 +90,12 @@ import_table <- function(file_path = NULL,
                          file_name = NULL) {
   if (is.null(file_path)) {
     if (is.null(file_name)) {
-      stop("Vous devez spécifié file_name")
+      stop("Vous devez spécifier file_name")
     }
     # Load from default paths
     output_dir = file.path(getwd(), "output")
     file_path = file.path(output_dir, file_name)
-    message("Chargmenet de la table par défault ",
+    message("Chargement de la table par défault ",
             file_name,
             " depuis ",
             file_path)

@@ -13,6 +13,8 @@ motifs_stats(
 )
 }
 \arguments{
+\item{corpus_grams}{data.frame corpus_motifs motifs pour chaque corpus mots | motifs | Oeuvre}
+
 \item{corpus_path}{string Chemin du csv contenant les corpus_motifs motifs pour chaque corpus}
 
 \item{save_output}{boolean: Sauvegarde les résultats}
@@ -20,8 +22,6 @@ motifs_stats(
 \item{save_path}{string: Chemin du fichier de sauvergarde}
 
 \item{overwrite}{boolean: Écrase et sauve de nouveaux les résultats}
-
-\item{corpus}{data.frame corpus_motifs motifs pour chaque corpus mots | motifs | Oeuvre}
 }
 \value{
 DataFrame: Oeuvre | motifs | n (fréq absolue) | nb_total_mots (dans l'oeuvre) |

@@ -14,7 +14,7 @@ choix_nb_ngrams(
 )
 }
 \arguments{
-\item{n_grams}{int choix de l'encodage en n-grams}
+\item{n_grams}{int choix de l'encodage en n-grams, entre 2 et 7}
 
 \item{corpus}{data.frame corpus_motifs motifs pour chaque corpus}
 
