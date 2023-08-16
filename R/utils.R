@@ -41,7 +41,9 @@ save_data_to_csv <-
            fileEncoding = "",
            overwrite = FALSE) {
     save_dir = save_dir_parser(save_path)
-    dir.create(save_dir)
+    if (!dir.exists(save_dir)) {
+      dir.create(save_dir)
+    }
     if (is.null(save_path)) {
       save_path = file.path(save_dir, file_name)
     }
@@ -77,6 +79,11 @@ check_object_param <- function(object = NULL,
   if (!is.null(object) & !is.null(object_path)) {
     stop("Vous ne pouvez pas passer à la fois 'object' et 'object_path' en argument!")
   }
+}
+
+parse_oeuvre_name <- function(filepath){
+  filename = tail(strsplit(filepath, "/")[[1]], n=1)
+  return (strsplit(filename, ".txt")[[1]][1])
 }
 
 import_table <- function(file_path = NULL,
