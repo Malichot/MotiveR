@@ -1,7 +1,7 @@
 Package: Motifs
 Type: Package
 Title:  Identification de motifs lexico-grammaticaux
-Version: 0.0.0
+Version: 0.0.1
 Author: Antoine de Sacy
 Authors@R: c(
     person("Dominique", "Legallois", role = c("aut")),
