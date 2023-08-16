@@ -11,10 +11,12 @@ if (!is.null(sessionInfo()$otherPkgs)) {
   )
 }
 # Répertoire de travail :
-setwd("/Users/brunospilak/Documents/Perso/Motifs/Motifs")
+setwd("/Users/brunospilak/Documents/Sorbonne/Motifs/Motifs")
 
 # Params
 library(Motifs)
+library(Factoshiny)
+
 path <- "../Corpus-torun" # chemin du corpus
 save_output <- TRUE # Sauvegarde résultats
 overwrite <- TRUE # Écrase résultats précédents
@@ -60,14 +62,21 @@ motifs_tf_idf(
   n_motifs = 2,
   plot_type = "sep",
   corpus_grams = corpus_grams,
-  save_output = FALSE,
-  overwrite = TRUE
+  save_output = save_output,
+  overwrite = overwrite
 )
 
-# ACP :
-motifs_acp(plot_type = "var", corpus_grams = corpus_grams)
-motifs_acp(plot_type = "motif", corpus_grams = corpus_grams)
-motifs_acp(plot_type = "var+motif", corpus_grams = corpus_grams)
+# ACP interactive:
+corpus_norm = prepare_acp(corpus_grams = corpus_grams)
+res.pca = FactoMineR::PCA(corpus_norm, graph=FALSE)
+res.shiny <- Factoshiny::PCAshiny(res.pca)
+# ou en une ligne
+# res.shiny <- Factoshiny::PCAshiny(prepare_acp(corpus_path = corpus_path))
+
+# Ou utiliser la fonction du package
+# motifs_acp(plot_type = "var", corpus_grams = corpus_grams)
+# motifs_acp(plot_type = "motif", corpus_grams = corpus_grams)
+# motifs_acp(plot_type = "var+motif", corpus_grams = corpus_grams)
 
 # Stats
 df_stats <- motifs_stats(
