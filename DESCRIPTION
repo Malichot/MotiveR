@@ -25,7 +25,8 @@ Imports:
     dplyr (>= 1.0.7),
     data.table (>= 1.14.2),
     factoextra (>= 1.0.7),
-    ggwordcloud (>= 0.5.0)
+    ggwordcloud (>= 0.5.0),
+    Factoshiny (>= 2.4),
 RoxygenNote: 7.1.2
 URL: https://github.com/Malichot/Motifs
 BugReports: https://github.com/Malichot/Motifs/issues
