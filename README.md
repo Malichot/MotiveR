@@ -10,16 +10,16 @@ En attendant la pulication sur CRAN, vous pouvez installer le package
 directement depuis Github avec:
 
 ```r
-devtools::install_github("Malichot/Motifs")
+devtools::install_github("Malichot/MotiveR")
 ```
 
 avec les vignettes:
 
 ```r
-devtools::install_github("Malichot/Motifs", build_vignettes = TRUE, force = TRUE)
+devtools::install_github("Malichot/MotiveR", build_vignettes = TRUE, force = TRUE)
 ```
 
-## Préparation des fichiers.
+## Préparation des fichiers
 
 Encodage et noms de fichiers.
 
@@ -40,6 +40,6 @@ Si vous travaillez sur Windows, l'encodage de vos fichiers sera sûrement window
 
 Après installation du package, accédez à la documentation avec `?Motifs`
 
-## Usage:
+## Usage
 
 Se référer aux vignettes dans le dossier "doc" où le package est installé.
