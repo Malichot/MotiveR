@@ -13,6 +13,12 @@ directement depuis Github avec:
 devtools::install_github("Malichot/Motifs")
 ```
 
+avec les vignettes:
+
+```r
+devtools::install_github("Malichot/Motifs", build_vignettes = TRUE, force = TRUE)
+```
+
 ## Préparation des fichiers.
 
 Encodage et noms de fichiers.
@@ -36,4 +42,4 @@ Après installation du package, accédez à la documentation avec `?Motifs`
 
 ## Usage:
 
-Se référer aux vignettes.
+Se référer aux vignettes dans le dossier "doc" où le package est installé.
