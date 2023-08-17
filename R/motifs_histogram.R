@@ -18,6 +18,9 @@ motifs_histogram <- function(corpus_grams = NULL,
                              corpus_path = NULL,
                              nmots = 25,
                              freq = "rel") {
+  # For R CMD check "no visible binding for global variable"
+  motifs <- Oeuvre <- n <- rel_freq <- NULL
+  
   # Lecture des données :
   check_object_param(corpus_grams, corpus_path)
   if (is.null(corpus_grams)) {

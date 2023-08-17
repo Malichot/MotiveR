@@ -11,7 +11,7 @@ save_dir_parser <- function(save_path = NULL) {
     save_dir <- file.path(getwd(), "output")
   } else {
     if (grepl("/", save_path)) {
-      save_dir = dirname(filepath)
+      save_dir = dirname(save_path)
     } else {
       save_dir = getwd()
     }

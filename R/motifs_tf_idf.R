@@ -1,6 +1,6 @@
 #' TF-IDF plot
 #'
-#' Fonction génération TF-IDF
+#' Fonction génération TF-IDF et graphiques
 #'
 #' @param n_motifs int sélection du nombre de motifs à afficher
 #'
@@ -27,6 +27,9 @@ motifs_tf_idf <- function(n_motifs = 20,
                           save_output = FALSE,
                           save_path = NULL,
                           overwrite = FALSE) {
+  # For R CMD check "no visible binding for global variable"
+  motifs <- Oeuvre <- n <- desc <- total <- tf_idf <- NULL
+  
   # Lecture des données :
   check_object_param(corpus_grams, corpus_path)
   if (is.null(corpus_grams)) {

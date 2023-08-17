@@ -27,8 +27,15 @@ choix_nb_ngrams <-
            save_output = FALSE,
            save_path = NULL,
            overwrite = FALSE) {
+    # For R CMD check "no visible binding for global variable"
+    motifs <- next_motif <- mots <- next_word <- next_motif2 <-NULL
+    next_word2 <- next_motif3 <- next_word3 <- next_motif4 <- NULL
+    next_word4 <- next_motif5 <- next_word5 <- next_motif6 <- NULL
+    next_word6 <- NULL
+    
+    
     stopifnot((n_grams >= 2) & (n_grams <= 7))
-    # Lecture des données :
+    # Lecture des données: 
     check_object_param(corpus, corpus_path)
     if (is.null(corpus)) {
       corpus = import_table(corpus_path, file_name = "udpipe_corpus_motifs.csv")
@@ -38,7 +45,7 @@ choix_nb_ngrams <-
     corpus <- corpus[, c('mots', 'motifs', 'Oeuvre')]
     
     ## Retrait des cases vides okazou :
-    corpus <- corpus[complete.cases(corpus), ]
+    corpus <- corpus[stats::complete.cases(corpus), ]
     
     ## Conserve le titre de l'oeuvre seulement au lien du chemin
     corpus[, "Oeuvre"] = sapply(corpus$Oeuvre, parse_oeuvre_name)

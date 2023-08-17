@@ -1,6 +1,6 @@
 Package: Motifs
 Type: Package
-Title:  Identification de motifs lexico-grammaticaux
+Title: Identification de motifs lexico-grammaticaux
 Version: 0.0.1
 Author: Antoine de Sacy
 Authors@R: c(
@@ -11,11 +11,11 @@ Authors@R: c(
 Description: Développement sous R d’une méthode d’analyse textuelle fondée sur l’identification de motifs
     lexico-grammaticaux, méthode dite des « motifs » par Dominique Legallois
     (Université Sorbonne Nouvelle Paris III) et Antoine de Sacy.
-License: What license is it under?
+License: GPL
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 4.1.1)
+    R (>= 4.1)
 Imports:
     udpipe,
     magrittr (>= 1.5),
@@ -26,7 +26,12 @@ Imports:
     data.table (>= 1.14.2),
     factoextra (>= 1.0.7),
     ggwordcloud (>= 0.5.0),
-    Factoshiny (>= 2.4),
+    vroom (>= 1.5.7),
+    stringr (>= 1.4)
 RoxygenNote: 7.1.2
 URL: https://github.com/Malichot/Motifs
 BugReports: https://github.com/Malichot/Motifs/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

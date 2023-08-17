@@ -20,6 +20,9 @@ prepare_acp <-
            n_motifs = NULL,
            corpus_grams = NULL,
            corpus_path = NULL) {
+    # For R CMD check "no visible binding for global variable"
+    motifs <- Oeuvre <- n <- NULL
+    
     # Lecture des données :
     check_object_param(corpus_grams, corpus_path)
     if (is.null(corpus_grams)) {

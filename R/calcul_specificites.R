@@ -27,6 +27,7 @@ calcul_specificites <- function(save_freq = TRUE,
                                 save_output = FALSE,
                                 save_path = NULL,
                                 overwrite = FALSE) {
+  Oeuvre <- motifs <- n <- NULL
   # Importation des données
   # Chargement des deux corpus :
   check_object_param(corpus_grams, corpus_path)
@@ -37,7 +38,7 @@ calcul_specificites <- function(save_freq = TRUE,
   corpus_grams <- corpus_grams[, c("mots", "motifs", "Oeuvre")]
   
   ## Retrait des cases vides :
-  corpus_grams <- corpus_grams[complete.cases(corpus_grams), ]
+  corpus_grams <- corpus_grams[stats::complete.cases(corpus_grams), ]
   
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
   corpus_grams <- corpus_grams %>%
@@ -239,10 +240,10 @@ calcul_specificites <- function(save_freq = TRUE,
           whiteDrawn >= independance
         # index of observed frequencies above the theoretic frequencies.
         
-        specif[i, specif_negative] <- phyper (whiteDrawn[specif_negative], white[specif_negative], black[specif_negative], drawn)
+        specif[i, specif_negative] <- stats::phyper(whiteDrawn[specif_negative], white[specif_negative], black[specif_negative], drawn)
         
         
-        specif[i, specif_positive] <- phyper (whiteDrawn[specif_positive] - 1, white[specif_positive], black[specif_positive], drawn)
+        specif[i, specif_positive] <- stats::phyper(whiteDrawn[specif_positive] - 1, white[specif_positive], black[specif_positive], drawn)
         
       }
       

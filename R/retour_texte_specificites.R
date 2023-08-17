@@ -39,6 +39,9 @@ retour_texte_specificites <- function(frequence,
                                       save_output = FALSE,
                                       save_path = NULL,
                                       overwrite = FALSE) {
+  # For R CMD check "no visible binding for global variable"
+  n <- NULL
+  
   # Chargement des deux corpus :
   check_object_param(corpus_grams, corpus_path)
   check_object_param(corpus_spec, corpus_spec_path)
@@ -60,7 +63,7 @@ retour_texte_specificites <- function(frequence,
   # réduit le temps de génération, inutile d'analyser des motifs à très basse fréquence...
   
   corpus_spec <- corpus_spec %>%
-    dplyr::filter(n > frequence)
+    dplyr::filter(n >= frequence)
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
   
@@ -87,7 +90,6 @@ retour_texte_specificites <- function(frequence,
           #if(start < 1 && h == 1){
           start <- 1
         }
-        
         end <-
           hits[h] + len_context + as.numeric(n_grams) # La fin du motif contient aussi le motif en lui-même.
         
