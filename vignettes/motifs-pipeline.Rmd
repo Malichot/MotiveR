@@ -21,20 +21,18 @@ Cette vignette montre comment utiliser les fonctions du package Motifs. Elle ser
 Définissez d'abord les paramètres et charger les librairies.
 
 ```{r setup}
-# Définir le répertoire de travail
-
-# Paramètres:
-path <- "Corpus-torun" # chemin du corpus
-save_output <- TRUE # Sauvegarde résultats
-overwrite <- TRUE # Écrase résultats précédents
-n_grams <- 4 # n-gram encodage
-frequence <- 200
-len_context <- 4
-
 # Charger le package (après l'avoir installé)
 library(Motifs)
 # Charger Factoshiny pour réaliser des ACP interactive avec shiny.
 library(Factoshiny)
+
+# Paramètres:
+path <- system.file("extdata", "corpus-test", package = "Motifs") # chemin du corpus
+save_output <- FALSE # Sauvegarde résultats
+overwrite <- FALSE # Écrase résultats précédents
+n_grams <- 4 # n-gram encodage
+frequence <- 200
+len_context <- 4
 ```
 
 ### Préparation des données
@@ -45,7 +43,7 @@ Lors de la première utilisation, le modèle d'étiquetage est téléchargé ce 
 
 - En deux fois: annotation et étiquetage du corpus
 
-```{r annotation, message=FALSE, results='hide'}
+```{r annotation, eval=FALSE, message=FALSE, include=TRUE, results='hide'}
 # UDpipe annotation
 corpus_annote <- annotation_udpipe(path = path,
                                   save_output = save_output,
@@ -112,7 +110,7 @@ motifs_tf_idf(
 ```
 
 #### ACP interactive avec Shiny:
-```{r PCAshiny, message=FALSE, results='hide'}
+```{r PCAshiny, eval=FALSE, message=FALSE, include=TRUE, results='hide'}
 corpus_norm = prepare_acp(corpus_grams = corpus_grams)
 res.pca = FactoMineR::PCA(corpus_norm, graph=FALSE)
 res.shiny <- Factoshiny::PCAshiny(res.pca)

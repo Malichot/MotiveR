@@ -30,5 +30,5 @@ motifs_tf_idf(
 \item{overwrite}{boolean: Écrase et sauve de nouveaux les résultats}
 }
 \description{
-Fonction génération TF-IDF
+Fonction génération TF-IDF et graphiques
 }
