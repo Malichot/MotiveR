@@ -22,7 +22,7 @@ Définissez d'abord les paramètres et charger les librairies.
 
 ```{r setup}
 # Charger le package (après l'avoir installé)
-library(Motifs)
+library(MotiveR)
 # Charger Factoshiny pour réaliser des ACP interactive avec shiny.
 library(Factoshiny)
 
