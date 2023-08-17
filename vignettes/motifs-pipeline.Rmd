@@ -27,7 +27,7 @@ library(MotiveR)
 library(Factoshiny)
 
 # Paramètres:
-path <- system.file("extdata", "corpus-test", package = "Motifs") # chemin du corpus
+path <- system.file("extdata", "corpus-test", package = "MotiveR") # chemin du corpus
 save_output <- FALSE # Sauvegarde résultats
 overwrite <- FALSE # Écrase résultats précédents
 n_grams <- 4 # n-gram encodage
