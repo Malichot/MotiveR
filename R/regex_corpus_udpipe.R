@@ -823,6 +823,10 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL,
     save_data_to_csv(corpus, "udpipe_corpus_motifs.csv", save_path, fileEncoding = "UTF-8", overwrite = overwrite)
   }
   corpus = data.table::as.data.table(corpus)
+
+  ## Conserve le titre de l'oeuvre seulement au lien du chemin
+  corpus[, "Oeuvre"] = sapply(corpus$Oeuvre, parse_oeuvre_name)
+  
   return(corpus)
 
 }

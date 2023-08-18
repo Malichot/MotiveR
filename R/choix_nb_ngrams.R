@@ -46,10 +46,7 @@ choix_nb_ngrams <-
     
     ## Retrait des cases vides okazou :
     corpus <- corpus[stats::complete.cases(corpus), ]
-    
-    ## Conserve le titre de l'oeuvre seulement au lien du chemin
-    corpus[, "Oeuvre"] = sapply(corpus$Oeuvre, parse_oeuvre_name)
-    
+
     if (n_grams == 2) {
       # bigrams motifs :
       corpus_spec_punct <- corpus  %>%
