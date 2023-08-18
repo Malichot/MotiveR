@@ -11,5 +11,5 @@
 #' @author Antoine de Sacy
 #' @author Bruno Spilak \email{bruno.spilak@gmail.com}
 #'
-#' @name Motifs
+#' @name MotiveR
 NULL

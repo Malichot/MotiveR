@@ -1,10 +1,6 @@
-#' TF-IDF plot
+#' TF-IDF transformation
 #'
-#' Fonction génération TF-IDF et graphiques
-#'
-#' @param n_motifs int sélection du nombre de motifs à afficher
-#'
-#' @param plot_type string "group" pour une visualisation groupée, "sep" pour une visualisation séparée (par défaut)
+#' Fonction génération TF-IDF
 #'
 #' @param corpus_grams data.frame sous format mots || motifs || Oeuvre
 #'
@@ -17,12 +13,10 @@
 #' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
 #'
 #' @example
-#' motifs_tf_idf(corpus_path="corpus_motifs_grams.csv", n_motifs = 20, plot_type="group")
+#' motifs_tf_idf(corpus_path="corpus_motifs_grams.csv")
 #'
 #' @export
-motifs_tf_idf <- function(n_motifs = 20,
-                          plot_type = "sep",
-                          corpus_grams = NULL,
+motifs_tf_idf <- function(corpus_grams = NULL,
                           corpus_path = NULL,
                           save_output = FALSE,
                           save_path = NULL,
@@ -79,7 +73,25 @@ motifs_tf_idf <- function(n_motifs = 20,
                      save_path,
                      overwrite = overwrite)
   }
-  
+  return (corpus_words_ngrams)
+}
+
+#' Visualisation des TF-IDF
+#'
+#' Fonction de génération d'histogrammes TF-IDF
+#'
+#' @param corpus_words_ngrams data.frame sous format mots || motifs || Oeuvre
+#' 
+#' @param n_motifs int sélection du nombre de motifs à afficher
+#'
+#' @param plot_type string "group" pour une visualisation groupée, "sep" pour une visualisation séparée (par défaut)
+#'
+#' @example
+#' corpus_words_ngrams = motifs_tf_idf(corpus_path="corpus_motifs_grams.csv")
+#' plot_tf_idf(corpus_words_ngrams, n_motifs = 20, plot_type = "sep")
+#'
+#' @export
+plot_tf_idf <- function(corpus_words_ngrams, n_motifs = 20, plot_type = "sep"){
   # Visualisation :
   if (plot_type == "sep") {
     tf_idf_grid <- corpus_words_ngrams %>%
