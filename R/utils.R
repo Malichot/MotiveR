@@ -11,7 +11,7 @@ save_dir_parser <- function(save_path = NULL) {
     save_dir <- file.path(getwd(), "output")
   } else {
     if (grepl("/", save_path)) {
-      save_dir = dirname(filepath)
+      save_dir = dirname(save_path)
     } else {
       save_dir = getwd()
     }
@@ -41,7 +41,9 @@ save_data_to_csv <-
            fileEncoding = "",
            overwrite = FALSE) {
     save_dir = save_dir_parser(save_path)
-    dir.create(save_dir)
+    if (!dir.exists(save_dir)) {
+      dir.create(save_dir)
+    }
     if (is.null(save_path)) {
       save_path = file.path(save_dir, file_name)
     }
@@ -79,16 +81,21 @@ check_object_param <- function(object = NULL,
   }
 }
 
+parse_oeuvre_name <- function(filepath){
+  filename = tail(strsplit(filepath, "/")[[1]], n=1)
+  return (strsplit(filename, ".txt")[[1]][1])
+}
+
 import_table <- function(file_path = NULL,
                          file_name = NULL) {
   if (is.null(file_path)) {
     if (is.null(file_name)) {
-      stop("Vous devez spécifié file_name")
+      stop("Vous devez spécifier file_name")
     }
     # Load from default paths
     output_dir = file.path(getwd(), "output")
     file_path = file.path(output_dir, file_name)
-    message("Chargmenet de la table par défault ",
+    message("Chargement de la table par défault ",
             file_name,
             " depuis ",
             file_path)

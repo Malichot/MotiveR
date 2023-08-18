@@ -5,7 +5,7 @@
 \title{Calcul de spécificités}
 \usage{
 calcul_specificites(
-  save_freq = FALSE,
+  save_freq = TRUE,
   retrait_frequence_1 = TRUE,
   corpus_grams = NULL,
   corpus_path = NULL,
@@ -17,7 +17,7 @@ calcul_specificites(
 \arguments{
 \item{save_freq}{boolean Suverage les résultats avec les fréquences}
 
-\item{retrait_frequence_1}{boolean}
+\item{retrait_frequence_1}{boolean: Retire spécificité de fréquence 1 dans la sortie}
 
 \item{corpus_grams}{data.frame sous format mots || motifs || Oeuvre}
 

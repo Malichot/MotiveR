@@ -24,6 +24,9 @@ motifs_stats <- function(corpus_grams = NULL,
                          save_output = FALSE,
                          save_path = NULL,
                          overwrite = FALSE) {
+  # For R CMD check "no visible binding for global variable"
+  motifs <- Oeuvre <- n <- index <- n_total <- NULL
+  
   # Importation des données
   check_object_param(corpus_grams, corpus_path)
   if (is.null(corpus_grams)) {

@@ -6,7 +6,7 @@
 \usage{
 motifs_tf_idf(
   n_motifs = 20,
-  plot_type = "group",
+  plot_type = "sep",
   corpus_grams = NULL,
   corpus_path = NULL,
   save_output = FALSE,
@@ -17,7 +17,7 @@ motifs_tf_idf(
 \arguments{
 \item{n_motifs}{int sélection du nombre de motifs à afficher}
 
-\item{plot_type}{string "group" pour une visualisation groupée, "sep" pour une visualisation séparée}
+\item{plot_type}{string "group" pour une visualisation groupée, "sep" pour une visualisation séparée (par défaut)}
 
 \item{corpus_grams}{data.frame sous format mots || motifs || Oeuvre}
 
@@ -26,7 +26,9 @@ motifs_tf_idf(
 \item{save_output}{boolean: Sauvegarde les résultats}
 
 \item{save_path}{string: Chemin du fichier de sauvergarde}
+
+\item{overwrite}{boolean: Écrase et sauve de nouveaux les résultats}
 }
 \description{
-Fonction génération TF-IDF
+Fonction génération TF-IDF et graphiques
 }

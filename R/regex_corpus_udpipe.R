@@ -18,7 +18,12 @@
 #' corpus_motifs <- regex_corpus_UDPipe(corpus_path="./output/udpipe_corpus_complet.csv", save_output = TRUE)
 #'
 #' @export
-regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output = FALSE, save_path = NULL, overwrite=FALSE){
+regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, 
+                                save_output = FALSE, save_path = NULL, 
+                                overwrite=FALSE){
+  # For R CMD check "no visible binding for global variable"
+  POS <- lemmes <- feats <- mots <- NULL
+  
   # Lecture des données :
   check_object_param(corpus, corpus_path)
   if (is.null(corpus)){
@@ -818,6 +823,10 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, save_output =
     save_data_to_csv(corpus, "udpipe_corpus_motifs.csv", save_path, fileEncoding = "UTF-8", overwrite = overwrite)
   }
   corpus = data.table::as.data.table(corpus)
+
+  ## Conserve le titre de l'oeuvre seulement au lien du chemin
+  corpus[, "Oeuvre"] = sapply(corpus$Oeuvre, parse_oeuvre_name)
+  
   return(corpus)
 
 }
