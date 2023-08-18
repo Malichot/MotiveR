@@ -38,7 +38,7 @@ Si vous travaillez sur Windows, l'encodage de vos fichiers sera sûrement window
 
 ## Documentation
 
-Après installation du package, accédez à la documentation avec `?Motifs`
+Après installation du package, accédez à la documentation avec `?MotiveR`
 
 ## Usage
 
