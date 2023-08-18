@@ -18,12 +18,16 @@ Cette vignette montre comment utiliser les fonctions du package Motifs. Elle ser
 
 ### Introduction
 
-Définissez d'abord les paramètres et charger les librairies.
+Définissez d'abord les paramètres et charger les librairies. Suivant les besoins, charger `explor` our `Factoshiny` pour la visualisation des ACP.
 
 ```{r setup}
 # Charger le package (après l'avoir installé)
 library(MotiveR)
-# Charger Factoshiny pour réaliser des ACP interactive avec shiny.
+# Pour créer des ACP interactive
+library(FactoMineR)
+# Charger explor pour réaliser des ACP interactive avec shiny.
+library(explor)
+# ou Factoshiny
 library(Factoshiny)
 
 # Paramètres:
@@ -109,13 +113,20 @@ motifs_tf_idf(
 )
 ```
 
-#### ACP interactive avec Shiny:
-```{r PCAshiny, eval=FALSE, message=FALSE, include=TRUE, results='hide'}
+#### ACP avec FactoMineR:
+```{r FactoMineRPCA, fig.width = 6, fig.height=3, out.width="100%"}
 corpus_norm = prepare_acp(corpus_grams = corpus_grams)
-res.pca = FactoMineR::PCA(corpus_norm, graph=FALSE)
+res.pca = FactoMineR::PCA(corpus_norm, graph=TRUE)
+```
+
+#### Visualisation avec explor:
+```{r explor, eval=FALSE, message=FALSE, include=TRUE, results='hide'}
+res.shiny <- explor::explor(res.pca)
+```
+
+#### Visualisation avec Factoshiny:
+```{r Factoshiny, eval=FALSE, message=FALSE, include=TRUE, results='hide'}
 res.shiny <- Factoshiny::PCAshiny(res.pca)
-# ou en une ligne
-# res.shiny <- Factoshiny::PCAshiny(prepare_acp(corpus_path = corpus_path))
 ```
 
 #### ACP avec la fonction du package
