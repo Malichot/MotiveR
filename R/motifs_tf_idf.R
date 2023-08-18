@@ -36,7 +36,7 @@ motifs_tf_idf <- function(corpus_grams = NULL,
   ## Retrait des cases vides :
   
   corpus_grams <- corpus_grams[complete.cases(corpus_grams), ]
-  
+
   ## Dénombrement + filtrage éventuel des données : ex : n > 10
   corpus_words_ngrams <- corpus_grams %>%
     dplyr::count(Oeuvre, motifs, sort = TRUE) %>%
@@ -92,6 +92,9 @@ motifs_tf_idf <- function(corpus_grams = NULL,
 #'
 #' @export
 plot_tf_idf <- function(corpus_words_ngrams, n_motifs = 20, plot_type = "sep"){
+  # For R CMD check "no visible binding for global variable"
+  motifs <- Oeuvre <- n <- desc <- total <- tf_idf <- NULL
+  
   # Visualisation :
   if (plot_type == "sep") {
     tf_idf_grid <- corpus_words_ngrams %>%
