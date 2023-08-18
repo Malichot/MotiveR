@@ -824,9 +824,6 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL,
   }
   corpus = data.table::as.data.table(corpus)
 
-  ## Conserve le titre de l'oeuvre seulement au lien du chemin
-  corpus[, "Oeuvre"] = sapply(corpus$Oeuvre, parse_oeuvre_name)
-  
   return(corpus)
 
 }
