@@ -91,6 +91,9 @@ annotation_udpipe <-
     colnames(corpus_annote) <-
       c("mots", "lemmes", "POS", "feats", "Oeuvre")
     
+    ## Conserve le titre de l'oeuvre seulement au lien du chemin
+    corpus_annote[, "Oeuvre"] = sapply(corpus_annote$Oeuvre, parse_oeuvre_name)
+    
     # Exportation csv :
     if (!is.null(save_path) | save_output) {
       save_data_to_csv(
