@@ -88,35 +88,28 @@ motifs_histogram(corpus_grams = corpus_grams,
 ```
 
 #### Analyse TFIDF :
-Transforme en table TFIDF et montre les motifs dont le score est le plus élevé:
+Transforme en table TFIDF et histogrammes des motifs dont le score est le plus élevé:
 
 - 2 motifs sur un grqphique par oeuvre:
 ```{r motifs_tf_idf_sep, out.width="100%", message=FALSE, results='hide', fig.width = 8, fig.height=3}
-motifs_tf_idf(
-  n_motifs = 3,
-  plot_type = "sep",
+corpus_words_ngrams <- motifs_tf_idf(
   corpus_grams = corpus_grams,
   save_output = save_output,
   overwrite = overwrite
 )
+plot_tf_idf(corpus_words_ngrams, n_motifs = 2, plot_type = "sep")
 ```
 
 
 - 3 motifs sur un seul grqphique:
 ```{r motifs_tf_idf_group, out.width="100%", message=FALSE, results='hide', fig.width = 6, fig.height=4, out.width="100%"}
-motifs_tf_idf(
-  n_motifs = 3,
-  plot_type = "group",
-  corpus_grams = corpus_grams,
-  save_output = save_output,
-  overwrite = overwrite
-)
+plot_tf_idf(corpus_words_ngrams, n_motifs = 3, plot_type = "group")
 ```
 
 #### ACP avec FactoMineR:
 ```{r FactoMineRPCA, fig.width = 6, fig.height=3, out.width="100%"}
-corpus_norm = prepare_acp(corpus_grams = corpus_grams)
-res.pca = FactoMineR::PCA(corpus_norm, graph=TRUE)
+corpus_norm <- prepare_acp(corpus_grams = corpus_grams)
+res.pca <- FactoMineR::PCA(corpus_norm, graph=TRUE)
 ```
 
 #### Visualisation avec explor:

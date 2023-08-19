@@ -2,11 +2,9 @@
 % Please edit documentation in R/motifs_tf_idf.R
 \name{motifs_tf_idf}
 \alias{motifs_tf_idf}
-\title{TF-IDF plot}
+\title{TF-IDF transformation}
 \usage{
 motifs_tf_idf(
-  n_motifs = 20,
-  plot_type = "sep",
   corpus_grams = NULL,
   corpus_path = NULL,
   save_output = FALSE,
@@ -15,10 +13,6 @@ motifs_tf_idf(
 )
 }
 \arguments{
-\item{n_motifs}{int sélection du nombre de motifs à afficher}
-
-\item{plot_type}{string "group" pour une visualisation groupée, "sep" pour une visualisation séparée (par défaut)}
-
 \item{corpus_grams}{data.frame sous format mots || motifs || Oeuvre}
 
 \item{corpus_path}{string chemin du csv contenant les motifs en ngram}
@@ -30,5 +24,5 @@ motifs_tf_idf(
 \item{overwrite}{boolean: Écrase et sauve de nouveaux les résultats}
 }
 \description{
-Fonction génération TF-IDF et graphiques
+Fonction génération TF-IDF
 }
