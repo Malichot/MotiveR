@@ -1,12 +1,12 @@
 Package: MotiveR
 Type: Package
 Title: Identification de motifs lexico-grammaticaux
-Version: 0.0.2
+Version: 0.0.3
 Author: Antoine de Sacy
 Authors@R: c(
     person("Dominique", "Legallois", role = c("aut")),
-    person("Antoine", "de Sacy", role = c("aut")),
-    person("Bruno", "Spilak", role = "cre", email = "bruno.spilak@gmail.com")
+    person("Antoine", "de Sacy", role = c("aut"), email="antoinedesacy@gmail.com"),
+    person("Bruno", "Spilak", role = "cre")
     )
 Description: Développement sous R d’une méthode d’analyse textuelle fondée sur l’identification de motifs
     lexico-grammaticaux, méthode dite des « motifs » par Dominique Legallois
