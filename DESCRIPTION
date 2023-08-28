@@ -1,12 +1,11 @@
 Package: MotiveR
 Type: Package
 Title: Identification de motifs lexico-grammaticaux
-Version: 0.0.2
-Author: Antoine de Sacy
+Version: 0.0.3
 Authors@R: c(
     person("Dominique", "Legallois", role = c("aut")),
-    person("Antoine", "de Sacy", role = c("aut")),
-    person("Bruno", "Spilak", role = "cre", email = "bruno.spilak@gmail.com")
+    person("Antoine", "de Sacy", role = c("aut", "cre"), email="antoinedesacy@gmail.com"),
+    person("Bruno", "Spilak", role = "ctb")
     )
 Description: Développement sous R d’une méthode d’analyse textuelle fondée sur l’identification de motifs
     lexico-grammaticaux, méthode dite des « motifs » par Dominique Legallois
@@ -19,7 +18,6 @@ Depends:
 Imports:
     udpipe,
     magrittr (>= 1.5),
-    tibble (>= 3.1.5),
     ggplot2 (>= 3.3.5),
     tidytext (>= 0.3.2),
     dplyr (>= 1.0.7),
@@ -27,17 +25,18 @@ Imports:
     factoextra (>= 1.0.7),
     ggwordcloud (>= 0.5.0),
     vroom (>= 1.5.7),
-    stringr (>= 1.4),
-    FactoMineR (>= 2.4),
-    Factoshiny (>= 2.4),
-    explor (>= 0.3)
+    stringr (>= 1.4)
 RoxygenNote: 7.1.2
 URL: https://github.com/Malichot/MotiveR
 BugReports: https://github.com/Malichot/MotiveR/issues
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tibble (>= 3.1.5),
+    FactoMineR (>= 2.4),
+    Factoshiny (>= 2.4),
+    explor (>= 0.3)
 VignetteBuilder: knitr
 Language: fr
 Config/testthat/edition: 3
