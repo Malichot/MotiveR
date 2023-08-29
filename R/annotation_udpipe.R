@@ -58,9 +58,9 @@ annotation_udpipe <-
     # Correction encodage apostrophes :
     
     df <- df %>%
-      dplyr::mutate(mots = stringr::str_replace_all(.$mots, "$", "\n")) %>%
-      dplyr::mutate(mots = stringr::str_replace_all(.$mots, "’", "'")) %>%
-      dplyr::mutate(mots = stringr::str_replace_all(.$mots, "'", "'"))
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "$", "\n")) %>%
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "’", "'")) %>%
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "'", "'"))
     
     # Retrait des NA dans la colonne mots :
     
