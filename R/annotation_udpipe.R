@@ -1,14 +1,14 @@
-#' Étiquetage UDPipe
+#' etiquetage UDPipe
 #'
-#' Étiquetage du corpus situé dans path
+#' etiquetage du corpus situe dans path
 #'
-#' @param path string: Chemin du dossier contenant les différents corpus.
+#' @param path string: Chemin du dossier contenant les differents corpus.
 #'
-#' @param save_output boolean: Sauvegarde les résultats
+#' @param save_output boolean: Sauvegarde les resultats
 #'
 #' @param save_path string: Chemin du fichier de sauvergarde
 #'
-#' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
+#' @param overwrite boolean: ecrase et sauve de nouveaux les resultats
 #'
 #' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
 #'
@@ -21,16 +21,16 @@ annotation_udpipe <-
            save_output = TRUE,
            save_path = NULL,
            overwrite = FALSE) {
-    # Vérfie path
+    # Verfie path
     if (!file.exists(path)) {
-      stop("The chemin spécifié ", path, " n'existe pas!")
+      stop("The chemin specifie ", path, " n'existe pas!")
     }
-    # Modèle
+    # Modele
     UDPIPE_MODEL_PATH <-
       file.path(getwd(), "udpipe", "french-gsd-ud-2.5-191206.udpipe")
-    # Si le fichier modèle n'existe pas télécharge le
+    # Si le fichier modele n'existe pas telecharge le
     if (!file.exists(UDPIPE_MODEL_PATH)) {
-      message(paste0("Télécharge et sauve le modèle dans ", UDPIPE_MODEL_PATH))
+      message(paste0("Telecharge et sauve le modele dans ", UDPIPE_MODEL_PATH))
       udpipe::udpipe_download_model(language = "french", model_dir = "./udpipe")
     }
     udmodel_french <-
@@ -54,13 +54,34 @@ annotation_udpipe <-
         progress = F
       )
     
-    # Correction : ajout d'un saut de ligne en bout pour éviter erreurs étiquetage :
-    # Correction encodage apostrophes :
+    # Quelques correction pour ameliorer l'etiquetage et la tokenisation : 
     
     df <- df %>%
-      dplyr::mutate(mots = stringr::str_replace_all(.$mots, "$", "\n")) %>%
-      dplyr::mutate(mots = stringr::str_replace_all(.$mots, "’", "'")) %>%
-      dplyr::mutate(mots = stringr::str_replace_all(.$mots, "'", "'"))
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "$", "\n")) %>%
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "\\n", "")) %>% # resolve line breaks in txt...
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "\\s+", " ")) %>% # resolve multiple spaces in txt...
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "\u0020", " ")) %>% # clean spaces
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "\u00ab", '"')) %>% # clean french guillemets
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "\u00bb", '"')) %>% # clean french guillemets
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "\u201c", '"')) %>% # clean guillemets
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "\u201d", '"')) %>% # clean guillemets
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "\u2019", "'")) %>% # fix apostrophs...
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "\u0027", "'")) %>% # fix apostrophs...
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\\.)(\\w)", "\\1 \\2")) %>% # space after . if no
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\\!)(\\w)", "\\1 \\2")) %>% # space after ! if no
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\\?)(\\w)", "\\1 \\2")) %>% # space after ? if no
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\\w)(\\?)", "\\1 \\2")) %>% # space when char is glued to ?
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\\w)(\\!)", "\\1 \\2")) %>% # space when char is glued to !
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\\w)(\\s?)(\\!)(\\.{3})", "\\1 \\2 \\3")) %>% # space when chars are glued ...!
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\\w)(\\s?)(\\.{3})(\\!)", "\\1 \\2 \\3")) %>% # space when chars are glued ...!
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\\w)(\\s?)(\\?)(\\.{3})", "\\1 \\2 \\3")) %>% # space when chars are glued ...?
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\\w)(\\s?)(\\.{3})(\\?)", "\\1 \\2 \\3")) %>% # space when chars are glued ...?
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\\.)(\\\u2014)", "\\1 \\2")) %>% # space after \u2014 if no
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\\.)(\\\u2014)", "\\1 \\2")) %>% # space after \u2014 (not the same UNICODE...) if no
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, ":\u2014", ": \u2014")) %>% # Space when :\u2014
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\u2014)(\\w)", "\\1 \\2")) %>% # space when \u2014A
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(\u2014)(\\w)", "\\1 \\2")) %>% # space when \u2014A (not the same UNICODE...) if no
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "\u2026", "...")) # fix ...
     
     # Retrait des NA dans la colonne mots :
     
@@ -82,10 +103,10 @@ annotation_udpipe <-
     # Transformation en df :
     corpus_annote <- as.data.frame(corpus_annote)
     
-    # Correction de l'identifiant : retrait "./" au début :
+    # Correction de l'identifiant : retrait "./" au debut :
     corpus_annote$doc_id <- gsub("\\.\\/", "", corpus_annote$doc_id)
     
-    # Sélection des colonnes qui nous intéressent :
+    # Selection des colonnes qui nous interessent :
     corpus_annote <-
       corpus_annote[, c("token", "lemma", "upos", "feats", "doc_id")]
     colnames(corpus_annote) <-

@@ -53,25 +53,13 @@ prepare_acp <-
     ## lignes = motifs
     ## colonnes = corpus
     ## Réf : https://stackoverflow.com/questions/19346066/r-re-arrange-dataframe-some-rows-to-columns
-    corpus_lexical_table <-
+    corpus_norm <-
       stats::xtabs(n ~ motifs + Oeuvre, corpus_grams)
     
-    ## Ré-ordonnancement :
-    corpus_lexical_table <-
-      corpus_lexical_table[order(-corpus_lexical_table[, 1], corpus_lexical_table[, 1]), ]
-    
-    ## Normalisations (zscores)
-    ## Cf.
-    # Z-scores sur les fréquences de motifs
-    ZTransf = function(x) {
-      for (i in 1:nrow(x)) {
-        x[i, ] = (x[i, ] - mean(x[i, ]))  / sd(x[i, ])
-      }
-      return(x)
-    }
-    corpus_norm <- ZTransf(corpus_lexical_table)
-    
-    # Check na and infinite values :
+    # Normalisation Z-score
+    corpus_norm <- (corpus_norm - apply(corpus_norm, 1, mean)) / apply(corpus_norm, 1, sd)
+
+        # Check na and infinite values :
     a <- is.infinite(corpus_norm)
     b <- which(a == TRUE)
     if (length(b) > 0) {
@@ -84,7 +72,7 @@ prepare_acp <-
     }
     
     corpus_norm = as.data.frame.matrix(corpus_norm)
-    return(corpus_norm)   
+    return(t(corpus_norm))
   }
 
 

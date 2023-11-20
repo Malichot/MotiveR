@@ -1,7 +1,7 @@
 Package: MotiveR
 Type: Package
 Title: Identification de motifs lexico-grammaticaux
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: c(
     person("Dominique", "Legallois", role = c("aut")),
     person("Antoine", "de Sacy", role = c("aut", "cre"), email="antoinedesacy@gmail.com"),
@@ -23,7 +23,6 @@ Imports:
     dplyr (>= 1.0.7),
     data.table (>= 1.14.2),
     factoextra (>= 1.0.7),
-    ggwordcloud (>= 0.5.0),
     vroom (>= 1.5.7),
     stringr (>= 1.4)
 RoxygenNote: 7.1.2

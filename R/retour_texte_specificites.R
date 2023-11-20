@@ -1,29 +1,29 @@
-#' Retour au texte depuis les spécificiés
+#' Retour au texte depuis les specificites
 #'
-#' Fonction pour retour aux textes à partir de la table de spécificités
+#' Fonction pour retour aux textes a partir de la table de specificites
 #'
-#' @param frequence int filtre de seuil de fréquence
+#' @param frequence int filtre de seuil de frequence
 #'
 #' @param n_grams int n-grams
 #'
-#' @param len_context int nombre de mots du contexte à afficher
+#' @param len_context int nombre de mots du contexte a afficher
 #'
 #' @param corpus_grams data.frame corpus_motifs motifs pour chaque corpus mots | motifs | Oeuvre
 #'
 #' @param corpus_path string Chemin du csv contenant les corpus_motifs motifs pour chaque corpus
 #'
-#' @param corpus_spec data.frame corpus specificités
+#' @param corpus_spec data.frame corpus specificites
 #'
-#' @param corpus_spec_path string Chemin du csv contenant les specificités du corpus
+#' @param corpus_spec_path string Chemin du csv contenant les specificites du corpus
 #'
-#' @param save_output boolean: Sauvegarde les résultats
+#' @param save_output boolean: Sauvegarde les resultats
 #'
 #' @param save_path string: Chemin du fichier de sauvergarde
 #'
-#' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
+#' @param overwrite boolean: Ecrase et sauve de nouveaux les resultats
 #'
-#' @return DataFrame: Oeuvre | motifs | n (fréq absolue) | nb_total_mots (dans l'oeuvre) |
-#' n_rel (fréquence relative) | spécificités oeuvre par oeuvre | pourcentage (présence du motif par rapport au reste du corpus)
+#' @return DataFrame: Oeuvre | motifs | n (freq absolue) | nb_total_mots (dans l'oeuvre) |
+#' n_rel (frequence relative) | specificites oeuvre par oeuvre | pourcentage (presence du motif par rapport au reste du corpus)
 #'
 #' @example
 #' corpus_annote <- retour_texte_specificites(frequence=10, len_context=4, n_grams=4)
@@ -48,7 +48,7 @@ retour_texte_specificites <- function(frequence,
   if (is.null(corpus_grams)) {
     corpus_grams = import_table(corpus_path, file_name = "corpus_motifs_grams.csv")
   }
-  # Vérification okazou (pb index) :
+  # Verification okazou (pb index) :
   corpus_grams <-
     corpus_grams[, c("mots", "ngrammot", "motifs", "Oeuvre")]
   
@@ -59,8 +59,8 @@ retour_texte_specificites <- function(frequence,
   ## Retrait des cases vides :
   corpus_grams <- corpus_grams[complete.cases(corpus_grams), ]
   
-  # Réduction du corpus_spec à nombre_motifs : évite de produire des trop grand csv,
-  # réduit le temps de génération, inutile d'analyser des motifs à très basse fréquence...
+  # Reduction du corpus_spec a nombre_motifs : evite de produire des trop grand csv,
+  # reduit le temps de generation, inutile d'analyser des motifs a tres basse frequence...
   
   corpus_spec <- corpus_spec %>%
     dplyr::filter(n >= frequence)
@@ -71,9 +71,9 @@ retour_texte_specificites <- function(frequence,
   
   ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
   
-  ## Référence : M. Jockers, Text analysis with R for students of literature, 2014.
+  ## Reference : M. Jockers, Text analysis with R for students of literature, 2014.
   
-  # Préalable : choix d'un motif pertinent ! Ex : le NC , le NC
+  # Prealable : choix d'un motif pertinent. Ex : le NC , le NC
   
   
   
@@ -91,7 +91,7 @@ retour_texte_specificites <- function(frequence,
           start <- 1
         }
         end <-
-          hits[h] + len_context + as.numeric(n_grams) # La fin du motif contient aussi le motif en lui-même.
+          hits[h] + len_context + as.numeric(n_grams) # La fin du motif contient aussi le motif en lui-meme.
         
         myrow <-
           cbind(
@@ -131,7 +131,7 @@ retour_texte_specificites <- function(frequence,
       return(result)
     }
     else {
-      message("Votre motif n'a pas été trouvé")
+      message("Votre motif n'a pas ete trouve")
     }
   }
   

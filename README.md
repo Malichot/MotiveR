@@ -1,8 +1,8 @@
 # MotiveR
 
- Développement sous R d’une méthode d’analyse textuelle fondée sur l’identification de motifs lexico-grammaticaux, méthode dite des « motifs » par Dominique Legallois (Université Sorbonne Nouvelle Paris III) et Antoine de Sacy. 
- 
- Ce projet a reçu l'aide de l'Association Humanistica (http://www.humanisti.ca/) à travers la bourse octroyée en 2021-2022 et a été lauréat du DARIAH Theme Call 2023-2024.
+Développement sous R d’une méthode d’analyse textuelle fondée sur l’identification de motifs lexico-grammaticaux, méthode dite des « motifs » par Dominique Legallois (Université Sorbonne Nouvelle Paris III) et Antoine Silvestre de Sacy (CNRS & Sorbonne-Nouvelle). 
+
+Ce projet a reçu l'aide de l'Association Humanistica (http://www.humanisti.ca/) à travers la bourse octroyée en 2021-2022, de la Sorbonne-Nouvelle et a été lauréat du DARIAH Theme Call 2023-2024.
 
 # Installation
 
