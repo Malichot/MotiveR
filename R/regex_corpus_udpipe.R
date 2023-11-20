@@ -2,15 +2,15 @@
 #'
 #' Transformation en motifs UDPpipe
 #'
-#' @param corpus data.frame contenant les différents corpus.
+#' @param corpus data.frame contenant les differents corpus.
 #'
-#' @param corpus_path string Chemin du dossier contenant les différents corpus.
+#' @param corpus_path string Chemin du dossier contenant les differents corpus.
 #' 
-#' @param save_output boolean: Sauvegarde les résultats
+#' @param save_output boolean: Sauvegarde les resultats
 #' 
 #' @param save_path string: Chemin du fichier de sauvergarde
 #' 
-#' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
+#' @param overwrite boolean: ecrase et sauve de nouveaux les resultats
 #'
 #' @return DataFrame: corpus_motifs motifs pour chaque corpus
 #'
@@ -59,14 +59,14 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL,
   # Participes : 
   
   corpus <- corpus %>%
-    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% # PPsé masc sing
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% # PPse masc sing
     dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part", "PPAS")) %>% 
-    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% # PPsé fem sin
-    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% ## PPsé mas plu
-    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Plur|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPsé fem plu
-    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPsé fem sing
-    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPsé masc plu
-    dplyr::mutate(lemmes = replace(lemmes, feats == "Tense=Pres|VerbForm=Part", "PPRES")) # Pprésnt.
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% # PPse fem sin
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Tense=Past|Typo=Yes|VerbForm=Part", "PPAS")) %>% ## PPse mas plu
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Plur|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPse fem plu
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPse fem sing
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Gender=Masc|Number=Plur|Tense=Past|VerbForm=Part", "PPAS")) %>% # PPse masc plu
+    dplyr::mutate(lemmes = replace(lemmes, feats == "Tense=Pres|VerbForm=Part", "PPRES")) # Ppresnt.
   
   # Subjonctif present :
   
@@ -170,7 +170,7 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL,
   # replace: 
   corpus$POS[id_inv] <- corpus$lemmes[id_inv]
   
-  #### Adverbes totalité ####
+  #### Adverbes totalite ####
   
   path_to_advtot <- system.file("extdata", "regle_transformation_motifs", "adverbes_tot.txt", package = "MotiveR")
   
@@ -295,7 +295,7 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL,
   
   #### ADJ, NUM, DETPOSS, NC, INTJ
   
-  ## Cas où l'on part des POS pour changer les lemmes :
+  ## Cas ou l'on part des POS pour changer les lemmes :
   corpus <- corpus %>%
     dplyr::mutate(lemmes = replace(lemmes, POS == "ADJ", "ADJ")) %>%
     dplyr::mutate(lemmes = replace(lemmes, POS == "NUM", "NUM")) %>%  
@@ -303,12 +303,12 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL,
     dplyr::mutate(lemmes = replace(lemmes, POS == "NOUN", "NC")) %>%
     dplyr::mutate(lemmes = replace(lemmes, POS == "PROPN", "NP")) %>%
     dplyr::mutate(lemmes = replace(lemmes, POS == "INTJ", "INTJ")) %>%
-    dplyr::mutate(lemmes = replace(lemmes, lemmes == "«", '"')) %>% # Remplacement des guillemets français en anglais.
-    dplyr::mutate(lemmes = replace(lemmes, lemmes == "»", '"'))
+    dplyr::mutate(lemmes = replace(lemmes, lemmes == "\u00ab", '"')) %>% # Remplacement des guillemets francais en anglais.
+    dplyr::mutate(lemmes = replace(lemmes, lemmes == "\u00bb", '"'))
   
   #### PRONOMS ####
   
-  # Les pronoms personnels et réfléchis : on part des mots pour changer les lemmes : 
+  # Les pronoms personnels et reflechis : on part des mots pour changer les lemmes : 
   
   corpus <- corpus %>%
     dplyr::mutate(lemmes = replace(lemmes, mots == "je", "je")) %>%
@@ -342,7 +342,7 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL,
   ## Retrait des lignes vides :
   corpus <- dplyr::as_tibble(corpus)
   
-  # Dernières verifications (== a le, de le)
+  # Dernieres verifications (== a le, de le)
   t <- which(corpus$mots == "aux")
   e <- which(corpus$mots == "du")
   f <- which(corpus$mots == "des")
