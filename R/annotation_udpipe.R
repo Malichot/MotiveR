@@ -81,7 +81,7 @@ annotation_udpipe <-
       dplyr::mutate(mots = stringr::str_replace_all(df$mots, ":–", ": –")) %>% # Space when :–
       dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(–)(\\w)", "\\1 \\2")) %>% # space when –A
       dplyr::mutate(mots = stringr::str_replace_all(df$mots, "(—)(\\w)", "\\1 \\2")) %>% # space when —A (not the same UNICODE...) if no
-      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "…", "...")) %>% # fix ...
+      dplyr::mutate(mots = stringr::str_replace_all(df$mots, "…", "...")) # fix ...
     
     # Retrait des NA dans la colonne mots :
     
