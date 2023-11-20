@@ -34,9 +34,9 @@ library(Factoshiny)
 path <- system.file("extdata", "corpus-test", package = "MotiveR") # chemin du corpus
 save_output <- FALSE # Sauvegarde resultats
 overwrite <- FALSE # ecrase resultats precedents
-n_grams <- 4 # n-gram encodage
-frequence <- 200
-len_context <- 4
+n_grams <- 4 # longueur de la sequence n-gram
+frequence <- 200 # filtre de frequence pour le retour aux textes (limite le temps de calcul)
+len_context <- 4 # longueur du contexte d'analyse
 ```
 
 ### Preparation des donnees
