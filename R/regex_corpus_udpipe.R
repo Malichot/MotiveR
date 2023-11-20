@@ -282,8 +282,8 @@ regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL,
   
   #### Noms communs corporels ####
   
-  path_to_nccor <- system.file("extdata", "regle_transformation_motifs", "parties_corpus.txt", package = "MotiveR")
-  
+  path_to_nccor <- system.file("extdata", "regle_transformation_motifs", "parties_corps.txt", package = "MotiveR")
+
   nccor <- read.csv(path_to_nccor)
   
   # nccor index :
