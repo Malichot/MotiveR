@@ -1,14 +1,14 @@
-#' Étiquetage UDPipe
+#' etiquetage UDPipe
 #'
-#' Étiquetage du corpus situé dans path
+#' etiquetage du corpus situe dans path
 #'
-#' @param path string: Chemin du dossier contenant les différents corpus.
+#' @param path string: Chemin du dossier contenant les differents corpus.
 #'
-#' @param save_output boolean: Sauvegarde les résultats
+#' @param save_output boolean: Sauvegarde les resultats
 #'
 #' @param save_path string: Chemin du fichier de sauvergarde
 #'
-#' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
+#' @param overwrite boolean: ecrase et sauve de nouveaux les resultats
 #'
 #' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
 #'
@@ -21,16 +21,16 @@ annotation_udpipe <-
            save_output = TRUE,
            save_path = NULL,
            overwrite = FALSE) {
-    # Vérfie path
+    # Verfie path
     if (!file.exists(path)) {
-      stop("The chemin spécifié ", path, " n'existe pas!")
+      stop("The chemin specifie ", path, " n'existe pas!")
     }
     # Modele
     UDPIPE_MODEL_PATH <-
       file.path(getwd(), "udpipe", "french-gsd-ud-2.5-191206.udpipe")
     # Si le fichier modele n'existe pas telecharge le
     if (!file.exists(UDPIPE_MODEL_PATH)) {
-      message(paste0("Télécharge et sauve le modèle dans ", UDPIPE_MODEL_PATH))
+      message(paste0("Telecharge et sauve le modele dans ", UDPIPE_MODEL_PATH))
       udpipe::udpipe_download_model(language = "french", model_dir = "./udpipe")
     }
     udmodel_french <-
@@ -103,10 +103,10 @@ annotation_udpipe <-
     # Transformation en df :
     corpus_annote <- as.data.frame(corpus_annote)
     
-    # Correction de l'identifiant : retrait "./" au début :
+    # Correction de l'identifiant : retrait "./" au debut :
     corpus_annote$doc_id <- gsub("\\.\\/", "", corpus_annote$doc_id)
     
-    # Sélection des colonnes qui nous intéressent :
+    # Selection des colonnes qui nous interessent :
     corpus_annote <-
       corpus_annote[, c("token", "lemma", "upos", "feats", "doc_id")]
     colnames(corpus_annote) <-
