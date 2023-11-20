@@ -59,7 +59,7 @@ prepare_acp <-
     ## Normalisations (zscores)
     # Z-scores sur les fréquences de motifs
     ZTransf = function(x) {
-      for (i in 1:nrow(x)) {
+      for (i in 1:ncol(x)) {
         x[,i] = (x[,i] - mean(x[,i ]))  / sd(x[,i])
       }
       return(x)
