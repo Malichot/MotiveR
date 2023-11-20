@@ -18,42 +18,41 @@ Cette vignette montre comment utiliser les fonctions du package Motifs. Elle ser
 
 ### Introduction
 
-Définissez d'abord les paramètres et charger les librairies. Suivant les besoins, charger `explor` our `Factoshiny` pour la visualisation des ACP.
+Definissez d'abord les parametres et charger les librairies. Suivant les besoins, charger `explor` our `Factoshiny` pour la visualisation des ACP.
 
 ```{r setup}
-# Charger le package (après l'avoir installé)
+# Charger le package (apres l'avoir installe)
 library(MotiveR)
-# Pour créer des ACP interactive
+# Pour creer des ACP interactive
 library(FactoMineR)
-# Charger explor pour réaliser des ACP interactive avec shiny.
+# Charger explor pour realiser des ACP interactive avec shiny.
 library(explor)
 # ou Factoshiny
 library(Factoshiny)
 
-# Paramètres:
+# Parametres:
 path <- system.file("extdata", "corpus-test", package = "MotiveR") # chemin du corpus
-save_output <- FALSE # Sauvegarde résultats
-overwrite <- FALSE # Écrase résultats précédents
+save_output <- FALSE # Sauvegarde resultats
+overwrite <- FALSE # ecrase resultats precedents
 n_grams <- 4 # n-gram encodage
 frequence <- 200
 len_context <- 4
-
 ```
 
-### Préparation des données
+### Preparation des donnees
 
-#### Annotation et étiquetage
+#### Annotation et etiquetage
 
-Lors de la première utilisation, le modèle d'étiquetage est téléchargé ce qui peut prendre un peu de temps.
+Lors de la premiere utilisation, le modele d'etiquetage est telecharge ce qui peut prendre un peu de temps.
 
-- En deux fois: annotation et étiquetage du corpus
+- En deux fois: annotation et etiquetage du corpus
 
 ```{r annotation, eval=FALSE, message=FALSE, include=TRUE, results='hide'}
 # UDpipe annotation
 corpus_annote <- annotation_udpipe(path = path,
                                   save_output = save_output,
                                   overwrite = overwrite)
-# Étiquetage du corpus
+# etiquetage du corpus
 corpus_motifs <- regex_corpus_udpipe(corpus = corpus_annote,
                                     save_output = save_output,
                                     overwrite = overwrite)
@@ -89,7 +88,7 @@ motifs_histogram(corpus_grams = corpus_grams,
 ```
 
 #### Analyse TFIDF :
-Transforme en table TFIDF et histogrammes des motifs dont le score est le plus élevé:
+Transforme en table TFIDF et histogrammes des motifs dont le score est le plus eleve:
 
 - 2 motifs sur un grqphique par oeuvre:
 ```{r motifs_tf_idf_sep, out.width="100%", message=FALSE, results='hide', fig.width = 8, fig.height=3}
@@ -130,7 +129,7 @@ motifs_acp(plot_type = "motif", corpus_grams = corpus_grams, n_motifs=100)
 motifs_acp(plot_type = "var+motif", corpus_grams = corpus_grams, n_motifs=100)
 ```
 
-#### Réaliser des statistiques sur les motifs
+#### Realiser des statistiques sur les motifs
 ```{r motifs_stats, message=FALSE, results='hide'}
 df_stats <- motifs_stats(
   corpus_grams = corpus_grams,
@@ -139,7 +138,7 @@ df_stats <- motifs_stats(
 )
 ```
 
-#### Calcul de spécificités
+#### Calcul de specificites
 ```{r calcul_specificites, message=FALSE, results='hide'}
 calcul_spec_freq <- calcul_specificites(
   save_freq = TRUE,
@@ -163,7 +162,7 @@ retour_text_spec <- retour_texte_specificites(
 )
 ```
 
-#### Retour aux textes à partir d'un motif
+#### Retour aux textes a partir d'un motif
 ```{r retour_texte_specificites_un_motif, message=FALSE, results='hide'}
 retour_text_spec_un_motif <- retour_texte_specificites_un_motif(
   motif_cible = "le NC de le",
