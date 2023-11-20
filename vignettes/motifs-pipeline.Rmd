@@ -37,6 +37,7 @@ overwrite <- FALSE # Écrase résultats précédents
 n_grams <- 4 # n-gram encodage
 frequence <- 200
 len_context <- 4
+
 ```
 
 ### Préparation des données
