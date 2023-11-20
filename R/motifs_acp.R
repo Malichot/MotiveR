@@ -56,16 +56,11 @@ prepare_acp <-
     corpus_lexical_table <-
       stats::xtabs(n ~ motifs + Oeuvre, corpus_grams)
     
-    ## Ré-ordonnancement :
-    corpus_lexical_table <-
-      corpus_lexical_table[order(-corpus_lexical_table[, 1], corpus_lexical_table[, 1]), ]
-    
     ## Normalisations (zscores)
-    ## Cf.
     # Z-scores sur les fréquences de motifs
     ZTransf = function(x) {
       for (i in 1:nrow(x)) {
-        x[i, ] = (x[i, ] - mean(x[i, ]))  / sd(x[i, ])
+        x[,i] = (x[,i] - mean(x[,i ]))  / sd(x[,i])
       }
       return(x)
     }
