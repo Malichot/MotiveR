@@ -86,27 +86,11 @@ parse_oeuvre_name <- function(filepath){
   return (strsplit(filename, ".txt")[[1]][1])
 }
 
-import_table <- function(file_path = NULL,
-                         file_name = NULL) {
-  if (is.null(file_path)) {
-    if (is.null(file_name)) {
-      stop("Vous devez specifier file_name")
-    }
-    # Load from default paths
-    output_dir = file.path(getwd(), "output")
-    file_path = file.path(output_dir, file_name)
-    message("Chargement de la table par default ",
-            file_name,
-            " depuis ",
-            file_path)
-    object = data.table::fread(file_path, encoding = "UTF-8", header = TRUE)
-  } else {
-    message("Chargement de la table depuis ", file_path)
-    if (file.exists(file_path)) {
-      object = data.table::fread(file_path, encoding = "UTF-8", header = TRUE)
-      return(object)
-    } else {
-      stop("Le fichier ", file_path, " n'existe pas.")
-    }
-  }
+import_table <- function(output_dir, file_name) {
+  file_path = file.path(output_dir, file_name)
+  message("Chargement de la table par default ",
+          file_name,
+          " depuis le dossier",
+          output_dir)
+  object = data.table::fread(file_path, encoding = "UTF-8", header = TRUE)
 }
