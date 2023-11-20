@@ -20,7 +20,7 @@ save_dir_parser <- function(save_path = NULL) {
 }
 
 save_dir_handler <- function(save_dir, overwrite = FALSE) {
-  message("Sauvegarde les résultats dans le dossier ", save_dir)
+  message("Sauvegarde les resultats dans le dossier ", save_dir)
   if (!file.exists(save_dir)) {
     dir.create(save_dir)
   } else {
@@ -28,7 +28,7 @@ save_dir_handler <- function(save_dir, overwrite = FALSE) {
       stop(
         "Le dosser de sauvegarde",
         save_dir,
-        " existe dèjà. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE."
+        " existe deja. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE."
       )
     }
   }
@@ -55,14 +55,14 @@ save_data_to_csv <-
         warning(
           "Le fichier ",
           save_path,
-          " existe dèjà, écrase et sauve nouveau. Pour éviter ce comportement, utiliser overwrite = FALSE."
+          " existe deja, ecrase et sauve nouveau. Pour eviter ce comportement, utiliser overwrite = FALSE."
         )
         write.csv(data, save_path, fileEncoding = fileEncoding)
       } else {
         stop(
           "Le fichier ",
           save_path,
-          " existe dèjà. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE."
+          " existe deja. Veuillez le renommer ou le supprimer ou utilisez overwrite=TRUE."
         )
       }
     }
@@ -77,7 +77,7 @@ get_default_path <- function(file) {
 check_object_param <- function(object = NULL,
                                object_path = NULL) {
   if (!is.null(object) & !is.null(object_path)) {
-    stop("Vous ne pouvez pas passer à la fois 'object' et 'object_path' en argument!")
+    stop("Vous ne pouvez pas passer a la fois 'object' et 'object_path' en argument!")
   }
 }
 
@@ -90,12 +90,12 @@ import_table <- function(file_path = NULL,
                          file_name = NULL) {
   if (is.null(file_path)) {
     if (is.null(file_name)) {
-      stop("Vous devez spécifier file_name")
+      stop("Vous devez specifier file_name")
     }
     # Load from default paths
     output_dir = file.path(getwd(), "output")
     file_path = file.path(output_dir, file_name)
-    message("Chargement de la table par défault ",
+    message("Chargement de la table par default ",
             file_name,
             " depuis ",
             file_path)
