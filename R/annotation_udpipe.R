@@ -22,18 +22,18 @@ annotation_udpipe <-
            save_output = TRUE,
            save_path = NULL,
            overwrite = FALSE) {
-    # Verfie path
+    # Verifie path
     if (!file.exists(path)) {
-      print(path)
       stop("Le chemin specifie ", path, " n'existe pas!")
     }
     # Modele
-    UDPIPE_MODEL_PATH <-
-      file.path(getwd(), "udpipe", "french-gsd-ud-2.5-191206.udpipe")
+    UDPIPE_MODEL_PATH <- file.path(system.file("extdata", package = "MotiveR"),
+                                   "french-gsd-ud-2.5-191206.udpipe")
     # Si le fichier modele n'existe pas telecharge le
     if (!file.exists(UDPIPE_MODEL_PATH)) {
       message(paste0("Telecharge et sauve le modele dans ", UDPIPE_MODEL_PATH))
-      udpipe::udpipe_download_model(language = "french", model_dir = "./udpipe")
+      udpipe::udpipe_download_model(language = "french",
+                                    model_dir = system.file("extdata", package = "MotiveR"))
     }
     udmodel_french <-
       udpipe::udpipe_load_model(file = UDPIPE_MODEL_PATH)
