@@ -22,10 +22,10 @@
 #'
 #' @param overwrite boolean: Ecrase et sauve de nouveaux les resultats
 #'
-#' @return DataFrame: Oeuvre | motifs | n (freq absolue) | nb_total_mots (dans l'oeuvre) |
+#' @returns DataFrame avec colonnes: Oeuvre | motifs | n (freq absolue) | nb_total_mots (dans l'oeuvre) |
 #' n_rel (frequence relative) | specificites oeuvre par oeuvre | pourcentage (presence du motif par rapport au reste du corpus)
 #'
-#' @example
+#' @examples
 #' corpus_annote <- retour_texte_specificites(frequence=10, len_context=4, n_grams=4)
 #'
 #' @export

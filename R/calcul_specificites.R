@@ -1,6 +1,6 @@
-#' Calcul de spécificités
+#' Calcul de specificites
 #'
-#' Calcul de spécificités
+#' Calcul de specificites
 #'
 #' @param corpus_grams data.frame sous format mots || motifs || Oeuvre
 #'
@@ -16,8 +16,10 @@
 #'
 #' @param retrait_frequence_1 boolean: Retire spécificité de fréquence 1 dans la sortie
 #'
-#' @example
-#' calcul_specificites(corpus_path="corpus_motifs_grams.csv")
+#' @returns DataFrame avec colonnes (Oeuvre || motifs || n (fréq abs) || total (nb de mots dans l'oeuvre) || nrel (fréq relative) || Spécificités par oeuvres)
+#'
+#' @examples
+#' spec <- calcul_specificites(corpus_path="./output")
 #'
 #' @export
 calcul_specificites <- function(save_freq = TRUE,

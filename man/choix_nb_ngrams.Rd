@@ -32,3 +32,7 @@ DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeu
 \description{
 Choix du nb de ngrams sur le corpus de motifs
 }
+\examples{
+corpus_grams <- choix_nb_ngrams(n_grams=2, corpus_path="./output")
+
+}

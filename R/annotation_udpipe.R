@@ -10,10 +10,10 @@
 #'
 #' @param overwrite boolean: ecrase et sauve de nouveaux les resultats
 #'
-#' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
+#' @returns DataFrame: corpus_annote avec les colonnes (mots || lemmes || POS || feats || Oeuvre)
 #'
-#' @example
-#' corpus_annote <- annotation_udpipe("curpus-test")
+#' @examples
+#' corpus_annote <- annotation_udpipe(system.file("extdata", "curpus-test", package = "MotiveR"))
 #'
 #' @export
 annotation_udpipe <-

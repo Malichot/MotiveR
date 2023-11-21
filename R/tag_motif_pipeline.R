@@ -10,11 +10,10 @@
 #'
 #' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
 #'
+#' @returns DataFrame avec colonnes (mots || lemmes || POS || feats || Oeuvre)
 #'
-#' @return DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
-#'
-#' @example
-#' corpus_annote <- tag_motif_pipeline("curpus-test")
+#' @examples
+#' corpus_annote <- tag_motif_pipeline(system.file("extdata", "curpus-test", package = "MotiveR"))
 #'
 #' @export
 tag_motif_pipeline <-

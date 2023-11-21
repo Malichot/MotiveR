@@ -13,19 +13,23 @@ regex_corpus_udpipe(
 )
 }
 \arguments{
-\item{corpus}{data.frame contenant les différents corpus.}
+\item{corpus}{data.frame contenant les differents corpus.}
 
-\item{corpus_path}{string Chemin du dossier contenant les différents corpus.}
+\item{corpus_path}{string Chemin du dossier contenant les differents corpus.}
 
-\item{save_output}{boolean: Sauvegarde les résultats}
+\item{save_output}{boolean: Sauvegarde les resultats}
 
 \item{save_path}{string: Chemin du fichier de sauvergarde}
 
-\item{overwrite}{boolean: Écrase et sauve de nouveaux les résultats}
+\item{overwrite}{boolean: ecrase et sauve de nouveaux les resultats}
 }
 \value{
-DataFrame: corpus_motifs motifs pour chaque corpus
+DataFrame: motifs pour chaque corpus
 }
 \description{
 Transformation en motifs UDPpipe
+}
+\examples{
+corpus_motifs <- regex_corpus_UDPipe(corpus_path="./output", save_output = TRUE)
+
 }

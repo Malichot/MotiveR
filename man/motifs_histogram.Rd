@@ -20,6 +20,13 @@ motifs_histogram(
 
 \item{freq}{string "rel" pour fréquence relative ou "abs" pour fréquence absolue}
 }
+\value{
+un ggplot
+}
 \description{
 Fonction génération d'histogramme
+}
+\examples{
+motifs_histogram(corpus_path="./output/", nmots = 25)
+
 }

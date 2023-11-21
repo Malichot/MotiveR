@@ -2,7 +2,7 @@
 % Please edit documentation in R/motifs_acp.R
 \name{prepare_acp}
 \alias{prepare_acp}
-\title{Prépare les données pour réaliser une ACP (ex: normalisation et filtrage).}
+\title{Prépare ACP}
 \usage{
 prepare_acp(
   freq_filter = 2,
@@ -21,8 +21,12 @@ prepare_acp(
 \item{corpus_path}{string chemin du csv contenant les motifs en ngram}
 }
 \value{
-DataFrame: Oeuvre1 | Oeuvre2 | ... | OeuvreN avec les motifs en index.
+DataFrame: avec en colonne, Oeuvre1 | Oeuvre2 | ... | OeuvreN avec les motifs en ligne.
 }
 \description{
 Prépare les données pour réaliser une ACP (ex: normalisation et filtrage).
+}
+\examples{
+data <- prepare_acp(corpus_path = "./output", freq_filter = 2)
+
 }

@@ -13,6 +13,14 @@ plot_tf_idf(corpus_words_ngrams, n_motifs = 20, plot_type = "sep")
 
 \item{plot_type}{string "group" pour une visualisation groupée, "sep" pour une visualisation séparée (par défaut)}
 }
+\value{
+un ggplot
+}
 \description{
 Fonction de génération d'histogrammes TF-IDF
+}
+\examples{
+corpus_words_ngrams = motifs_tf_idf(corpus_path="./output")
+plot_tf_idf(corpus_words_ngrams, n_motifs = 20, plot_type = "sep")
+
 }

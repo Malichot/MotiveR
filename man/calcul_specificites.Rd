@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcul_specificites.R
 \name{calcul_specificites}
 \alias{calcul_specificites}
-\title{Calcul de spécificités}
+\title{Calcul de specificites}
 \usage{
 calcul_specificites(
   save_freq = TRUE,
@@ -29,6 +29,13 @@ calcul_specificites(
 
 \item{overwrite}{boolean: Écrase et sauve de nouveaux les résultats}
 }
+\value{
+DataFrame avec colonnes (Oeuvre || motifs || n (fréq abs) || total (nb de mots dans l'oeuvre) || nrel (fréq relative) || Spécificités par oeuvres)
+}
 \description{
-Calcul de spécificités
+Calcul de specificites
+}
+\examples{
+spec <- calcul_specificites(corpus_path="./output")
+
 }

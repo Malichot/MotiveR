@@ -26,6 +26,13 @@ motifs_acp(
 
 \item{corpus_path}{string chemin du csv contenant les motifs en ngram}
 }
+\value{
+un ggplot
+}
 \description{
 Fonction d'analyse des motifs en composantes principales
+}
+\examples{
+motifs_acp(corpus_path="./output", freq_filter = 2, n_obs=50)
+
 }

@@ -12,8 +12,10 @@
 #' 
 #' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
 #'
-#' @example
-#' motifs_tf_idf(corpus_path="corpus_motifs_grams.csv")
+#' @returns Dataframe avec colonnes Oeuvre || motifs || n || tf || idf || tf_idf
+#'
+#' @examples
+#' motifs_tf_idf(corpus_path="./output")
 #'
 #' @export
 motifs_tf_idf <- function(corpus_grams = NULL,
@@ -86,8 +88,10 @@ motifs_tf_idf <- function(corpus_grams = NULL,
 #'
 #' @param plot_type string "group" pour une visualisation groupée, "sep" pour une visualisation séparée (par défaut)
 #'
-#' @example
-#' corpus_words_ngrams = motifs_tf_idf(corpus_path="corpus_motifs_grams.csv")
+#' @returns un ggplot
+#'
+#' @examples
+#' corpus_words_ngrams = motifs_tf_idf(corpus_path="./output")
 #' plot_tf_idf(corpus_words_ngrams, n_motifs = 20, plot_type = "sep")
 #'
 #' @export

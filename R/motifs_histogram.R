@@ -9,9 +9,11 @@
 #' @param nmots int sélection du nombre de motifs à afficher
 #'
 #' @param freq string "rel" pour fréquence relative ou "abs" pour fréquence absolue
-
-#' @example
-#' motifs_histogram(corpus_path="corpus_motifs_grams.csv", nmots = 25)
+#'
+#' @returns un ggplot
+#'
+#' @examples
+#' motifs_histogram(corpus_path="./output/", nmots = 25)
 #'
 #' @export
 motifs_histogram <- function(corpus_grams = NULL,

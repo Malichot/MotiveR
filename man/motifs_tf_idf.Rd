@@ -23,6 +23,13 @@ motifs_tf_idf(
 
 \item{overwrite}{boolean: Écrase et sauve de nouveaux les résultats}
 }
+\value{
+Dataframe avec colonnes Oeuvre || motifs || n || tf || idf || tf_idf
+}
 \description{
 Fonction génération TF-IDF
+}
+\examples{
+motifs_tf_idf(corpus_path="./output")
+
 }

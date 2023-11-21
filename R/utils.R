@@ -1,10 +1,8 @@
 #' @importFrom magrittr %>%
-#' @export
-magrittr::`%>%`
-
 #' @importFrom data.table :=
-#' @export
-data.table::`:=`
+#' @importFrom stats complete.cases phyper sd xtabs
+#' @importFrom utils head tail write.csv read.csv
+
 
 save_dir_parser <- function(save_path = NULL) {
   if (is.null(save_path)) {
