@@ -20,6 +20,14 @@ motifs_histogram(
 
 \item{freq}{string "rel" pour fréquence relative ou "abs" pour fréquence absolue}
 }
+\value{
+un ggplot
+}
 \description{
 Fonction génération d'histogramme
+}
+\examples{
+corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+motifs_histogram(corpus_path=corpus_path, nmots=25)
+
 }

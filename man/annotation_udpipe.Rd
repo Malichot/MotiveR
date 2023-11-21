@@ -2,7 +2,7 @@
 % Please edit documentation in R/annotation_udpipe.R
 \name{annotation_udpipe}
 \alias{annotation_udpipe}
-\title{Étiquetage UDPipe}
+\title{etiquetage UDPipe}
 \usage{
 annotation_udpipe(
   path,
@@ -12,17 +12,22 @@ annotation_udpipe(
 )
 }
 \arguments{
-\item{path}{string: Chemin du dossier contenant les différents corpus.}
+\item{path}{string: Chemin du dossier contenant les differents corpus.}
 
-\item{save_output}{boolean: Sauvegarde les résultats}
+\item{save_output}{boolean: Sauvegarde les resultats}
 
 \item{save_path}{string: Chemin du fichier de sauvergarde}
 
-\item{overwrite}{boolean: Écrase et sauve de nouveaux les résultats}
+\item{overwrite}{boolean: ecrase et sauve de nouveaux les resultats}
 }
 \value{
-DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
+DataFrame: corpus_annote avec les colonnes (mots || lemmes || POS || feats || Oeuvre)
 }
 \description{
-Étiquetage du corpus situé dans path
+etiquetage du corpus situe dans path
+}
+\examples{
+path <- system.file("extdata", "corpus-test", package = "MotiveR")
+corpus_annote <- annotation_udpipe(path, save_output=FALSE)
+
 }

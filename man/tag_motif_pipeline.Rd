@@ -16,8 +16,13 @@ tag_motif_pipeline(path, corpus = NULL, save_output = TRUE, overwrite = FALSE)
 \item{overwrite}{boolean: Écrase et sauve de nouveaux les résultats}
 }
 \value{
-DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeuvre)
+DataFrame avec colonnes (mots || lemmes || POS || feats || Oeuvre)
 }
 \description{
 Étiquetage du corpus et transformation en motifs UDPpipe
+}
+\examples{
+path <- system.file("extdata", "corpus-test", package = "MotiveR")
+corpus_annote <- tag_motif_pipeline(path, save_output=FALSE)
+
 }

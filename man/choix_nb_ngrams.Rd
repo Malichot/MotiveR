@@ -32,3 +32,8 @@ DataFrame: corpus_annote avec les columns (mots || lemmes || POS || feats || Oeu
 \description{
 Choix du nb de ngrams sur le corpus de motifs
 }
+\examples{
+corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+corpus_grams <- choix_nb_ngrams(2, corpus_path=corpus_path, save_output=FALSE)
+
+}

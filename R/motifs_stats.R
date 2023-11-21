@@ -12,11 +12,13 @@
 #'
 #' @param overwrite boolean: Écrase et sauve de nouveaux les résultats
 #'
-#' @return DataFrame: Oeuvre | motifs | n (fréq absolue) | nb_total_mots (dans l'oeuvre) |
-#' n_rel (fréquence relative) | spécificités oeuvre par oeuvre | pourcentage (présence du motif par rapport au reste du corpus)
+#' @returns DataFrame: Oeuvre | motifs | n (fréq absolue) | nb_total_mots (dans l'oeuvre) | n_rel
+#' (fréquence relative) | spécificités oeuvre par oeuvre | pourcentage (présence du motif par
+#' rapport au reste du corpus)
 #'
-#' @example
-#' motifs_stats <- motifs_stats(corpus_path="corpus_motifs_grams.csv")
+#' @examples
+#' corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+#' motifs_stats <- motifs_stats(corpus_path=corpus_path)
 #'
 #' @export
 motifs_stats <- function(corpus_grams = NULL,

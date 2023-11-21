@@ -23,6 +23,16 @@ Definissez d'abord les parametres et charger les librairies. Suivant les besoins
 ```{r setup}
 # Charger le package (apres l'avoir installe)
 library(MotiveR)
+
+# installer and charger les packages externes
+# libraries = c("Factoshiny", "FactoMineR", "explor")
+# lapply(libraries, function(x) if (!(x %in% installed.packages())) {
+#   install.packages(x, repos = "https://cran.rstudio.com")
+# })
+# lapply(libraries, library, quietly = TRUE, character.only = TRUE)
+
+
+
 # Pour creer des ACP interactive
 library(FactoMineR)
 # Charger explor pour realiser des ACP interactive avec shiny.

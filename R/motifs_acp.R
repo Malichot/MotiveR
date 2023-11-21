@@ -1,18 +1,24 @@
+#' Prépare ACP
+#'
 #' Prépare les données pour réaliser une ACP (ex: normalisation et filtrage).
 #'
+#' @param freq_filter int filtre de fréquence pour alléger les normalisations de fréquences. Les
+#' motifs qui ont une fréquence au moins égale a freq_filter sont sélectionnés.
 #'
-#' @param freq_filter int filtre de fréquence pour alléger les normalisations de fréquences. Les motifs qui ont une fréquence au moins égale a freq_filter sont sélectionnés.
-#'
-#' @param n_motifs int Nombre maximum de motifs par oeuvre pour réaliser l'ACP. Si spécifié, freq_filter est ignoré.
+#' @param n_motifs int Nombre maximum de motifs par oeuvre pour réaliser l'ACP. Si spécifié,
+#' freq_filter est ignoré.
 #'
 #' @param corpus_grams data.frame sous format mots || motifs || Oeuvre
 #'
 #' @param corpus_path string chemin du csv contenant les motifs en ngram
 #' 
-#' @return DataFrame: Oeuvre1 | Oeuvre2 | ... | OeuvreN avec les motifs en index.
+#' @returns DataFrame: avec en colonne, Oeuvre1 | Oeuvre2 | ... | OeuvreN avec les motifs en ligne.
 #'
-#' @example
-#' prepare_acp(corpus_path = corpus_path, freq_filter = 2)
+#' @examples
+#' file_path <- system.file("extdata", "example_output", "corpus_motifs_grams.csv",
+#' package="MotiveR")
+#' corpus_grams <- data.table::fread(file_path, encoding = "UTF-8", header = TRUE)
+#' data <- prepare_acp(freq_filter=2, corpus_grams=corpus_grams)
 #'
 #' @export
 prepare_acp <-
@@ -52,7 +58,7 @@ prepare_acp <-
     ## Préparation des données pour normalisation :
     ## lignes = motifs
     ## colonnes = corpus
-    ## Réf : https://stackoverflow.com/questions/19346066/r-re-arrange-dataframe-some-rows-to-columns
+    # Réf : https://stackoverflow.com/questions/19346066/r-re-arrange-dataframe-some-rows-to-columns
     corpus_norm <-
       stats::xtabs(n ~ motifs + Oeuvre, corpus_grams)
     
@@ -80,20 +86,27 @@ prepare_acp <-
 #'
 #' Fonction d'analyse des motifs en composantes principales
 #'
-#' @param plot_type string: "var+motif" plot variables et motifs (défaut) "var" plot variables, "motif" plot motifs
+#' @param plot_type string: "var+motif" plot variables et motifs (défaut) "var" plot variables,
+#' "motif" plot motifs
 #' 
-#' @param freq_filter int filtre de fréquence pour alléger les normalisations de fréquences. Les motifs qui ont une fréquence au moins égale a freq_filter sont sélectionnés.
+#' @param freq_filter int filtre de fréquence pour alléger les normalisations de fréquences.
+#' Les motifs qui ont une fréquence au moins égale a freq_filter sont sélectionnés.
 #'
-#' @param n_motifs int Nombre maximum de motifs par oeuvre pour réaliser l'ACP. Si spécifié, freq_filter est ignoré.
+#' @param n_motifs int Nombre maximum de motifs par oeuvre pour réaliser l'ACP. Si spécifié,
+#' freq_filter est ignoré.
 #'
-#' @param n_obs int Nombre maximum d'observations pour réaliser l'ACP. Si NULL, toutes les observations sont utilisées.
+#' @param n_obs int Nombre maximum d'observations pour réaliser l'ACP. Si NULL, toutes les
+#' observations sont utilisées.
 #'
 #' @param corpus_grams data.frame sous format mots || motifs || Oeuvre
 #'
 #' @param corpus_path string chemin du csv contenant les motifs en ngram
+#'
+#' @returns un ggplot
 #' 
-#' @example
-#' motifs_acp(corpus_path="corpus_motifs_grams.csv", freq_filter = 2, n_obs=50)
+#' @examples
+#' corpus_path = system.file("extdata", "example_output", package="MotiveR")
+#' motifs_acp(freq_filter=2, corpus_path=corpus_path)
 #'
 #' @export
 motifs_acp <-
@@ -109,13 +122,16 @@ motifs_acp <-
       freq_filter = freq_filter, n_motifs = n_motifs,  corpus_grams =
         corpus_grams,  corpus_path = corpus_path
     )
-    
+
     # And now PCA :
     if (is.null(n_obs)) {
       corpus_PCA <-
         stats::prcomp(corpus_norm[1:nrow(corpus_norm), ], scale. = FALSE)
     }
     else {
+      if (n_obs > nrow(corpus_norm)){
+        stop("n_obs est trop grand! Valeur maximale possible: ", nrow(corpus_norm))
+      }
       corpus_PCA <- stats::prcomp(corpus_norm[1:n_obs, ], scale. = FALSE)
     }
     

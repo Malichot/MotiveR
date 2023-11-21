@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcul_specificites.R
 \name{calcul_specificites}
 \alias{calcul_specificites}
-\title{Calcul de spécificités}
+\title{Calcul de specificites}
 \usage{
 calcul_specificites(
   save_freq = TRUE,
@@ -15,7 +15,7 @@ calcul_specificites(
 )
 }
 \arguments{
-\item{save_freq}{boolean Suverage les résultats avec les fréquences}
+\item{save_freq}{boolean Sauvegarde les résultats avec les fréquences}
 
 \item{retrait_frequence_1}{boolean: Retire spécificité de fréquence 1 dans la sortie}
 
@@ -29,6 +29,15 @@ calcul_specificites(
 
 \item{overwrite}{boolean: Écrase et sauve de nouveaux les résultats}
 }
+\value{
+DataFrame avec colonnes (Oeuvre || motifs || n (fréq abs) || total (nb de mots dans
+l'oeuvre) || nrel (fréq relative) || Spécificités par oeuvres)
+}
 \description{
-Calcul de spécificités
+Calcul de specificites
+}
+\examples{
+corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+spec <- calcul_specificites(corpus_path=corpus_path, save_freq = FALSE, save_output=FALSE)
+
 }
