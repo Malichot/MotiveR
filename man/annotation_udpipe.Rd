@@ -27,6 +27,7 @@ DataFrame: corpus_annote avec les colonnes (mots || lemmes || POS || feats || Oe
 etiquetage du corpus situe dans path
 }
 \examples{
-corpus_annote <- annotation_udpipe(system.file("extdata", "curpus-test", package = "MotiveR"))
+path <- system.file("extdata", "corpus-test", package = "MotiveR")
+corpus_annote <- annotation_udpipe(path, save_output=FALSE)
 
 }

@@ -11,7 +11,8 @@ plot_tf_idf(corpus_words_ngrams, n_motifs = 20, plot_type = "sep")
 
 \item{n_motifs}{int sélection du nombre de motifs à afficher}
 
-\item{plot_type}{string "group" pour une visualisation groupée, "sep" pour une visualisation séparée (par défaut)}
+\item{plot_type}{string "group" pour une visualisation groupée, "sep" pour une visualisation
+séparée (par défaut)}
 }
 \value{
 un ggplot
@@ -20,7 +21,8 @@ un ggplot
 Fonction de génération d'histogrammes TF-IDF
 }
 \examples{
-corpus_words_ngrams = motifs_tf_idf(corpus_path="./output")
+corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+corpus_words_ngrams = motifs_tf_idf(corpus_path=corpus_path)
 plot_tf_idf(corpus_words_ngrams, n_motifs = 20, plot_type = "sep")
 
 }

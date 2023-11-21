@@ -22,10 +22,21 @@
 #'
 #' @param overwrite boolean: ecrase et sauve de nouveaux les resultats
 #'
-#' @returns DataFrame: Oeuvre | motifs | n (freq absolue) | nb_total_mots (dans l'oeuvre) | n_rel (frequence relative) | specificites oeuvre par oeuvre | pourcentage (presence du motif par rapport au reste du corpus)
+#' @returns DataFrame: Oeuvre | motifs | n (freq absolue) | nb_total_mots (dans l'oeuvre) | n_rel
+#' (frequence relative) | specificites oeuvre par oeuvre | pourcentage (presence du motif par
+#' rapport au reste du corpus)
 #'
 #' @examples
-#' corpus_annote <- retour_texte_specificites_un_motif(", a le NC", 4, 4)
+#' file_path <- system.file("extdata", "example_output", "corpus_motifs_grams.csv",
+#' package="MotiveR")
+#' corpus_grams <- data.table::fread(file_path, encoding = "UTF-8", header = TRUE)
+#'
+#' file_path <- system.file("extdata", "example_output", "corpus_motifs_spec_freq.csv",
+#' package="MotiveR")
+#' corpus_spec <- data.table::fread(file_path, encoding = "UTF-8", header = TRUE)
+#'
+#' corpus_annote <- retour_texte_specificites_un_motif(", a le NC", 4, 4, corpus_grams=corpus_grams,
+#' corpus_spec=corpus_spec)
 #'
 #' @export
 retour_texte_specificites_un_motif <- function(motif_cible,

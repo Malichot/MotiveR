@@ -30,6 +30,7 @@ DataFrame: motifs pour chaque corpus
 Transformation en motifs UDPpipe
 }
 \examples{
-corpus_motifs <- regex_corpus_UDPipe(corpus_path="./output", save_output = TRUE)
+corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+corpus_motifs <- regex_corpus_udpipe(corpus_path=corpus_path, save_output = TRUE)
 
 }

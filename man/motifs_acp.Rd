@@ -14,13 +14,17 @@ motifs_acp(
 )
 }
 \arguments{
-\item{plot_type}{string: "var+motif" plot variables et motifs (défaut) "var" plot variables, "motif" plot motifs}
+\item{plot_type}{string: "var+motif" plot variables et motifs (défaut) "var" plot variables,
+"motif" plot motifs}
 
-\item{freq_filter}{int filtre de fréquence pour alléger les normalisations de fréquences. Les motifs qui ont une fréquence au moins égale a freq_filter sont sélectionnés.}
+\item{freq_filter}{int filtre de fréquence pour alléger les normalisations de fréquences.
+Les motifs qui ont une fréquence au moins égale a freq_filter sont sélectionnés.}
 
-\item{n_motifs}{int Nombre maximum de motifs par oeuvre pour réaliser l'ACP. Si spécifié, freq_filter est ignoré.}
+\item{n_motifs}{int Nombre maximum de motifs par oeuvre pour réaliser l'ACP. Si spécifié,
+freq_filter est ignoré.}
 
-\item{n_obs}{int Nombre maximum d'observations pour réaliser l'ACP. Si NULL, toutes les observations sont utilisées.}
+\item{n_obs}{int Nombre maximum d'observations pour réaliser l'ACP. Si NULL, toutes les
+observations sont utilisées.}
 
 \item{corpus_grams}{data.frame sous format mots || motifs || Oeuvre}
 
@@ -33,6 +37,7 @@ un ggplot
 Fonction d'analyse des motifs en composantes principales
 }
 \examples{
-motifs_acp(corpus_path="./output", freq_filter = 2, n_obs=50)
+corpus_path = system.file("extdata", "example_output", package="MotiveR")
+motifs_acp(freq_filter=2, corpus_path=corpus_path)
 
 }

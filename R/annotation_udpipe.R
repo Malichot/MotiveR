@@ -13,7 +13,8 @@
 #' @returns DataFrame: corpus_annote avec les colonnes (mots || lemmes || POS || feats || Oeuvre)
 #'
 #' @examples
-#' corpus_annote <- annotation_udpipe(system.file("extdata", "curpus-test", package = "MotiveR"))
+#' path <- system.file("extdata", "corpus-test", package = "MotiveR")
+#' corpus_annote <- annotation_udpipe(path, save_output=FALSE)
 #'
 #' @export
 annotation_udpipe <-
@@ -23,7 +24,8 @@ annotation_udpipe <-
            overwrite = FALSE) {
     # Verfie path
     if (!file.exists(path)) {
-      stop("The chemin specifie ", path, " n'existe pas!")
+      print(path)
+      stop("Le chemin specifie ", path, " n'existe pas!")
     }
     # Modele
     UDPIPE_MODEL_PATH <-

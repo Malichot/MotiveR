@@ -15,7 +15,8 @@
 #' @returns Dataframe avec colonnes Oeuvre || motifs || n || tf || idf || tf_idf
 #'
 #' @examples
-#' motifs_tf_idf(corpus_path="./output")
+#' corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+#' motifs_tf_idf(corpus_path=corpus_path)
 #'
 #' @export
 motifs_tf_idf <- function(corpus_grams = NULL,
@@ -86,12 +87,14 @@ motifs_tf_idf <- function(corpus_grams = NULL,
 #' 
 #' @param n_motifs int sélection du nombre de motifs à afficher
 #'
-#' @param plot_type string "group" pour une visualisation groupée, "sep" pour une visualisation séparée (par défaut)
+#' @param plot_type string "group" pour une visualisation groupée, "sep" pour une visualisation
+#' séparée (par défaut)
 #'
 #' @returns un ggplot
 #'
 #' @examples
-#' corpus_words_ngrams = motifs_tf_idf(corpus_path="./output")
+#' corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+#' corpus_words_ngrams = motifs_tf_idf(corpus_path=corpus_path)
 #' plot_tf_idf(corpus_words_ngrams, n_motifs = 20, plot_type = "sep")
 #'
 #' @export

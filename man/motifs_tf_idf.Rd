@@ -30,6 +30,7 @@ Dataframe avec colonnes Oeuvre || motifs || n || tf || idf || tf_idf
 Fonction génération TF-IDF
 }
 \examples{
-motifs_tf_idf(corpus_path="./output")
+corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+motifs_tf_idf(corpus_path=corpus_path)
 
 }

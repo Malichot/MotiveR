@@ -6,7 +6,7 @@
 #'
 #' @param corpus_path string chemin du csv contenant les motifs en ngram
 #'
-#' @param save_freq boolean Suverage les résultats avec les fréquences
+#' @param save_freq boolean Sauvegarde les résultats avec les fréquences
 #'
 #' @param save_output boolean: Sauvegarde les résultats
 #'
@@ -16,10 +16,12 @@
 #'
 #' @param retrait_frequence_1 boolean: Retire spécificité de fréquence 1 dans la sortie
 #'
-#' @returns DataFrame avec colonnes (Oeuvre || motifs || n (fréq abs) || total (nb de mots dans l'oeuvre) || nrel (fréq relative) || Spécificités par oeuvres)
+#' @returns DataFrame avec colonnes (Oeuvre || motifs || n (fréq abs) || total (nb de mots dans
+#' l'oeuvre) || nrel (fréq relative) || Spécificités par oeuvres)
 #'
 #' @examples
-#' spec <- calcul_specificites(corpus_path="./output")
+#' corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+#' spec <- calcul_specificites(corpus_path=corpus_path, save_freq = FALSE, save_output=FALSE)
 #'
 #' @export
 calcul_specificites <- function(save_freq = TRUE,

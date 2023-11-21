@@ -12,9 +12,11 @@ prepare_acp(
 )
 }
 \arguments{
-\item{freq_filter}{int filtre de fréquence pour alléger les normalisations de fréquences. Les motifs qui ont une fréquence au moins égale a freq_filter sont sélectionnés.}
+\item{freq_filter}{int filtre de fréquence pour alléger les normalisations de fréquences. Les
+motifs qui ont une fréquence au moins égale a freq_filter sont sélectionnés.}
 
-\item{n_motifs}{int Nombre maximum de motifs par oeuvre pour réaliser l'ACP. Si spécifié, freq_filter est ignoré.}
+\item{n_motifs}{int Nombre maximum de motifs par oeuvre pour réaliser l'ACP. Si spécifié,
+freq_filter est ignoré.}
 
 \item{corpus_grams}{data.frame sous format mots || motifs || Oeuvre}
 
@@ -27,6 +29,9 @@ DataFrame: avec en colonne, Oeuvre1 | Oeuvre2 | ... | OeuvreN avec les motifs en
 Prépare les données pour réaliser une ACP (ex: normalisation et filtrage).
 }
 \examples{
-data <- prepare_acp(corpus_path = "./output", freq_filter = 2)
+file_path <- system.file("extdata", "example_output", "corpus_motifs_grams.csv",
+package="MotiveR")
+corpus_grams <- data.table::fread(file_path, encoding = "UTF-8", header = TRUE)
+data <- prepare_acp(freq_filter=2, corpus_grams=corpus_grams)
 
 }
