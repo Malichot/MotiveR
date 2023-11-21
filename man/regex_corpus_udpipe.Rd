@@ -31,6 +31,6 @@ Transformation en motifs UDPpipe
 }
 \examples{
 corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
-corpus_motifs <- regex_corpus_udpipe(corpus_path=corpus_path, save_output = TRUE)
+corpus_motifs <- regex_corpus_udpipe(corpus_path=corpus_path, save_output = FALSE)
 
 }
