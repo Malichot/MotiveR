@@ -13,8 +13,8 @@
 #' @returns un ggplot
 #'
 #' @examples
-#' corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
-#' motifs_histogram(corpus_path=corpus_path, nmots=25)
+#' \dontrun{corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+#' motifs_histogram(corpus_path=corpus_path, nmots=25)}
 #'
 #' @export
 motifs_histogram <- function(corpus_grams = NULL,

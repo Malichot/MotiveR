@@ -22,7 +22,7 @@ DataFrame avec colonnes (mots || lemmes || POS || feats || Oeuvre)
 Étiquetage du corpus et transformation en motifs UDPpipe
 }
 \examples{
-path <- system.file("extdata", "corpus-test", package = "MotiveR")
-corpus_annote <- tag_motif_pipeline(path, save_output=FALSE)
+\dontrun{path <- system.file("extdata", "corpus-test", package = "MotiveR")
+corpus_annote <- tag_motif_pipeline(path, save_output=FALSE)}
 
 }
