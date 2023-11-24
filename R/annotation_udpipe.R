@@ -15,7 +15,10 @@
 #' @examples
 #' path <- system.file("extdata", "corpus-test", package = "MotiveR")
 #' corpus_annote <- annotation_udpipe(path, save_output=FALSE)
-#'
+#' 
+#' # A ignorer: retire le modèle udpipe
+#' unlink(x = paste0(system.file("extdata", package = "MotiveR"), "french-gsd-ud-2.5-191206.udpipe"))
+#
 #' @export
 annotation_udpipe <-
   function(path,
