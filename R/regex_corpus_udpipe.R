@@ -17,6 +17,9 @@
 #' @examples
 #' corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
 #' corpus_motifs <- regex_corpus_udpipe(corpus_path=corpus_path, save_output = FALSE)
+#' 
+#' # A ignorer: retire le modèle udpipe
+#' unlink(x = paste0(system.file("extdata", package = "MotiveR"), "french-gsd-ud-2.5-191206.udpipe"))
 #'
 #' @export
 regex_corpus_udpipe <- function(corpus = NULL, corpus_path = NULL, 
