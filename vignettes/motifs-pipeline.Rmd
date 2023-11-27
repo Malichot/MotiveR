@@ -47,6 +47,7 @@ overwrite <- FALSE # ecrase resultats precedents
 n_grams <- 4 # longueur de la sequence n-gram
 frequence <- 200 # filtre de frequence pour le retour aux textes (limite le temps de calcul)
 len_context <- 4 # longueur du contexte d'analyse
+
 ```
 
 ### Preparation des donnees
@@ -62,7 +63,7 @@ Lors de la premiere utilisation, le modele d'etiquetage est telecharge ce qui pe
 corpus_annote <- annotation_udpipe(path = path,
                                   save_output = save_output,
                                   overwrite = overwrite)
-# etiquetage du corpus
+# transformation en motifs du corpus annote
 corpus_motifs <- regex_corpus_udpipe(corpus = corpus_annote,
                                     save_output = save_output,
                                     overwrite = overwrite)
