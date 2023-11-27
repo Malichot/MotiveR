@@ -13,7 +13,7 @@
 #' @returns un ggplot
 #'
 #' @examples
-#' \dontrun{corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+#' \donttest{corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
 #' motifs_histogram(corpus_path=corpus_path, nmots=25)}
 #'
 #' @export

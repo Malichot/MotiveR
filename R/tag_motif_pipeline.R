@@ -13,7 +13,7 @@
 #' @returns DataFrame avec colonnes (mots || lemmes || POS || feats || Oeuvre)
 #'
 #' @examples
-#' \dontrun{path <- system.file("extdata", "corpus-test", package = "MotiveR")
+#' \donttest{path <- system.file("extdata", "corpus-test", package = "MotiveR")
 #' corpus_annote <- tag_motif_pipeline(path, save_output=FALSE)}
 #'
 #' @export
