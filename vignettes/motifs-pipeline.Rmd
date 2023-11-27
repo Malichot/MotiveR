@@ -31,7 +31,8 @@ library(MotiveR)
 # })
 # lapply(libraries, library, quietly = TRUE, character.only = TRUE)
 
-
+# manipulation de données
+library(dplyr)
 
 # Pour creer des ACP interactive
 library(FactoMineR)
@@ -45,7 +46,7 @@ path <- system.file("extdata", "corpus-test", package = "MotiveR") # chemin du c
 save_output <- FALSE # Sauvegarde resultats
 overwrite <- FALSE # ecrase resultats precedents
 n_grams <- 4 # longueur de la sequence n-gram
-frequence <- 200 # filtre de frequence pour le retour aux textes (limite le temps de calcul)
+frequence <- 10 # filtre de frequence pour le retour aux textes (limite le temps de calcul)
 len_context <- 4 # longueur du contexte d'analyse
 
 ```
@@ -135,9 +136,9 @@ res.shiny <- Factoshiny::PCAshiny(res.pca)
 
 #### ACP avec la fonction du package
 ```{r motifs_acp, out.width="100%", message=FALSE, results='hide', fig.width = 6, fig.height=3, out.width="100%"}
-motifs_acp(plot_type = "var", corpus_grams = corpus_grams, n_motifs=100)
-motifs_acp(plot_type = "motif", corpus_grams = corpus_grams, n_motifs=100)
-motifs_acp(plot_type = "var+motif", corpus_grams = corpus_grams, n_motifs=100)
+motifs_acp(plot_type = "var", corpus_grams = corpus_grams, n_motifs=10)
+motifs_acp(plot_type = "motif", corpus_grams = corpus_grams, n_motifs=10)
+motifs_acp(plot_type = "var+motif", corpus_grams = corpus_grams, n_motifs=10)
 ```
 
 #### Realiser des statistiques sur les motifs
