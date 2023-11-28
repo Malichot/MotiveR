@@ -68,9 +68,18 @@ len_context <- 4 # longueur du contexte d'analyse
 
 #### Annotation et etiquetage
 
-Lors de la premiere utilisation, le modèle d'étiquetage est téléchargé ce qui peut prendre un peu de temps.
+Lors de la premiere utilisation, le modèle d'étiquetage est téléchargé ce qui peut prendre un peu de temps. La librairie MotiveR utilise le moteur UDpipe pour l'annotation (voir https://ufal.mff.cuni.cz/udpipe/2/models) morphosyntaxique.
 
-- En deux fois: annotation et transformation du corpus en motifs.
+En ce qui concerne la transformation en motifs, les règles de transformations sont les suivantes : 
+
+- Garde les formes invariables (prépositions, conjonctions, adverbes frequents, mots invariables) ; 
+- Garde le lemme des verbes fréquents (auxiliaires, verbes modaux, verbes d’aspect) ; réduire les formes pronominales à une forme canonique ;
+- Conserver les étiquettes POS (noms communs, noms propres, verbes (+temps), infinitifs, participes passés, adjectifs, déterminants possessif, interjections) ;
+- Annoter sémantiquement certains noms et adverbes : adverbes de fréquence, habitude, intensité, manière, modaux, phase, totalité, noms abstraits, noms exprimant une partie du corps.
+
+Pour les utilisateurs avancés, l'ensemble de ces transformations peuvent être affinées selon les besoins à partir d'un simple changement des listes de mots disponibles dans le dossier suivant : `"~/MotiveR/inst/extdata/regle_transformation_motifs/`. Le principe fondamental est la modularité de ces règles de transformations qui peuvent être adaptées aux besoins spécifiques de la problématique de recherche.
+
+- On peut réaliser la procédure en deux fois : annotation et transformation du corpus en motifs grâce aux fonctions `annotation_udpipde` et `regex_corpus_udpipe`.
 
 ```{r annotation, eval=FALSE, message=FALSE, include=TRUE, results='hide'}
 # UDpipe annotation
@@ -83,7 +92,8 @@ corpus_motifs <- regex_corpus_udpipe(corpus = corpus_annote,
                                     overwrite = overwrite)
 ```
 
-- Ou en une fois grâce la fonction `tag_motif_pipeline`
+
+- Ou en une fois grâce la fonction `tag_motif_pipeline` : 
 
 ```{r tag_motif_pipeline, message=FALSE, results='hide'}
 corpus_motifs <- tag_motif_pipeline(path = path,
@@ -108,7 +118,7 @@ corpus_grams <-  choix_nb_ngrams(
 
 #### Histogrammes des motifs:
 
-Fonction permettant la création d'une visualisation sous la forme d'un histogramme de n motifs calculé à partir des motifs les plus fréquents (choix du nombre de motifs à afficher grâce au paramètre nmots = n). On peut choisir de calculer cela à partir de la fréquence absolu (paramètre "abs") ou de la fréquence relative ("rel") qui normalise un peu la fréquence :
+Fonction permettant la création d'une visualisation sous la forme d'un histogramme de n motifs calculé à partir des motifs les plus fréquents (choix du nombre de motifs à afficher grâce au paramètre `nmots = n`). On peut choisir de calculer cela à partir de la fréquence absolu (paramètre `freq = "abs"`) ou de la fréquence relative (`freq = "rel"`) qui normalise un peu la fréquence au regard de la différence de longueur entre les textes :
 
 ```{r motifs_histogram, message=FALSE, results='hide', fig.width = 6, fig.height=3}
 motifs_histogram(corpus_grams = corpus_grams,
@@ -118,8 +128,8 @@ motifs_histogram(corpus_grams = corpus_grams,
 
 #### Analyse TFIDF :
 
-Fonctions permettant de calculer au sein du corpus les fréquences TF-IDF (motif_tf_idf) et de créer des histogrammes (plot_tf_idf) de ces motifs à partir de ce score. 
-> Pour info : le Tf-idf (term-frequency – inverse document frequency) est une mesure permettant de se pencher sur les spécificités propres à chaque document du corpus, ce qui les distingue les uns des autres. Contre une pondération « locale » (à l’échelle du document), le tf-idf permet une pondération « globale » (à l’échelle du corpus) des termes, de leur représentativité dans le corpus.
+Fonctions permettant de calculer au sein du corpus les fréquences TF-IDF (`motif_tf_idf`) et de créer des histogrammes (`plot_tf_idf`) de ces motifs à partir de ce score. 
+> Pour info : le Tf-idf (*term-frequency – inverse document frequency*) est une mesure permettant de se pencher sur les spécificités propres à chaque document du corpus, ce qui les distingue les uns des autres. Contre une pondération « locale » (à l’échelle du document), le tf-idf permet une pondération « globale » (à l’échelle du corpus) des termes, de leur représentativité dans le corpus.
 
 ```{r motifs_tf_idf_sep, out.width="100%", message=FALSE, results='hide', fig.width = 8, fig.height=3}
 corpus_words_ngrams <- motifs_tf_idf(
@@ -139,7 +149,7 @@ plot_tf_idf(corpus_words_ngrams, n_motifs = 3, plot_type = "group")
 
 #### ACP avec FactoMineR:
 
-Fonction permettant de produire une analyse en composante princiaple à partir des motifs du corpus. Cette fonction prepare_acp exécute avant le calcul de l'ACP une normalisation zscore des fréquences. Différentes fonctions de visualisation sont ensuite disponibles, via une application Shiny (explor), via Factoshiny ou avec la fonction du package. Un filtre de fréquence peut être appliqué permettant de réduire le nombre d'observations étudié.
+Fonction permettant de produire une analyse en composante princiaple à partir des motifs du corpus. Cette fonction `prepare_acp` exécute avant le calcul de l'ACP une normalisation zscore des fréquences. Différentes fonctions de visualisation sont ensuite disponibles, via une application Shiny (explor), via Factoshiny ou avec la fonction du package. Un filtre de fréquence peut être appliqué permettant de réduire le nombre d'observations étudié.
 
 ```{r FactoMineRPCA, fig.width = 6, fig.height=3, out.width="100%"}
 corpus_norm <- prepare_acp(corpus_grams = corpus_grams)
