@@ -14,11 +14,24 @@ knitr::opts_chunk$set(
 )
 ```
 
-Cette vignette montre comment utiliser les fonctions du package Motifs. Elle sert comme exemple de pipeline d’analyse des motifs d’un corpus.
+Cette vignette montre comment utiliser les fonctions du package Motifs. Elle sert d'exemple au pipeline d’analyse des motifs d’un corpus à l'aide du package MotiveR. Le package est construit sous la forme d'un enchaînement logique de fonctions allant du :
+
+- Preprocessing des données (annotation et transformation en motifs).
+- Visualisations exploratoires et statistiques : histogrammes de fréquence, tf-idf, acp.
+- Calcul statistiques de spécificités permettant l'analyse comparative des oeuvres du corpus.
+- Retours aux textes selon deux approches : sur l'ensemble des motifs ou à partir d'un motifs cible.
 
 ### Introduction
 
-Definissez d'abord les parametres et charger les librairies. Suivant les besoins, charger `explor` our `Factoshiny` pour la visualisation des ACP.
+Definissez d'abord les paramètres et charger les librairies. Suivant les besoins, charger `explor` our `Factoshiny` pour la visualisation des ACP.
+
+Les paramètres sont les suivants : 
+- path : chemin vers le dossier contenant les fichiers .txt constituant le corpus d'analyse. Exemple : "~/MotiveR/extdata/corpus/"
+- save_output : si l'on souhaite sauvegarder les résultats à la suite de l'exécution des fonctions. Exemple : TRUE / FALSE. 
+- overwrite : est-ce que les résultats doivent écraser les sorties précédentes ? Exemple : TRUE / FALSE.
+- n_grams : longueur de la séquence de n_grams des motifs analysés. Ex : 1 à 7.
+- frequence : filtre de frequence pour le retour aux textes. Ce paramètre permet de limiter le temps de calcul et de limiter le nombre de motifs analysés.
+- len_context : longueur du contexte d'analyse dans le retour au texte (droite et gauche, càd avant le motif et après le motif), définit en nombre de mots. Exemple : 10.
 
 ```{r setup}
 # Charger le package (apres l'avoir installe)
@@ -55,9 +68,9 @@ len_context <- 4 # longueur du contexte d'analyse
 
 #### Annotation et etiquetage
 
-Lors de la premiere utilisation, le modele d'etiquetage est telecharge ce qui peut prendre un peu de temps.
+Lors de la premiere utilisation, le modèle d'étiquetage est téléchargé ce qui peut prendre un peu de temps.
 
-- En deux fois: annotation et etiquetage du corpus
+- En deux fois: annotation et transformation du corpus en motifs.
 
 ```{r annotation, eval=FALSE, message=FALSE, include=TRUE, results='hide'}
 # UDpipe annotation
@@ -80,6 +93,8 @@ corpus_motifs <- tag_motif_pipeline(path = path,
 
 #### Transformation en n-grams
 
+Sélection de la longueur du motif en nombre de ngrams. Par exemple, un ngram de 4 constituera des motifs du type : "NC de le NC".
+
 ```{r choix_nb_ngrams, message=FALSE, results='hide'}
 corpus_grams <-  choix_nb_ngrams(
   n_grams,
@@ -92,7 +107,9 @@ corpus_grams <-  choix_nb_ngrams(
 ### Analyze
 
 #### Histogrammes des motifs:
-Avec 10 motifs:
+
+Fonction permettant la création d'une visualisation sous la forme d'un histogramme de n motifs calculé à partir des motifs les plus fréquents (choix du nombre de motifs à afficher grâce au paramètre nmots = n). On peut choisir de calculer cela à partir de la fréquence absolu (paramètre "abs") ou de la fréquence relative ("rel") qui normalise un peu la fréquence :
+
 ```{r motifs_histogram, message=FALSE, results='hide', fig.width = 6, fig.height=3}
 motifs_histogram(corpus_grams = corpus_grams,
                  nmots = 10,
@@ -100,9 +117,10 @@ motifs_histogram(corpus_grams = corpus_grams,
 ```
 
 #### Analyse TFIDF :
-Transforme en table TFIDF et histogrammes des motifs dont le score est le plus eleve:
 
-- 2 motifs sur un grqphique par oeuvre:
+Fonctions permettant de calculer au sein du corpus les fréquences TF-IDF (motif_tf_idf) et de créer des histogrammes (plot_tf_idf) de ces motifs à partir de ce score. 
+> Pour info : le Tf-idf (term-frequency – inverse document frequency) est une mesure permettant de se pencher sur les spécificités propres à chaque document du corpus, ce qui les distingue les uns des autres. Contre une pondération « locale » (à l’échelle du document), le tf-idf permet une pondération « globale » (à l’échelle du corpus) des termes, de leur représentativité dans le corpus.
+
 ```{r motifs_tf_idf_sep, out.width="100%", message=FALSE, results='hide', fig.width = 8, fig.height=3}
 corpus_words_ngrams <- motifs_tf_idf(
   corpus_grams = corpus_grams,
@@ -112,6 +130,7 @@ corpus_words_ngrams <- motifs_tf_idf(
 plot_tf_idf(corpus_words_ngrams, n_motifs = 2, plot_type = "sep")
 ```
 
+Grâce au paramètre plot_type, la visualisation peut être séparée ("sep") ou groupée ("group").
 
 - 3 motifs sur un seul grqphique:
 ```{r motifs_tf_idf_group, out.width="100%", message=FALSE, results='hide', fig.width = 6, fig.height=4, out.width="100%"}
@@ -119,6 +138,9 @@ plot_tf_idf(corpus_words_ngrams, n_motifs = 3, plot_type = "group")
 ```
 
 #### ACP avec FactoMineR:
+
+Fonction permettant de produire une analyse en composante princiaple à partir des motifs du corpus. Cette fonction prepare_acp exécute avant le calcul de l'ACP une normalisation zscore des fréquences. Différentes fonctions de visualisation sont ensuite disponibles, via une application Shiny (explor), via Factoshiny ou avec la fonction du package. Un filtre de fréquence peut être appliqué permettant de réduire le nombre d'observations étudié.
+
 ```{r FactoMineRPCA, fig.width = 6, fig.height=3, out.width="100%"}
 corpus_norm <- prepare_acp(corpus_grams = corpus_grams)
 res.pca <- FactoMineR::PCA(corpus_norm, graph=TRUE)
@@ -151,6 +173,9 @@ df_stats <- motifs_stats(
 ```
 
 #### Calcul de specificites
+
+Cette fonction permet d'exécuter un calcul de spécificité des motifs dans le corpus à l'étude ; il se fonde sur le calcul inventé par Pierre Lafon en 1984 (voir LAFON, Pierre, *Dépouillements et statistiques en lexicométrie*, Genève-Paris, Slatkine-Champion, 1984). Plutôt que d’en rester au calcul de la fréquence relative ou du Tf-idf, P. Lafon propose un calcul de spécificité qui normalise cette fréquence relative en prenant en compte le fait que la distribution des individus dans un texte ne suit pas une loi normale, mais est plutôt proche d’une loi hypergéométrique. Il permet ainsi de comparer les motifs des différents textes entre eux et d'analyser de façon comparative lesquels sont les plus spécifiques d'un texte du corpus par rapport aux autres.
+
 ```{r calcul_specificites, message=FALSE, results='hide'}
 calcul_spec_freq <- calcul_specificites(
   save_freq = TRUE,
@@ -162,6 +187,22 @@ calcul_spec_freq <- calcul_specificites(
 ```
 
 #### Retour aux textes
+
+La fonction de retour aux texte permet de produire un tableau de concordance pour analyser les résultats. Ce tableau contient les scores de spécificités ce qui permet d'ordonnancer les résultats à partir des différents textes que l'on souhaite analyser. Deux approches sont possibles : 
+
+- Soit l'on explore la table de l'ensemble des motifs, dans une démarche exploratoire.
+- Soit l'on part d'un motif spécifique pour étudier l'ensemble de ses occurrences dans le corpus étudié.
+
+Dans les deux cas, on peut se fonder sur les scores de spécificités pour interpréter les résultats. Les paramètres définissent :
+
+- frequence : le seuil de fréquence minimal (seul les motifs au dessus de ce seuil seront affichés dans la table de concordance).
+- len_context : la longueur de la fenêtre contextuel (en nombre de mots).
+- n_grams : la longueur de notre séquence de motifs, exprimée en ngrams.
+- corpus_grams : une dataframe, résultat de la fonction choix_nb_ngrams.
+- corpus_spect : une dataframe, résultat de la fonction calcul_specificites.
+- save_output : sauvegarde ou non les résultats.
+- overwrite : écrase ou non les résultats.
+
 ```{r retour_texte_specificites, message=FALSE, results='hide'}
 retour_text_spec <- retour_texte_specificites(
   frequence = frequence,
@@ -175,6 +216,7 @@ retour_text_spec <- retour_texte_specificites(
 ```
 
 #### Retour aux textes a partir d'un motif
+
 ```{r retour_texte_specificites_un_motif, message=FALSE, results='hide'}
 retour_text_spec_un_motif <- retour_texte_specificites_un_motif(
   motif_cible = "le NC de le",
