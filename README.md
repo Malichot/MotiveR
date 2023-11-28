@@ -42,4 +42,4 @@ Après installation du package, accédez à la documentation avec `?MotiveR`
 
 ## Usage
 
-Se référer aux vignettes dans le dossier "doc" où le package est installé.
+Se référer aux vignettes et au document motifs-pipeline.Rmd qui documente l'ensemble des fonctions du package et leur utilisation.
