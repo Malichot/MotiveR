@@ -17,7 +17,7 @@
 #' rapport au reste du corpus)
 #'
 #' @examples
-#' \dontrun{corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
+#' \donttest{corpus_path <- system.file("extdata", "example_output", package = "MotiveR")
 #' motifs_stats <- motifs_stats(corpus_path=corpus_path)}
 #'
 #' @export
