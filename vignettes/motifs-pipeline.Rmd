@@ -25,7 +25,8 @@ Cette vignette montre comment utiliser les fonctions du package Motifs. Elle ser
 
 Definissez d'abord les paramètres et charger les librairies. Suivant les besoins, charger `explor` our `Factoshiny` pour la visualisation des ACP.
 
-Les paramètres sont les suivants : 
+Les paramètres sont les suivants :
+
 - path : chemin vers le dossier contenant les fichiers .txt constituant le corpus d'analyse. Exemple : "~/MotiveR/extdata/corpus/"
 - save_output : si l'on souhaite sauvegarder les résultats à la suite de l'exécution des fonctions. Exemple : TRUE / FALSE. 
 - overwrite : est-ce que les résultats doivent écraser les sorties précédentes ? Exemple : TRUE / FALSE.
